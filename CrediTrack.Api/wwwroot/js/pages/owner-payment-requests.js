@@ -7,7 +7,7 @@
   var api = window.CrediTrackApi;
   if (!api) return;
   var $ = function (id) { return document.getElementById(id); };
-  var PAGE_SIZE = 20;
+  var PAGE_SIZE = 10;
   var state = { data: null, items: [], page: 1, status: "pending" };
   (function () {   // e.g. payment-requests?status=archived (from the dashboard link)
     var s = new URLSearchParams(window.location.search).get("status");

@@ -15,7 +15,7 @@
   var api = window.CrediTrackCustomerApi;
   var $ = function (id) { return document.getElementById(id); };
   var toast = function (message) { window.CrediTrack.showToast(message); };
-  var PAGE_SIZE = 20;
+  var PAGE_SIZE = 10;     // notifications per page
 
   // Icon + colour class (from owner-notifications.css) + the action line for each notification type
   function svg(paths) {
@@ -49,7 +49,8 @@
   };
   var FALLBACK_TYPE = { icon: "bell", cls: "customer", action: "Open" };
 
-  var state = { data: null, filter: "all", visible: PAGE_SIZE };
+  var state = { data: null, filter: "all", page: 1 };
+  var pager = window.CrediTrackPager.create($("pager"), function (n) { state.page = n; render(); }, $("toolbar"));
 
   function esc(text) {
     var d = document.createElement("div");
@@ -128,7 +129,10 @@
   }
 
   function render() {
-    var d = state.data, hasAny = d.total > 0, list = filtered(), page = list.slice(0, state.visible);
+    var d = state.data, hasAny = d.total > 0, list = filtered();
+    var totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+    if (state.page > totalPages) state.page = totalPages;       // e.g. the last item on the last page was marked read
+    var page = list.slice((state.page - 1) * PAGE_SIZE, state.page * PAGE_SIZE);
     $("toolbar").hidden = !hasAny;
     $("count-all").textContent = d.total;
     $("count-unread").textContent = d.unread;
@@ -140,8 +144,7 @@
 
     $("nt-groups").innerHTML = groups(page);
     $("nt-groups").hidden = !page.length;
-    $("more").hidden = list.length <= page.length;
-    $("more").textContent = "Show more (" + (list.length - page.length) + " left)";
+    pager.update({ page: state.page, totalPages: totalPages });
     $("empty-none").hidden = hasAny;
     $("none-join").hidden = d.hasStores;
     $("none-title").textContent = d.hasStores ? "No notifications yet" : "No store joined yet";
@@ -203,11 +206,10 @@
     var chip = event.target.closest(".chip");
     if (!chip) return;
     state.filter = chip.getAttribute("data-filter");
-    state.visible = PAGE_SIZE;
+    state.page = 1;
     render();
   });
-  $("show-all").addEventListener("click", function () { state.filter = "all"; state.visible = PAGE_SIZE; render(); var c = document.querySelector("#filter-chips .chip"); if (c) c.focus(); });
-  $("more").addEventListener("click", function () { state.visible += PAGE_SIZE; render(); });
+  $("show-all").addEventListener("click", function () { state.filter = "all"; state.page = 1; render(); var c = document.querySelector("#filter-chips .chip"); if (c) c.focus(); });
 
   // Keep "5 minutes ago" honest while the page stays open
   setInterval(function () {

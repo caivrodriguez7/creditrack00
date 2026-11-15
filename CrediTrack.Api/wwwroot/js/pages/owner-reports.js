@@ -20,7 +20,7 @@
   // The period being shown. Custom ranges also keep their dates.
   var period = { key: "month", start: "", end: "" };
   // Detailed table: rows are shown 20 at a time. The count starts again whenever the period changes.
-  var ROWS_PER_STEP = 20;
+  var ROWS_PER_STEP = 10;
   var tablePage = 1;          // the page of the Detailed Transactions table that is open
   var pager = window.CrediTrackPager.create(document.getElementById("pager"), function (n) { return goPage(n); }, document.getElementById("detail-sub"));
   var shownPeriodKey = "";

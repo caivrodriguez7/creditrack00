@@ -44,7 +44,7 @@
   }
 
   // ---- Search, filter and sort (the API does the work: see queryOverdueAccounts in js/api/owner-api.js) ----
-  var PAGE_SIZE = 20;
+  var PAGE_SIZE = 10;
   var state = { data: null, items: [], page: 1, query: "", range: "all", sort: "due-asc" };
   var pager = window.CrediTrackPager.create($("pager"), function (n) { return load(n); }, $("od-head"));
   var requestSeq = 0;   // only the newest request may draw

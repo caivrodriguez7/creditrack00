@@ -14,7 +14,7 @@
   var ICONS = window.CrediTrackCustomerIcons || {};
   var $ = function (id) { return document.getElementById(id); };
 
-  var PAGE_SIZE = 20;
+  var PAGE_SIZE = 10;
   var TYPE_LABEL = { credit: "Credit", payment: "Payment", request: "Payment request" };
   var STATUS = {
     recorded: { label: "Confirmed", cls: "badge--success" },

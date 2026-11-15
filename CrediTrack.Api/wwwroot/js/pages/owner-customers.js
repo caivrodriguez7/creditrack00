@@ -8,7 +8,7 @@
   var api = window.CrediTrackApi;
   var $ = function (id) { return document.getElementById(id); };
 
-  var PAGE_SIZE = 20;
+  var PAGE_SIZE = 10;
   var state = { data: null, items: [], page: 1, query: "", filter: "all", view: "active" };
   var pager = window.CrediTrackPager.create($("pager"), function (n) { return load(n); }, $("search"));
   var requestSeq = 0;   // only the newest request may draw (a slow earlier answer is ignored)

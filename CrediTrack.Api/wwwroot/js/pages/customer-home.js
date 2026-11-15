@@ -13,7 +13,10 @@
   var ICONS = window.CrediTrackCustomerIcons || {};
   var $ = function (id) { return document.getElementById(id); };
   var SCOPE_KEY = "creditrack.customer.home.store";   // remembers the selected store while the tab is open
-  var ACTIVITY_LIMIT = 5;
+  var ACTIVITY_LIMIT = 5;     // recent activity rows per page
+  var DUE_LIMIT = 5;          // payment reminders shown (only credits due today)
+  var activityPage = 1;
+  var activityPager = window.CrediTrackPager.create($("activity-pager"), function (n) { activityPage = n; renderActivity(); }, $("activity-panel"));
 
   var payFab = null;       // the floating PAY button (set below)
   var home = null;          // what api.getHome() returned
@@ -105,13 +108,18 @@
     $("paid-bar").style.width = percent + "%";
     $("payment-sub").textContent = sum.balance <= 0 ? "Nothing to pay right now" : percent + "% of credits paid";
 
+    activityPage = 1;
     renderActivity();
     markSelectedStore();
   }
 
   // ---------- Recent activity ----------
   function renderActivity() {
-    var rows = home.activity.filter(function (a) { return scope === "all" || a.storeId === scope; }).slice(0, ACTIVITY_LIMIT);
+    var all = home.activity.filter(function (a) { return scope === "all" || a.storeId === scope; });
+    var totalPages = Math.max(1, Math.ceil(all.length / ACTIVITY_LIMIT));
+    if (activityPage > totalPages) activityPage = totalPages;
+    var rows = all.slice((activityPage - 1) * ACTIVITY_LIMIT, activityPage * ACTIVITY_LIMIT);
+    activityPager.update({ page: activityPage, totalPages: totalPages });
     $("activity-list").hidden = !rows.length;
     $("activity-empty").hidden = rows.length > 0;
     $("activity-link").hidden = !rows.length;
@@ -168,24 +176,24 @@
     return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2])).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" });
   }
   function renderDue() {
-    var list = home.dueReminders || [], section = $("due-section");
+    // Only credits that are due TODAY are listed (the server sends just those), up to DUE_LIMIT of them
+    var list = (home.dueReminders || []).filter(function (d) { return d.status === "today"; }), section = $("due-section");
     section.hidden = list.length === 0;
     if (!list.length) return;
-    var late = list.some(function (d) { return d.status === "overdue"; });
-    section.classList.toggle("cdue--late", late);
+    section.classList.remove("cdue--late");
     // A count badge, the one credit that needs attention first (the list is in due-date order; tapping it opens its details, where Pay is),
     // and a link to the rest. Overdue credits turn the badge red.
-    var total = home.dueReminderCount || list.length;
+    var total = Math.max(home.dueReminderCount || 0, list.length);
     $("due-count").textContent = total;
     $("due-count").setAttribute("aria-label", plural(total, "reminder", "reminders"));
-    $("due-list").innerHTML = list.slice(0, 1).map(function (d) {
+    $("due-list").innerHTML = list.slice(0, DUE_LIMIT).map(function (d) {
       return '<li class="cdue__item cdue__item--' + d.status + '">' +
         '<a class="cdue__link" href="transaction-details?id=' + encodeURIComponent(d.id) + '">' +
         '<span class="cdue__main"><span class="cdue__when">' + esc(dueText(d)) + "</span>" +
         '<span class="cdue__store">' + esc(d.storeName) + " · " + esc(d.code) + " · due " + esc(dueDateText(d.dueDate)) + "</span></span>" +
         '<span class="cdue__amount">' + peso(d.outstanding) + "</span></a></li>";
     }).join("");
-    var extra = total - 1;
+    var extra = total - DUE_LIMIT;
     $("due-more").hidden = extra <= 0;
     if (extra > 0) $("due-more").textContent = "View all " + total + " reminders";
   }

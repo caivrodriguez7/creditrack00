@@ -9,6 +9,7 @@
 
   var api = window.CrediTrackApi;
   var $ = function (id) { return document.getElementById(id); };
+  var PAGE_SIZE = 10;     // notifications per page
 
   // Icon + color class for each notification type
   function svg(paths) {
@@ -41,7 +42,8 @@
   };
   var FALLBACK_TYPE = { icon: "bell", cls: "customer", action: "Open" };
 
-  var state = { data: null, filter: "all" };
+  var state = { data: null, filter: "all", page: 1 };
+  var pager = window.CrediTrackPager.create($("pager"), function (n) { state.page = n; render(); }, $("toolbar"));
 
   function esc(text) {
     var d = document.createElement("div");
@@ -121,6 +123,9 @@
 
   function render() {
     var d = state.data, hasAny = d.total > 0, list = visible();
+    var totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+    if (state.page > totalPages) state.page = totalPages;       // e.g. the last item on the last page was marked read
+    var pageRows = list.slice((state.page - 1) * PAGE_SIZE, state.page * PAGE_SIZE);
     $("toolbar").hidden = !hasAny;
     $("count-all").textContent = d.total;
     $("count-unread").textContent = d.unread;
@@ -130,8 +135,9 @@
       chip.setAttribute("aria-pressed", String(chip.getAttribute("data-filter") === state.filter));
     });
 
-    $("nt-groups").innerHTML = groups(list);
+    $("nt-groups").innerHTML = groups(pageRows);
     $("nt-groups").hidden = !list.length;
+    pager.update({ page: state.page, totalPages: totalPages });
     $("empty-none").hidden = hasAny;
     $("empty-unread").hidden = !(hasAny && !list.length);
     $("show-all").hidden = state.filter === "all";
@@ -199,9 +205,10 @@
     var chip = event.target.closest(".chip");
     if (!chip) return;
     state.filter = chip.getAttribute("data-filter");
+    state.page = 1;
     render();
   });
-  $("show-all").addEventListener("click", function () { state.filter = "all"; render(); var c = document.querySelector("#filter-chips .chip"); if (c) c.focus(); });
+  $("show-all").addEventListener("click", function () { state.filter = "all"; state.page = 1; render(); var c = document.querySelector("#filter-chips .chip"); if (c) c.focus(); });
   // Empty state for a brand-new store: switch on the sample data (same switch as the dashboard and Transactions)
 
   // Keep "5 minutes ago" honest while the page stays open

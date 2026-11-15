@@ -12,7 +12,7 @@
   var ICONS = window.CrediTrackIcons || {};
   var $ = function (id) { return document.getElementById(id); };
 
-  var PAGE_SIZE = 20;
+  var PAGE_SIZE = 10;
   var STATUS = {
     unpaid:   { label: "Unpaid",         cls: "badge--warning" },
     partial:  { label: "Partially paid", cls: "badge--lime" },

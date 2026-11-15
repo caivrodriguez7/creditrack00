@@ -127,7 +127,8 @@ public class CustomerPortalController : ControllerBase
 
         // Credits due soon or already overdue, from the same OverdueRule the store owner's pages use
         var mine = await _db.Transactions.AsNoTracking().Where(t => connected.Contains(t.CustomerId)).ToListAsync();
-        var reminders = DueReminders.Build(mine, OverdueRule.Today());
+        // Home shows only the credits due TODAY (overdue and due-soon ones are on History / Payments)
+        var reminders = DueReminders.Build(mine, OverdueRule.Today()).Where(r => r.Status == "today").ToList();
         var storeNames = records.ToDictionary(r => r.Id, r => r.Store.Name);
 
         return Ok(new
