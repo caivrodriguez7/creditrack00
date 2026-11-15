@@ -2161,6 +2161,123 @@
   // Edit Store Information: store name, store contact number, address, business type, store hours.
   function updateStoreInformation(data) { return saveProfileFields(data, STORE_FIELDS, false); }
 
+  // ---------- Payment Accounts (Settings > Store Information > Payment Accounts) ----------
+  // The GCash / Maya / Bank details and QR picture the owner shows to customers when they pay. One account per method.
+  // CrediTrack only records payments, it never moves money.
+  //   account: { method, configured, accountName, accountNumber, bankName, qrUrl, updatedAt }   (always the three methods, in this order)
+  // Real account: GET / PUT / DELETE /owner/store/payment-accounts. The demo owner (demoSession) keeps them in its temporary
+  // settings (readDemoSettings), so they are gone with the demo and never show up in a real account.
+  var PAYMENT_METHODS = ["gcash", "maya", "bank"];
+  var QR_MAX_LENGTH = 1500000;   // characters of the QR data URL, the same limit as the server
+  function emptyPaymentAccount(method) {
+    return { method: method, configured: false, accountName: "", accountNumber: "", bankName: "", qrUrl: "", updatedAt: null };
+  }
+  // The new QR picture: a small jpg / png / webp data URL (the page shrinks it first). Anything else is not accepted.
+  function cleanQr(v) { return typeof v === "string" && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(v) ? v : ""; }
+
+  // Checks one payment account form with the same rules as the server. Pure (nothing is saved), so the page can use it field by field.
+  // -> { valid, errors: { accountName, accountNumber, bankName: "message" }, values: the cleaned values }
+  function validatePaymentAccount(method, data) {
+    data = data || {};
+    var isBank = method === "bank";
+    var values = {
+      accountName: cleanText(data.accountName),
+      accountNumber: String(data.accountNumber == null ? "" : data.accountNumber).trim(),
+      bankName: isBank ? cleanText(data.bankName) : ""
+    };
+    var errors = {};
+    function plain(text) { return !/[<>\u0000-\u001f\u007f-\u009f]/.test(text); }   // no < or > and no control characters
+
+    if (!values.accountName) errors.accountName = "Enter the account name.";
+    else if (values.accountName.length < 2 || values.accountName.length > 60 || !plain(values.accountName)) errors.accountName = "Enter the account name (2 to 60 characters, no < or > symbols).";
+
+    // Digits, spaces, "-" and "+" only, with 7 to 20 digits (a GCash / Maya mobile number or a bank account number)
+    var digits = values.accountNumber.replace(/\D/g, "").length;
+    if (!values.accountNumber) errors.accountNumber = "Enter the account number.";
+    else if (values.accountNumber.length > 30 || !/^[0-9 +\-]+$/.test(values.accountNumber) || digits < 7 || digits > 20) errors.accountNumber = "Enter the account number (7 to 20 digits; spaces and - are fine).";
+
+    if (isBank) {
+      if (!values.bankName) errors.bankName = "Enter the bank name.";
+      else if (values.bankName.length < 2 || values.bankName.length > 40 || !plain(values.bankName)) errors.bankName = "Enter the bank name (2 to 40 characters, no < or > symbols).";
+    }
+    return { valid: Object.keys(errors).length === 0, errors: errors, values: values };
+  }
+
+  // A server error for one field ({ field, message }) becomes an Error with .errors, like the profile forms.
+  function paymentAccountError(err) {
+    if (err && err.field && err.status !== 401) { var e = new Error(err.message); e.errors = {}; e.errors[err.field] = err.message; throw e; }
+    throw err;
+  }
+  function checkPaymentMethod(method) {
+    return PAYMENT_METHODS.indexOf(method) === -1 ? new Error("Unknown payment method.") : null;
+  }
+
+  // -> [gcash, maya, bank] accounts (configured = false when not set up yet)
+  function getPaymentAccounts() {
+    function inOrder(list) {
+      return PAYMENT_METHODS.map(function (m) {
+        var found = (list || []).filter(function (a) { return a && a.method === m; })[0];
+        return Object.assign(emptyPaymentAccount(m), found || {});
+      });
+    }
+    if (demoSession()) return Promise.resolve(inOrder(PAYMENT_METHODS.map(function (m) { return (readDemoSettings().paymentAccounts || {})[m]; })));
+    if (!window.CrediTrackHttp) return Promise.reject(new Error("Cannot reach the server. Is the API running?"));
+    return window.CrediTrackHttp("/owner/store/payment-accounts").then(function (r) { return inOrder(r && r.accounts); });
+  }
+
+  // Creates the account or replaces its details. data: { accountName, accountNumber, bankName, qr, removeQr }
+  //   qr: a new picture (data URL). Leave it out to keep the saved QR. removeQr: true deletes the saved QR.
+  // Rejects with an Error that has .errors ({ accountName | accountNumber | bankName | qr: message }) when something is invalid.
+  function savePaymentAccount(method, data) {
+    method = String(method || "").toLowerCase();
+    var unknown = checkPaymentMethod(method);
+    if (unknown) return Promise.reject(unknown);
+    data = data || {};
+    var result = validatePaymentAccount(method, data);
+    var qr = cleanQr(data.qr);
+    if (data.qr && !qr) result.errors.qr = "Choose a JPG, PNG or WebP picture of your QR code.";
+    else if (qr.length > QR_MAX_LENGTH) result.errors.qr = "The QR picture is too large. Choose a smaller picture.";
+    if (Object.keys(result.errors).length) {
+      var err = new Error("Please check the highlighted fields.");
+      err.errors = result.errors;
+      return Promise.reject(err);
+    }
+    var v = result.values, removeQr = !qr && !!data.removeQr;
+    if (demoSession()) {                                      // temporary: gone with the demo
+      var settings = readDemoSettings(), saved = Object.assign({}, settings.paymentAccounts);
+      var before = saved[method] || emptyPaymentAccount(method);
+      saved[method] = {
+        method: method, configured: true, accountName: v.accountName, accountNumber: v.accountNumber, bankName: v.bankName,
+        qrUrl: qr || (removeQr ? "" : before.qrUrl || ""), updatedAt: new Date().toISOString()
+      };
+      settings.paymentAccounts = saved;
+      writeDemoSettings(settings);
+      return Promise.resolve(Object.assign({}, saved[method]));
+    }
+    if (!window.CrediTrackHttp) return Promise.reject(new Error("Cannot reach the server. Is the API running?"));
+    var body = { accountName: v.accountName, accountNumber: v.accountNumber, bankName: v.bankName, removeQr: removeQr };
+    if (qr) body.qr = qr;
+    return window.CrediTrackHttp("/owner/store/payment-accounts/" + method, { method: "PUT", body: body })
+      .then(function (a) { return Object.assign(emptyPaymentAccount(method), a); }, paymentAccountError);
+  }
+
+  // Removes the account and its QR picture. -> the empty account (configured = false)
+  function removePaymentAccount(method) {
+    method = String(method || "").toLowerCase();
+    var unknown = checkPaymentMethod(method);
+    if (unknown) return Promise.reject(unknown);
+    if (demoSession()) {
+      var settings = readDemoSettings(), saved = Object.assign({}, settings.paymentAccounts);
+      delete saved[method];
+      settings.paymentAccounts = saved;
+      writeDemoSettings(settings);
+      return Promise.resolve(emptyPaymentAccount(method));
+    }
+    if (!window.CrediTrackHttp) return Promise.reject(new Error("Cannot reach the server. Is the API running?"));
+    return window.CrediTrackHttp("/owner/store/payment-accounts/" + method, { method: "DELETE" })
+      .then(function (a) { return Object.assign(emptyPaymentAccount(method), a); });
+  }
+
   // Notification preferences: one on/off switch per kind of notification (all on by default).
   //   payments   payment requests, and approving or rejecting them
   //   overdue    an account becomes overdue
@@ -2271,6 +2388,11 @@
     refreshOwnerPhoto: refreshOwnerPhoto,
     updateOwnerProfile: updateOwnerProfile,
     updateStoreInformation: updateStoreInformation,
+    PAYMENT_METHODS: PAYMENT_METHODS,
+    validatePaymentAccount: validatePaymentAccount,
+    getPaymentAccounts: getPaymentAccounts,
+    savePaymentAccount: savePaymentAccount,
+    removePaymentAccount: removePaymentAccount,
     BUSINESS_TYPES: BUSINESS_TYPES,
     getNotificationPreferences: getNotificationPreferences,
     saveNotificationPreferences: saveNotificationPreferences,

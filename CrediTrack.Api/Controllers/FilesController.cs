@@ -65,4 +65,20 @@ public class FilesController : ControllerBase
         if (!allowed) return NotFound();
         return await Serve(path);
     }
+
+    // GET /api/files/qrs/{name} : the QR picture of a store's payment account. Only the owner of that store, and a customer
+    // who joined that store and has not left it, can open it.
+    [HttpGet("qrs/{name}")]
+    public async Task<IActionResult> Qr(string name)
+    {
+        var path = FileStorage.QrsFolder + "/" + name;
+        if (!FileStorage.IsStoredPath(path)) return NotFound();
+
+        var me = UserId();
+        var allowed = await _db.StorePaymentAccounts.AnyAsync(a => a.QrPath == path
+            && (a.Store.OwnerId == me
+                || _db.Customers.Any(c => c.StoreId == a.StoreId && c.LinkedUserId == me && !c.IsDisconnected)));
+        if (!allowed) return NotFound();
+        return await Serve(path);
+    }
 }

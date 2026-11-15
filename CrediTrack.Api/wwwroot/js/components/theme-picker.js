@@ -78,4 +78,55 @@
     window.addEventListener("creditheme", paint);
     paint();
   });
+
+  /* Text Size row (Small / Default / Large / Extra large): same radio-group behavior as the Appearance picker */
+  (function () {
+    var Size = window.CrediTextSize;
+    var holder = document.querySelector("[data-textsize-picker]");
+    if (!Size || !holder) return;
+    var chipEl = document.getElementById("textsize-current");
+    var SIZE_OPTIONS = [
+      { id: "small", label: "Small", px: "0.8125rem" },
+      { id: "default", label: "Default", px: "1rem" },
+      { id: "large", label: "Large", px: "1.25rem" },
+      { id: "xlarge", label: "Extra large", px: "1.5rem" }
+    ];
+    holder.setAttribute("role", "radiogroup");
+    holder.innerHTML = SIZE_OPTIONS.map(function (o) {
+      return '<button type="button" class="theme-picker__btn" role="radio" data-textsize-option="' + o.id + '">' +
+        '<span class="theme-picker__aa" aria-hidden="true" style="font-size:' + o.px + '">Aa</span><span>' + o.label + "</span></button>";
+    }).join("");
+    var buttons = Array.prototype.slice.call(holder.querySelectorAll("[data-textsize-option]"));
+    function paintSize() {
+      var cur = Size.get();
+      buttons.forEach(function (b) {
+        var on = b.getAttribute("data-textsize-option") === cur;
+        b.setAttribute("aria-checked", on ? "true" : "false");
+        b.tabIndex = on ? 0 : -1;
+      });
+      if (chipEl) {
+        var match = SIZE_OPTIONS.filter(function (o) { return o.id === cur; })[0];
+        chipEl.textContent = match ? match.label : "Default";
+        chipEl.setAttribute("data-text-size", cur);
+      }
+    }
+    holder.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-textsize-option]");
+      if (!b) return;
+      Size.set(b.getAttribute("data-textsize-option"));
+      paintSize();
+    });
+    holder.addEventListener("keydown", function (e) {
+      var i = buttons.indexOf(document.activeElement);
+      if (i === -1) return;
+      var next = null;
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") next = buttons[(i + 1) % buttons.length];
+      else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = buttons[(i + buttons.length - 1) % buttons.length];
+      if (!next) return;
+      e.preventDefault();
+      next.focus(); next.click();
+    });
+    window.addEventListener("credittextsize", paintSize);
+    paintSize();
+  })();
 })();

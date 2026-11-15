@@ -60,6 +60,30 @@
 
   window.CrediTheme = { get: get, set: set, resolved: function () { return resolve(get()); } };
 
+  /* Text size (Small / Default / Large / Extra large): saved in this browser only (localStorage key "creditrack.textsize").
+     <html data-text-size="..."> is what css/theme.css reads; everything is sized in rem, so the whole app scales together.
+     window.CrediTextSize: get() -> "small" | "default" | "large" | "xlarge", set(size). */
+  var SIZE_KEY = "creditrack.textsize";
+  var SIZES = ["small", "default", "large", "xlarge"];
+  var sizeMemory = null;
+  function readSize() {
+    var saved;
+    try { saved = window.localStorage.getItem(SIZE_KEY); } catch (e) { saved = sizeMemory; }
+    return SIZES.indexOf(saved) === -1 ? "default" : saved;
+  }
+  function applySize() { root.setAttribute("data-text-size", readSize()); }
+  window.CrediTextSize = {
+    get: readSize,
+    set: function (size) {
+      if (SIZES.indexOf(size) === -1) size = "default";
+      try { window.localStorage.setItem(SIZE_KEY, size); } catch (e) { sizeMemory = size; }
+      applySize();
+      try { window.dispatchEvent(new CustomEvent("credittextsize", { detail: { size: size } })); } catch (e) {}
+    }
+  };
+  applySize();
+  window.addEventListener("storage", function (e) { if (e.key === SIZE_KEY) applySize(); });
+
   apply();
 
   // "Follow device" keeps up when the phone switches at sunset

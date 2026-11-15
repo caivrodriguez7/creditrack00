@@ -113,7 +113,188 @@
       $("amount-full").textContent = "Full balance (" + peso(s.balance) + ")";
     }
   }
-  $("store").addEventListener("change", function () { setError("store", "store-error", ""); setError("amount", "amount-error", ""); renderStoreInfo(); });
+  $("store").addEventListener("change", function () { setError("store", "store-error", ""); setError("amount", "amount-error", ""); renderStoreInfo(); resetPayDetails(); });
+
+  // ---------- Store payment details (collapsible) ----------
+  // "View payment details" shows the GCash / Maya / Bank details the selected store has set up, so the customer knows where to pay.
+  // They are asked from the server each time the card is opened (the owner may have just changed them). Copy puts the account number
+  // on the clipboard; a QR picture can be saved. Nothing is paid or sent from here: CrediTrack only records payments.
+  var PAY_QR_URL = /^\/api\/files\/qrs\/[0-9a-f]{32}\.(jpg|png|webp)$/;   // only the store's own QR pictures are shown
+  var payAccounts = [], payToken = 0;
+
+  function payLabel(method) { var m = methodOf(method); return m ? m.label : method; }
+  function setPayOpen(open) {
+    $("pay-toggle").setAttribute("aria-expanded", open ? "true" : "false");
+    $("pay-panel").hidden = !open;
+    if (open) loadPayDetails();
+  }
+  // A new store (or the first load) closes the card and forgets what it showed
+  function resetPayDetails() {
+    payToken++;
+    payAccounts = [];
+    $("pay-list").innerHTML = "";
+    $("pay-status").hidden = true;
+    $("pay-note").hidden = true;
+    text("pay-sub", "Where to send your payment");
+    setPayOpen(false);
+    $("pay-details").hidden = !selectedStore();
+  }
+  function payAccountHtml(a, storeName) {
+    var label = payLabel(a.method), html = '<li class="cpr__acct"><h3 class="cpr__acct__title">' + esc(label) + "</h3><dl class=\"cpr__acct__rows\">";
+    if (a.method === "bank" && a.bankName) html += "<div><dt>Bank</dt><dd>" + esc(a.bankName) + "</dd></div>";
+    html += "<div><dt>Account name</dt><dd>" + esc(a.accountName) + "</dd></div>" +
+      '<div><dt>Account number</dt><dd class="cpr__acct__num"><span>' + esc(a.accountNumber) + "</span>" +
+      '<button class="cpr__copy" type="button" data-copy="' + esc(a.method) + '" aria-label="Copy the ' + esc(label) + ' account number">Copy</button></dd></div></dl>';
+    if (PAY_QR_URL.test(a.qrUrl)) {
+      // Tapping the picture opens it bigger. Save QR is a normal download link too (it still works if this script fails),
+      // but the click is handled below: fetch -> blob -> download, and when that cannot work, the big picture with a "press and hold" hint.
+      html += '<div class="cpr__qr"><button class="cpr__qr__zoom" type="button" data-qr-zoom="' + esc(a.method) + '" aria-haspopup="dialog" aria-label="Enlarge the ' + esc(label) + " QR code of " + esc(storeName) + '">' +
+        '<img class="cpr__qr__img" src="' + esc(a.qrUrl) + '" alt="" loading="lazy"></button>' +
+        '<span class="cpr__qr__cap">Tap the QR code to make it bigger</span>' +
+        '<a class="btn btn--secondary" href="' + esc(a.qrUrl) + '" download="' + esc(qrFileName(a)) + '" data-qr-save="' + esc(a.method) + '">Save QR</a>' +
+        '<p class="field__hint cpr__qr__hint" role="status" hidden></p></div>';
+    }
+    return html + "</li>";
+  }
+  function renderPayDetails(store, accounts) {
+    var status = $("pay-status");
+    payAccounts = accounts;
+    if (!accounts.length) {
+      status.textContent = store.name + " has not added payment details yet. Ask the store how you can pay.";
+      status.hidden = false;
+      $("pay-note").hidden = true;
+      text("pay-sub", "Not set up by the store yet");
+      return;
+    }
+    status.hidden = true;
+    $("pay-list").innerHTML = accounts.map(function (a) { return payAccountHtml(a, store.name); }).join("");
+    $("pay-note").hidden = false;
+    text("pay-sub", accounts.map(function (a) { return payLabel(a.method); }).join(", "));
+  }
+  function loadPayDetails() {
+    var store = selectedStore(), token = ++payToken, status = $("pay-status");
+    if (!store) return;
+    $("pay-list").innerHTML = "";
+    $("pay-note").hidden = true;
+    status.textContent = "Loading payment details\u2026";
+    status.hidden = false;
+    api.getStorePaymentAccounts(store.id).then(function (data) {
+      if (token !== payToken) return;                  // another store was chosen, or the card was closed, meanwhile
+      renderPayDetails(store, data.accounts || []);
+    }).catch(function () {
+      if (token !== payToken) return;
+      status.textContent = "We couldn't load the payment details. Close this card and open it again to try once more.";
+    });
+  }
+  $("pay-toggle").addEventListener("click", function () { setPayOpen($("pay-toggle").getAttribute("aria-expanded") !== "true"); });
+
+  // Copies text with the Clipboard API, or an old-fashioned hidden textarea where that is not available
+  function copyText(value) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(value);
+    return new Promise(function (resolve, reject) {
+      var box = document.createElement("textarea"), done = false;
+      box.value = value; box.setAttribute("readonly", ""); box.style.position = "fixed"; box.style.opacity = "0";
+      document.body.appendChild(box); box.select();
+      try { done = document.execCommand("copy"); } catch (e) { done = false; }
+      document.body.removeChild(box);
+      if (done) resolve(); else reject(new Error("copy failed"));
+    });
+  }
+  $("pay-list").addEventListener("click", function (event) {
+    var button = event.target.closest ? event.target.closest("[data-copy]") : null;
+    if (!button) return;
+    var account = payAccounts.filter(function (a) { return a.method === button.getAttribute("data-copy"); })[0];
+    if (!account) return;
+    // Spaces and dashes are left out, so the number can be pasted straight into GCash, Maya or a bank app
+    copyText(String(account.accountNumber).replace(/[\s-]/g, "")).then(function () {
+      window.CrediTrack.showToast(payLabel(account.method) + " account number copied.");
+    }).catch(function () { window.CrediTrack.showToast("We couldn't copy it. Press and hold the number to copy it."); });
+  });
+
+  // ---------- Save QR and the big QR picture ----------
+  // Save QR first tries a real download: fetch the picture with the login cookie, turn it into a blob and download that from an
+  // object URL. Some browsers (iPhone Safari at times, and the browsers inside Facebook, Messenger, Instagram and similar apps)
+  // only open the picture, or ignore "download". Nobody can tell from the page whether a download worked, so:
+  //   - when the download cannot even start (known in-app browser, fetch failed, not a picture) the big QR opens with a
+  //     "Press and hold the QR code to save it" hint;
+  //   - when the download did start, a hint stays under the button in case nothing was actually saved.
+  // Tapping the QR opens the same big picture, so the customer can also press and hold it, or screenshot it.
+  var viewer = $("qr-viewer"), viewerOpener = null;
+  var IN_APP_BROWSER = /FBAN|FBAV|FB_IAB|Instagram|Messenger|Line\/|MicroMessenger|Snapchat|TikTok|BytedanceWebview|Twitter|GSA\/|; wv\)/i;
+  var TOUCH_SCREEN = !!(window.matchMedia && window.matchMedia("(pointer: coarse)").matches);
+
+  function qrFileName(account) { return "creditrack-" + account.method + "-qr." + String(account.qrUrl).split(".").pop(); }
+  function accountOf(method) { return payAccounts.filter(function (a) { return a.method === method; })[0] || null; }
+  function canDownloadQr() {
+    return !!(window.fetch && window.URL && window.URL.createObjectURL && "download" in document.createElement("a") && !IN_APP_BROWSER.test(navigator.userAgent || ""));
+  }
+  function showQrHint(el, message) { if (!el) return; el.textContent = message; el.hidden = !message; }
+
+  // Downloads the picture through a temporary link. Rejects when the picture could not be fetched (not signed in, offline, not a picture).
+  function downloadQr(account) {
+    return window.fetch(account.qrUrl, { credentials: "include" }).then(function (response) {
+      if (!response.ok) throw new Error("status " + response.status);
+      return response.blob();
+    }).then(function (blob) {
+      if (!blob || !blob.size || !/^image\//.test(blob.type)) throw new Error("not a picture");
+      var url = window.URL.createObjectURL(blob), link = document.createElement("a");
+      link.href = url; link.download = qrFileName(account); link.rel = "noopener";
+      link.target = "_blank";                          // if a browser ignores "download" and opens the picture, it opens in a new tab and this page stays
+      link.hidden = true;
+      document.body.appendChild(link); link.click(); document.body.removeChild(link);
+      window.setTimeout(function () { window.URL.revokeObjectURL(url); }, 60000);   // not at once: some browsers read the file a moment later
+    });
+  }
+
+  function openViewer(account, opener) {
+    var label = payLabel(account.method), store = selectedStore(), img = $("qr-viewer-img");
+    text("qr-viewer-title", label + " QR code");
+    img.alt = label + " QR code of " + (store ? store.name : "the store");
+    img.src = account.qrUrl;                           // the browser already has it from the card, so this is instant
+    text("qr-viewer-hint", TOUCH_SCREEN ? "Press and hold the QR code to save it to your photos." : "Right-click the QR code and choose Save image as…");
+    viewerOpener = opener || null;
+    if (viewer.showModal) { if (!viewer.open) viewer.showModal(); } else viewer.setAttribute("open", "");
+    $("qr-viewer-close").focus();
+  }
+  function closeViewer() {
+    if (viewer.close) viewer.close(); else { viewer.removeAttribute("open"); viewerClosed(); }
+  }
+  function viewerClosed() {
+    $("qr-viewer-img").removeAttribute("src");
+    var back = viewerOpener; viewerOpener = null;
+    if (back && document.body.contains(back)) back.focus();
+  }
+  $("qr-viewer-close").addEventListener("click", closeViewer);
+  viewer.addEventListener("close", viewerClosed);                      // Esc, the Close button or a tap outside the card
+  viewer.addEventListener("click", function (event) { if (event.target === viewer) closeViewer(); });   // a tap on the dark area around the card
+  document.addEventListener("keydown", function (event) {            // browsers without <dialog>: the opened box is a plain element, so Esc is handled here
+    if (event.key === "Escape" && !viewer.showModal && viewer.hasAttribute("open")) closeViewer();
+  });
+
+  function saveQr(link) {
+    var account = accountOf(link.getAttribute("data-qr-save")), hint = link.parentNode.querySelector(".cpr__qr__hint");
+    if (!account || link.getAttribute("aria-busy") === "true") return;
+    function fallback() {
+      showQrHint(hint, "Press and hold the QR code to save it. Tap the QR code to make it bigger.");
+      openViewer(account, link);
+    }
+    if (!canDownloadQr()) { fallback(); return; }
+    link.setAttribute("aria-busy", "true");
+    link.textContent = "Saving…";
+    downloadQr(account).then(function () {
+      showQrHint(hint, "If the picture did not save, tap the QR code to make it bigger, then press and hold it to save it.");
+      window.CrediTrack.showToast("QR download started.");
+    }).catch(fallback).then(function () {
+      link.removeAttribute("aria-busy");
+      link.textContent = "Save QR";
+    });
+  }
+  $("pay-list").addEventListener("click", function (event) {
+    var target = event.target.closest ? event.target : event.target.parentNode;
+    var save = target.closest("[data-qr-save]"), zoom = target.closest("[data-qr-zoom]");
+    if (save) { event.preventDefault(); saveQr(save); return; }
+    if (zoom) { var account = accountOf(zoom.getAttribute("data-qr-zoom")); if (account) openViewer(account, zoom); }
+  });
 
   // ---------- Amount ----------
   function parseAmount(raw) {
@@ -316,7 +497,7 @@
       if (state.transactionId && isFinite(state.transactionOutstanding) && state.transactionOutstanding > 0) {
         $("amount").value = state.transactionOutstanding.toFixed(2);
       }
-      renderStoreInfo(); renderMethods(); renderReference(); updateCount();
+      renderStoreInfo(); resetPayDetails(); renderMethods(); renderReference(); updateCount();
       show("form");
     }).catch(function (err) {
       window.CrediTrack.showToast(err && err.message ? err.message : "Something went wrong. Please try again.");

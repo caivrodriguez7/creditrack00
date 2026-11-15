@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="/css/components/customer-shell.css">
   <!-- Step card, back button, detail rows and success layout are shared with Join a Store -->
   <link rel="stylesheet" href="/css/pages/customer-join.css">
-  <link rel="stylesheet" href="/css/pages/customer-request-payment.css">
+  <link rel="stylesheet" href="/css/pages/customer-request-payment.css?v=3">
   <link rel="stylesheet" href="/css/components/breadcrumbs.css">
   <link rel="stylesheet" href="/css/glass.css?v=4">
   <link rel="stylesheet" href="/css/polish.css?v=1">
@@ -43,6 +43,19 @@
               <select class="select cpr__select" id="store" name="store" aria-describedby="store-info store-error" required></select>
               <p class="field__hint cpr__info" id="store-info" role="status" hidden></p>
               <p class="field__error" id="store-error" role="alert" hidden></p>
+            </div>
+
+            <!-- Store payment details (collapsed): where to send the payment. Loaded when the customer opens it. Logic: js/pages/customer-request-payment.js -->
+            <div class="cpr__pay" id="pay-details" hidden>
+              <button class="cpr__pay__toggle" type="button" id="pay-toggle" aria-expanded="false" aria-controls="pay-panel">
+                <span class="cpr__pay__text"><strong>View payment details</strong><span id="pay-sub">Where to send your payment</span></span>
+                <span class="cpr__pay__chev" aria-hidden="true"></span>
+              </button>
+              <div class="cpr__pay__panel" id="pay-panel" role="region" aria-labelledby="pay-toggle" hidden>
+                <p class="field__hint" id="pay-status" role="status" hidden></p>
+                <ul class="cpr__pay__list" id="pay-list"></ul>
+                <p class="field__hint" id="pay-note" hidden>CrediTrack does not move money. Pay the store with these details first, then send your receipt below.</p>
+              </div>
             </div>
 
             <!-- Amount -->
@@ -172,14 +185,27 @@
     </main>
   </div>
 
+  <!-- QR viewer: the store's QR picture, bigger. Opened by tapping the QR in "View payment details" (or by Save QR when the browser cannot download it).
+       A native dialog: Esc and the Close button close it, and focus goes back to the button that opened it. Logic: js/pages/customer-request-payment.js -->
+  <dialog class="cpr-viewer" id="qr-viewer" aria-labelledby="qr-viewer-title">
+    <div class="cpr-viewer__bar">
+      <h2 class="cpr-viewer__title" id="qr-viewer-title">QR code</h2>
+      <button class="btn btn--secondary cpr-viewer__close" type="button" id="qr-viewer-close">Close</button>
+    </div>
+    <div class="cpr-viewer__body">
+      <div class="cpr-viewer__frame"><img class="cpr-viewer__img" id="qr-viewer-img" alt=""></div>
+      <p class="cpr-viewer__hint" id="qr-viewer-hint"></p>
+    </div>
+  </dialog>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 @section Scripts {
   <script src="/js/session.js?v=5"></script>
   <script src="/js/api/http.js"></script>
-  <script src="/js/api/customer-api.js"></script>
+  <script src="/js/api/customer-api.js?v=2"></script>
   <script src="/js/components/customer-shell.js"></script>
   <script src="/js/components/breadcrumbs.js"></script>
   <script src="/js/main.js?v=8"></script>
-  <script src="/js/pages/customer-request-payment.js"></script>
+  <script src="/js/pages/customer-request-payment.js?v=3"></script>
 }

@@ -14,13 +14,13 @@
   <meta name="color-scheme" content="light dark">
   <title>@Html.Raw(ViewData["Title"])</title>
   @await RenderSectionAsync("Head", required: false)
-  <link rel="stylesheet" href="/css/theme.css?v=3">
-  <script src="/js/theme.js?v=1"></script>
+  <link rel="stylesheet" href="/css/theme.css?v=4">
+  <script src="/js/theme.js?v=2"></script>
 </head>
 <!body @Html.Raw(bodyAttributes)>
   @RenderBody()
   @await RenderSectionAsync("Scripts", required: false)
-  <script src="/js/components/theme-picker.js?v=2"></script>
+  <script src="/js/components/theme-picker.js?v=3"></script>
   <script src="/js/language.js?v=2"></script>
 </!body>
 </html>

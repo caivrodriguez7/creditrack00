@@ -388,6 +388,46 @@ namespace CrediTrack.Api.Migrations
                     b.ToTable("Stores");
                 });
 
+            modelBuilder.Entity("CrediTrack.Api.Models.StorePaymentAccount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AccountName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("AccountNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("BankName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Method")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("QrPath")
+                        .HasColumnType("text");
+
+                    b.Property<int>("StoreId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StoreId", "Method")
+                        .IsUnique();
+
+                    b.ToTable("StorePaymentAccounts");
+                });
+
             modelBuilder.Entity("CrediTrack.Api.Models.StoredFile", b =>
                 {
                     b.Property<string>("Path")
@@ -798,6 +838,17 @@ namespace CrediTrack.Api.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("CrediTrack.Api.Models.StorePaymentAccount", b =>
+                {
+                    b.HasOne("CrediTrack.Api.Models.Store", "Store")
+                        .WithMany()
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Store");
                 });
 
             modelBuilder.Entity("CrediTrack.Api.Models.Transaction", b =>
