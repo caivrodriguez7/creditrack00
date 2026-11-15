@@ -8,8 +8,10 @@
   var ICONS = window.CrediTrackIcons || {};
   var $ = function (id) { return document.getElementById(id); };
 
-  var PAGE_SIZE = 10;
-  var state = { id: new URLSearchParams(window.location.search).get("id"), data: null, filter: "all", visible: PAGE_SIZE };
+  var PAGE_SIZE = 5;     // transactions per page in this customer's history
+  var state = { id: new URLSearchParams(window.location.search).get("id"), data: null, filter: "all", page: 1 };
+  // Page numbers under the history list (Previous / 1 2 3 / Next). It only draws; renderHistory() cuts the page.
+  var pager = window.CrediTrackPager.create($("pager"), function (n) { state.page = n; renderHistory(); }, $("history-title"));
 
   function peso(n) {
     return "₱" + Number(n).toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -34,7 +36,9 @@
   function renderHistory() {
     var all = state.data.history;
     var rows = all.filter(function (t) { return state.filter === "all" || t.type === state.filter; });
-    var shown = rows.slice(0, state.visible);
+    var totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+    state.page = Math.min(Math.max(1, state.page), totalPages);       // a filter change or a voided row can leave fewer pages
+    var shown = rows.slice((state.page - 1) * PAGE_SIZE, state.page * PAGE_SIZE);
 
     $("history-list").innerHTML = shown.map(function (t) {
       var isPayment = t.type === "payment";
@@ -48,7 +52,7 @@
         '<span class="list__amount ' + (isPayment ? "list__amount--in" : "list__amount--credit") + '">' + (isPayment ? "&minus;" : "+") + peso(t.amount) + "</span></li>";
     }).join("");
     $("history-list").hidden = !shown.length;
-    $("history-more").hidden = rows.length <= shown.length;
+    pager.update({ page: state.page, totalPages: totalPages });       // hidden when there is only one page
     $("history-chips").hidden = !all.length;
 
     var empty = !rows.length;
@@ -167,10 +171,9 @@
     var chip = event.target.closest(".chip");
     if (!chip) return;
     state.filter = chip.getAttribute("data-filter");
-    state.visible = PAGE_SIZE;
+    state.page = 1;
     renderHistory();
   });
-  $("history-more").addEventListener("click", function () { state.visible += PAGE_SIZE; renderHistory(); });
 
   // Archive / Restore (with a confirmation). Nothing is deleted: history, payments and balance stay exactly as they are.
   var confirmBox = $("archive-confirm"), confirmFrom = null;
