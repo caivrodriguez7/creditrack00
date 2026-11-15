@@ -1,5 +1,5 @@
 /* Pagination bar (window.CrediTrackPager).
-   Shows pill-shaped Previous / Next buttons with "5 of 20" between them under a list, outside its panel (the numbered buttons are hidden by css/components/pager.css).
+   Shows round navy ‹ / › buttons with a plain "5 of 20" between them, plus a "Go to: Page N" dropdown, under a list and outside its panel.
    The list pages send a query with page + pageSize and get back { page, totalPages, totalCount } (see js/api/list-query.js);
    this bar only draws those numbers and tells the page which page was chosen. It never loads anything itself.
 
@@ -47,19 +47,15 @@
     function draw() {
       if (total <= 1 || blocked()) { el.hidden = true; el.innerHTML = ""; return; }
       el.hidden = false;
-      var html = "";
-      html += '<button type="button" class="pager__btn pager__btn--step" data-page="' + (current - 1) + '"' + (current <= 1 ? " disabled" : "") + ' aria-label="Previous page">' +
-        '<span aria-hidden="true">&lsaquo;</span> <span class="pager__word">Previous</span></button>';
-      html += '<span class="pager__nums">';
-      windowOf(current, total).forEach(function (n) {
-        if (n === 0) html += '<span class="pager__gap" aria-hidden="true">&hellip;</span>';
-        else if (n === current) html += '<button type="button" class="pager__btn pager__btn--num is-current" aria-current="page" aria-label="Page ' + n + ', current page" disabled>' + n + "</button>";
-        else html += button(n, n, "pager__btn--num", "Go to page " + n);
-      });
-      html += "</span>";
+      // Row 1: round navy arrows with a plain "1 of 20" between them. Row 2 (wraps under on small screens): "Go to" dropdown.
+      var html = '<div class="pager__nav">';
+      html += '<button type="button" class="pager__btn pager__btn--step" data-page="' + (current - 1) + '"' + (current <= 1 ? " disabled" : "") + ' aria-label="Previous page"><span aria-hidden="true">&lsaquo;</span></button>';
       html += '<span class="pager__status" aria-live="polite" aria-label="Page ' + current + " of " + total + '">' + current + " of " + total + "</span>";
-      html += '<button type="button" class="pager__btn pager__btn--step" data-page="' + (current + 1) + '"' + (current >= total ? " disabled" : "") + ' aria-label="Next page">' +
-        '<span class="pager__word">Next</span> <span aria-hidden="true">&rsaquo;</span></button>';
+      html += '<button type="button" class="pager__btn pager__btn--step" data-page="' + (current + 1) + '"' + (current >= total ? " disabled" : "") + ' aria-label="Next page"><span aria-hidden="true">&rsaquo;</span></button>';
+      html += "</div>";
+      html += '<label class="pager__goto"><span class="pager__goto-label">Go to:</span><select class="pager__select" aria-label="Go to page">';
+      for (var n = 1; n <= total; n++) html += '<option value="' + n + '"' + (n === current ? " selected" : "") + ">Page " + n + "</option>";
+      html += "</select></label>";
       el.innerHTML = html;
     }
 
@@ -67,17 +63,29 @@
       guards.forEach(function (g) { new MutationObserver(draw).observe(g, { attributes: true, attributeFilter: ["hidden"] }); });
     }
 
+    // Ask the page to load page n; scroll back to the top of the list when it is done.
+    function jump(n) {
+      busy = true;
+      Promise.resolve(go(n)).then(function () {
+        if (anchor && anchor.scrollIntoView) anchor.scrollIntoView({ behavior: "smooth", block: "start" });
+      }).then(function () { busy = false; }, function () { busy = false; });
+    }
+
     el.setAttribute("role", "navigation");
     el.setAttribute("aria-label", "Pagination");
+    el.addEventListener("change", function (event) {
+      var sel = event.target.closest ? event.target.closest(".pager__select") : null;
+      if (!sel) return;
+      var n = parseInt(sel.value, 10);
+      if (!isFinite(n) || n < 1 || n > total || n === current || busy) { sel.value = current; return; }
+      jump(n);
+    });
     el.addEventListener("click", function (event) {
       var btn = event.target.closest("[data-page]");
       if (!btn || btn.disabled || busy) return;
       var n = parseInt(btn.getAttribute("data-page"), 10);
       if (!isFinite(n) || n < 1 || n > total || n === current) return;
-      busy = true;
-      Promise.resolve(go(n)).then(function () {
-        if (anchor && anchor.scrollIntoView) anchor.scrollIntoView({ behavior: "smooth", block: "start" });
-      }).then(function () { busy = false; }, function () { busy = false; });
+      jump(n);
     });
 
     return {
