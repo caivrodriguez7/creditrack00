@@ -503,3 +503,53 @@ dialog.st-dialog::backdrop { background: rgba(7, 26, 82, 0.45); -webkit-backdrop
 .st-owner .ccode__more:focus-visible { outline: none; box-shadow: inset var(--focus-ring); }
 .st-owner .ccode__more svg { flex: none; color: var(--color-muted); }
 @media (max-width: 22rem) { .st-owner .ccode__actions { grid-template-columns: 1fr; } }
+
+/* ---- Store Information > Payment Accounts (.pa): GCash / Maya / Bank tabs, each with its details and QR picture ----
+   Only theme tokens are used, so light and dark follow automatically. The QR frame is always white (a QR code needs a light background). */
+.pa [hidden] { display: none !important; }
+.pa .st-intro { margin-bottom: var(--space-3); }
+.pa-btn { min-height: 2.75rem; padding-inline: var(--space-4); font-size: var(--text-sm); cursor: pointer; }
+.pa-load-error { display: grid; justify-items: start; gap: var(--space-2); }
+
+/* Tabs (role="tablist"): three equal pills, the chosen one is filled */
+.pa-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.25rem; padding: 0.25rem; margin-bottom: var(--space-4); border-radius: var(--radius-pill); background: var(--color-surface); border: 1px solid var(--color-border); }
+.pa-tab {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; min-height: 2.5rem; padding: 0 var(--space-2);
+  border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--color-muted); cursor: pointer;
+  font: inherit; font-size: var(--text-sm); font-weight: var(--weight-semibold); line-height: 1.2; transition: background-color var(--ease), color var(--ease);
+}
+.pa-tab:hover { color: var(--color-navy); background: var(--color-turquoise-soft); }
+.pa-tab:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.pa-tab[aria-selected="true"] { background: var(--color-navy); color: #fff; }
+:root[data-theme="dark"] .pa-tab[aria-selected="true"] { background: rgba(27, 122, 126, 0.95); color: #fff; }   /* --color-navy is light in dark mode */
+.pa-tab__dot { flex: none; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--color-teal); }
+.pa-tab[aria-selected="true"] .pa-tab__dot { background: var(--color-lime); }
+
+/* One form per method */
+.pa-form { display: grid; gap: var(--space-4); }
+.pa-status-row { margin: 0; }
+.pa-form .st-fields { gap: var(--space-4); }
+.pa-form .field__label span[aria-hidden="true"] { color: var(--color-danger); }
+
+/* QR picture: preview on the left (above on a narrow phone), upload / remove on the right */
+.pa-qr__box { display: grid; justify-items: center; gap: var(--space-3); }
+.pa-qr__frame { display: grid; place-items: center; width: min(12rem, 100%); aspect-ratio: 1; padding: var(--space-2); overflow: hidden; background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-lg); }
+.pa-qr__img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.pa-qr__empty { padding: var(--space-2); text-align: center; font-size: var(--text-xs); color: #52627e; }
+.pa-qr__side { display: grid; gap: var(--space-2); width: 100%; min-width: 0; align-content: start; }
+.pa-qr__actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.pa-qr__actions .pa-btn { flex: 1 1 8rem; }
+.pa-qr__actions:has(input:focus-visible) label { box-shadow: var(--focus-ring); }
+.pa-qr__note { font-weight: var(--weight-semibold); color: var(--color-teal); }
+@media (min-width: 30rem) {
+  .pa-qr__box { grid-template-columns: auto minmax(0, 1fr); justify-items: stretch; align-items: start; }
+  .pa-qr__frame { width: 11rem; }
+}
+
+/* Save and Remove account */
+.pa-actions { display: grid; gap: var(--space-3); width: 100%; max-width: 24rem; }
+.pa-actions .btn { min-height: 2.875rem; font-size: var(--text-sm); }
+.pa-remove { background: var(--color-bg); color: var(--danger-strong); border-color: var(--color-danger); }
+.pa-remove:hover { background: var(--color-danger-soft); color: var(--danger-strong); }
+.pa-remove:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.pa-remove:disabled, .pa-actions .btn:disabled { opacity: 0.5; cursor: not-allowed; }

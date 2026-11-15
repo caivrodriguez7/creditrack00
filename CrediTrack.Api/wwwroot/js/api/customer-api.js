@@ -786,6 +786,31 @@
     });
   }
 
+  // The GCash / Maya / Bank details a store shows for paying it (only the methods the owner has set up), so the customer can copy the
+  // number or save the QR. CrediTrack only records payments, it never moves money.
+  // -> { storeName, accounts: [{ method: "gcash" | "maya" | "bank", accountName, accountNumber, bankName, qrUrl }] }
+  // Real account: GET /customer/stores/{my record id}/payment-accounts (the store id is that record id). Demo: fictional sample details.
+  var SAMPLE_PAYMENT_ACCOUNTS = {   // fictional (no real numbers, no QR picture)
+    "str-001": [
+      { method: "gcash", accountName: "Nena Reyes", accountNumber: "0917 000 1234", bankName: "", qrUrl: "" },
+      { method: "bank", accountName: "Nena Reyes", accountNumber: "0000 1111 2222", bankName: "Sample Bank", qrUrl: "" }
+    ],
+    "str-002": [
+      { method: "maya", accountName: "Tony Mercado", accountNumber: "0917 000 5678", bankName: "", qrUrl: "" }
+    ]
+  };
+  function getStorePaymentAccounts(storeId) {
+    if (isDemo()) return Promise.resolve({ storeName: "", accounts: (SAMPLE_PAYMENT_ACCOUNTS[String(storeId)] || []).map(function (a) { return Object.assign({}, a); }) });
+    return window.CrediTrackHttp("/customer/stores/" + encodeURIComponent(storeId) + "/payment-accounts").then(function (d) {
+      return {
+        storeName: (d && d.storeName) || "",
+        accounts: ((d && d.accounts) || []).map(function (a) {
+          return { method: a.method, accountName: a.accountName || "", accountNumber: a.accountNumber || "", bankName: a.bankName || "", qrUrl: a.qrUrl || "" };
+        })
+      };
+    });
+  }
+
   // data: { storeId, amount, method (id), reference, note, proof: { name, type, dataUrl } | null, requestId }
   // -> { request, store: { id, name, balance }, duplicate }   (balance is the store balance AFTER saving: always unchanged)
   // Rejects with an Error whose .code is: store | amount | over | method | reference | note
@@ -1227,7 +1252,7 @@
     getProfile: getProfile, getPersonalInfo: getPersonalInfo, getAppInfo: getAppInfo, getNotificationPreferences: getNotificationPreferences, saveNotificationPreferences: saveNotificationPreferences, NOTIFICATION_PREF_KEYS: NOTIFICATION_PREF_KEYS, changePassword: changePassword, getSecurityInfo: getSecurityInfo, validatePasswordChange: validatePasswordChange, passwordRulesMet: passwordRulesMet, getCustomerIdentity: getCustomerIdentity, parseCustomerCode: parseCustomerCode, customerQrText: customerQrText, saveProfile: saveProfile, updateProfile: updateProfile, validateProfile: validateProfile, parsePhone: parsePhone, formatPhone: formatPhone,
     getRequests: getRequests, acceptRequest: acceptRequest, declineRequest: declineRequest, cancelRequest: cancelRequest,
     findStore: findStore, lookupRecord: lookupRecord, joinStore: joinStore, getSampleStoreCodes: getSampleStoreCodes, normalizeStoreCode: normalizeStoreCode,
-    getCustomer: getCustomer, getHome: getHome, getHistory: getHistory, getConnectedStores: getConnectedStores, disconnectStore: disconnectStore, reconnectStore: reconnectStore, getPayments: getPayments, queryPayments: queryPayments, getPaymentRequest: getPaymentRequest, getNotifications: getNotifications, markNotificationRead: markNotificationRead, markAllNotificationsRead: markAllNotificationsRead, getUnreadNotificationCount: getUnreadNotificationCount, getPayableStores: getPayableStores, submitPaymentRequest: submitPaymentRequest, PAYMENT_METHODS: PAYMENT_METHODS, NOTE_MAX: NOTE_MAX, getTransaction: getTransaction, summarize: summarize,
+    getCustomer: getCustomer, getHome: getHome, getHistory: getHistory, getConnectedStores: getConnectedStores, disconnectStore: disconnectStore, reconnectStore: reconnectStore, getPayments: getPayments, queryPayments: queryPayments, getPaymentRequest: getPaymentRequest, getNotifications: getNotifications, markNotificationRead: markNotificationRead, markAllNotificationsRead: markAllNotificationsRead, getUnreadNotificationCount: getUnreadNotificationCount, getPayableStores: getPayableStores, getStorePaymentAccounts: getStorePaymentAccounts, submitPaymentRequest: submitPaymentRequest, PAYMENT_METHODS: PAYMENT_METHODS, NOTE_MAX: NOTE_MAX, getTransaction: getTransaction, summarize: summarize,
     isDemo: isDemo, isDemoLogin: isDemoLogin, setDemo: setDemo,
     isDemoEmail: isDemoEmail, startDemoLogin: startDemoLogin, DEMO_EMAIL: DEMO_EMAIL, DEMO_NAME: DEMO_NAME
   };

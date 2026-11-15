@@ -8,6 +8,7 @@ namespace CrediTrack.Api.Services;
 // Saves uploaded pictures (profile photos, proof of payment) in the DATABASE (table StoredFiles), so they are not lost when the
 // host restarts or redeploys the app (many cloud hosts wipe the app's folders). Users.PhotoPath / PaymentRequests.ProofPath keep
 // the short path, like "profiles/3f2a...c1.jpg" or "proofs/9b1e...7d.png", which is the key of the row in StoredFiles.
+// StorePaymentAccounts.QrPath does the same for a store's payment QR ("qrs/<32 hex>.png").
 //
 // Pictures are served only through GET /api/files/... (FilesController), which checks who is asking.
 // The old folder (appsettings "Uploads": { "Path": ... }, default App_Data/uploads) is only READ once at startup to move
@@ -18,10 +19,11 @@ public class FileStorage
 {
     public const string ProfilesFolder = "profiles";
     public const string ProofsFolder = "proofs";
+    public const string QrsFolder = "qrs";        // QR pictures of a store's GCash / Maya / Bank accounts
     public const string UrlPrefix = "/api/files/";
 
     private static readonly Regex DataUrlRx = new(@"^data:image/(jpeg|png|webp);base64,([A-Za-z0-9+/=]+)$", RegexOptions.Compiled);
-    private static readonly Regex PathRx = new(@"^(profiles|proofs)/[0-9a-f]{32}\.(jpg|png|webp)$", RegexOptions.Compiled);
+    private static readonly Regex PathRx = new(@"^(profiles|proofs|qrs)/[0-9a-f]{32}\.(jpg|png|webp)$", RegexOptions.Compiled);
 
     private readonly string _root;
     private readonly IServiceScopeFactory _scopes;

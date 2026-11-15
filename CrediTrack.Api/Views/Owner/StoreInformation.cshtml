@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
   <!-- Shared owner page styles (page grid, heading, profile card, info list, form actions): same look as Customers -->
   <link rel="stylesheet" href="/css/pages/owner-customers.css">
-  <link rel="stylesheet" href="/css/pages/owner-settings.css">
+  <link rel="stylesheet" href="/css/pages/owner-settings.css?v=4">
   <link rel="stylesheet" href="/css/components/breadcrumbs.css">
   <link rel="stylesheet" href="/css/glass.css?v=4">
   <link rel="stylesheet" href="/css/polish.css?v=1">
@@ -46,6 +46,155 @@
               <div class="info__row--stack"><dt>Store Address</dt><dd id="pf-storeAddress"></dd></div>
               <div><dt>Store Code</dt><dd id="pf-storeCode"></dd></div>
             </dl>
+          </section>
+
+          <!-- Payment Accounts: the GCash / Maya / Bank details and QR picture customers see when they pay (one account per method).
+               CrediTrack only records payments, it never moves money. Logic: js/pages/owner-store-info.js -->
+          <section class="panel pa" id="pa-section" aria-labelledby="pa-title">
+            <div class="panel__head">
+              <h2 class="panel__title" id="pa-title">Payment Accounts</h2>
+            </div>
+            <p class="st-intro">Save your GCash, Maya or bank details so customers can see where to send their payments. CrediTrack only records payments. It never moves money.</p>
+            <p class="field__hint" id="pa-loading" role="status">Loading payment accounts&hellip;</p>
+            <div class="pa-load-error" id="pa-load-error" hidden>
+              <p class="field__error" role="alert">We couldn&rsquo;t load your payment accounts.</p>
+              <button class="btn btn--secondary pa-btn" type="button" id="pa-retry">Try Again</button>
+            </div>
+            <div class="pa-body" id="pa-body" hidden>
+              <div class="pa-tabs" role="tablist" aria-label="Payment method" id="pa-tablist">
+            <button class="pa-tab" type="button" role="tab" id="pa-tab-gcash" data-method="gcash" aria-selected="true" aria-controls="pa-panel-gcash" tabindex="0"><span>GCash</span><span class="pa-tab__dot" id="pa-dot-gcash" hidden><span class="visually-hidden"> (set up)</span></span></button>
+            <button class="pa-tab" type="button" role="tab" id="pa-tab-maya" data-method="maya" aria-selected="false" aria-controls="pa-panel-maya" tabindex="-1"><span>Maya</span><span class="pa-tab__dot" id="pa-dot-maya" hidden><span class="visually-hidden"> (set up)</span></span></button>
+            <button class="pa-tab" type="button" role="tab" id="pa-tab-bank" data-method="bank" aria-selected="false" aria-controls="pa-panel-bank" tabindex="-1"><span>Bank</span><span class="pa-tab__dot" id="pa-dot-bank" hidden><span class="visually-hidden"> (set up)</span></span></button>
+              </div>
+          <div class="pa-panel" role="tabpanel" id="pa-panel-gcash" aria-labelledby="pa-tab-gcash">
+            <form class="pa-form" id="pa-form-gcash" novalidate aria-label="GCash account">
+              <p class="pa-status-row"><span class="badge pa-status" id="pa-status-gcash">Not set up yet</span></p>
+              <div class="st-fields">
+                <div class="field">
+                  <label class="field__label" for="pa-name-gcash">Account name <span aria-hidden="true">*</span></label>
+                  <input class="input" id="pa-name-gcash" type="text" autocomplete="off" maxlength="60" placeholder="e.g., Nena Santos" required aria-describedby="pa-name-gcash-error">
+                  <p class="field__error" id="pa-name-gcash-error" hidden></p>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="pa-number-gcash">Account number <span aria-hidden="true">*</span></label>
+                  <input class="input" id="pa-number-gcash" type="text" inputmode="tel" autocomplete="off" maxlength="30" placeholder="e.g., 0917 123 4567" required aria-describedby="pa-number-gcash-hint pa-number-gcash-error">
+                  <p class="field__hint" id="pa-number-gcash-hint">Your GCash mobile number, like 0917 123 4567.</p>
+                  <p class="field__error" id="pa-number-gcash-error" hidden></p>
+                </div>
+                <div class="field pa-qr">
+                  <p class="field__label" id="pa-qr-label-gcash">QR code <span class="field__opt">(optional)</span></p>
+                  <div class="pa-qr__box">
+                    <div class="pa-qr__frame">
+                      <img class="pa-qr__img" id="pa-qr-img-gcash" alt="GCash QR code preview" hidden>
+                      <span class="pa-qr__empty" id="pa-qr-empty-gcash">No QR picture yet</span>
+                    </div>
+                    <div class="pa-qr__side">
+                      <div class="pa-qr__actions">
+                        <label class="btn btn--secondary pa-btn" for="pa-qr-gcash" id="pa-qr-pick-gcash">Upload QR</label>
+                        <input class="visually-hidden" id="pa-qr-gcash" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="pa-qr-hint-gcash pa-qr-note-gcash pa-qr-gcash-error">
+                        <button class="btn btn--ghost pa-btn" type="button" id="pa-qr-remove-gcash" hidden>Remove QR</button>
+                      </div>
+                      <p class="field__hint" id="pa-qr-hint-gcash">JPG, PNG or WebP. A picture of just the QR code scans best.</p>
+                      <p class="field__hint pa-qr__note" id="pa-qr-note-gcash" hidden></p>
+                      <p class="field__error" id="pa-qr-gcash-error" role="alert" hidden></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pa-actions">
+                <button class="btn btn--primary" type="submit" id="pa-save-gcash">Save</button>
+                <button class="btn pa-remove" type="button" id="pa-remove-gcash" hidden>Remove account</button>
+              </div>
+            </form>
+          </div>
+          <div class="pa-panel" role="tabpanel" id="pa-panel-maya" aria-labelledby="pa-tab-maya" hidden>
+            <form class="pa-form" id="pa-form-maya" novalidate aria-label="Maya account">
+              <p class="pa-status-row"><span class="badge pa-status" id="pa-status-maya">Not set up yet</span></p>
+              <div class="st-fields">
+                <div class="field">
+                  <label class="field__label" for="pa-name-maya">Account name <span aria-hidden="true">*</span></label>
+                  <input class="input" id="pa-name-maya" type="text" autocomplete="off" maxlength="60" placeholder="e.g., Nena Santos" required aria-describedby="pa-name-maya-error">
+                  <p class="field__error" id="pa-name-maya-error" hidden></p>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="pa-number-maya">Account number <span aria-hidden="true">*</span></label>
+                  <input class="input" id="pa-number-maya" type="text" inputmode="tel" autocomplete="off" maxlength="30" placeholder="e.g., 0917 123 4567" required aria-describedby="pa-number-maya-hint pa-number-maya-error">
+                  <p class="field__hint" id="pa-number-maya-hint">Your Maya mobile number, like 0917 123 4567.</p>
+                  <p class="field__error" id="pa-number-maya-error" hidden></p>
+                </div>
+                <div class="field pa-qr">
+                  <p class="field__label" id="pa-qr-label-maya">QR code <span class="field__opt">(optional)</span></p>
+                  <div class="pa-qr__box">
+                    <div class="pa-qr__frame">
+                      <img class="pa-qr__img" id="pa-qr-img-maya" alt="Maya QR code preview" hidden>
+                      <span class="pa-qr__empty" id="pa-qr-empty-maya">No QR picture yet</span>
+                    </div>
+                    <div class="pa-qr__side">
+                      <div class="pa-qr__actions">
+                        <label class="btn btn--secondary pa-btn" for="pa-qr-maya" id="pa-qr-pick-maya">Upload QR</label>
+                        <input class="visually-hidden" id="pa-qr-maya" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="pa-qr-hint-maya pa-qr-note-maya pa-qr-maya-error">
+                        <button class="btn btn--ghost pa-btn" type="button" id="pa-qr-remove-maya" hidden>Remove QR</button>
+                      </div>
+                      <p class="field__hint" id="pa-qr-hint-maya">JPG, PNG or WebP. A picture of just the QR code scans best.</p>
+                      <p class="field__hint pa-qr__note" id="pa-qr-note-maya" hidden></p>
+                      <p class="field__error" id="pa-qr-maya-error" role="alert" hidden></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pa-actions">
+                <button class="btn btn--primary" type="submit" id="pa-save-maya">Save</button>
+                <button class="btn pa-remove" type="button" id="pa-remove-maya" hidden>Remove account</button>
+              </div>
+            </form>
+          </div>
+          <div class="pa-panel" role="tabpanel" id="pa-panel-bank" aria-labelledby="pa-tab-bank" hidden>
+            <form class="pa-form" id="pa-form-bank" novalidate aria-label="Bank account">
+              <p class="pa-status-row"><span class="badge pa-status" id="pa-status-bank">Not set up yet</span></p>
+              <div class="st-fields">
+                <div class="field">
+                  <label class="field__label" for="pa-name-bank">Account name <span aria-hidden="true">*</span></label>
+                  <input class="input" id="pa-name-bank" type="text" autocomplete="off" maxlength="60" placeholder="e.g., Nena Santos" required aria-describedby="pa-name-bank-error">
+                  <p class="field__error" id="pa-name-bank-error" hidden></p>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="pa-bank-bank">Bank name <span aria-hidden="true">*</span></label>
+                  <input class="input" id="pa-bank-bank" type="text" autocomplete="off" maxlength="40" placeholder="e.g., BDO, BPI, Landbank" required aria-describedby="pa-bank-bank-error">
+                  <p class="field__error" id="pa-bank-bank-error" hidden></p>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="pa-number-bank">Account number <span aria-hidden="true">*</span></label>
+                  <input class="input" id="pa-number-bank" type="text" inputmode="tel" autocomplete="off" maxlength="30" placeholder="e.g., 0917 123 4567" required aria-describedby="pa-number-bank-hint pa-number-bank-error">
+                  <p class="field__hint" id="pa-number-bank-hint">Your bank account number (7 to 20 digits).</p>
+                  <p class="field__error" id="pa-number-bank-error" hidden></p>
+                </div>
+                <div class="field pa-qr">
+                  <p class="field__label" id="pa-qr-label-bank">QR code <span class="field__opt">(optional)</span></p>
+                  <div class="pa-qr__box">
+                    <div class="pa-qr__frame">
+                      <img class="pa-qr__img" id="pa-qr-img-bank" alt="Bank QR code preview" hidden>
+                      <span class="pa-qr__empty" id="pa-qr-empty-bank">No QR picture yet</span>
+                    </div>
+                    <div class="pa-qr__side">
+                      <div class="pa-qr__actions">
+                        <label class="btn btn--secondary pa-btn" for="pa-qr-bank" id="pa-qr-pick-bank">Upload QR</label>
+                        <input class="visually-hidden" id="pa-qr-bank" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="pa-qr-hint-bank pa-qr-note-bank pa-qr-bank-error">
+                        <button class="btn btn--ghost pa-btn" type="button" id="pa-qr-remove-bank" hidden>Remove QR</button>
+                      </div>
+                      <p class="field__hint" id="pa-qr-hint-bank">JPG, PNG or WebP. A picture of just the QR code scans best.</p>
+                      <p class="field__hint pa-qr__note" id="pa-qr-note-bank" hidden></p>
+                      <p class="field__error" id="pa-qr-bank-error" role="alert" hidden></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pa-actions">
+                <button class="btn btn--primary" type="submit" id="pa-save-bank">Save</button>
+                <button class="btn pa-remove" type="button" id="pa-remove-bank" hidden>Remove account</button>
+              </div>
+            </form>
+          </div>
+            </div>
           </section>
         </div>
 
@@ -97,9 +246,9 @@
 @section Scripts {
   <script src="/js/session.js?v=5"></script>
   <script src="/js/api/http.js"></script>
-  <script src="/js/api/owner-api.js"></script>
+  <script src="/js/api/owner-api.js?v=2"></script>
   <script src="/js/components/owner-shell.js"></script>
   <script src="/js/components/breadcrumbs.js"></script>
   <script src="/js/main.js"></script>
-  <script src="/js/pages/owner-store-info.js"></script>
+  <script src="/js/pages/owner-store-info.js?v=3"></script>
 }

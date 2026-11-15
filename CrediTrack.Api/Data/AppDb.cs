@@ -21,6 +21,7 @@ public class AppDb : DbContext
     public DbSet<StoredFile> StoredFiles => Set<StoredFile>();
     public DbSet<NotificationPreference> NotificationPreferences => Set<NotificationPreference>();
     public DbSet<TransactionChangeDetail> TransactionChangeDetails => Set<TransactionChangeDetail>();
+    public DbSet<StorePaymentAccount> StorePaymentAccounts => Set<StorePaymentAccount>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -114,5 +115,10 @@ public class AppDb : DbContext
         b.Entity<PaymentRequest>().HasOne<User>().WithMany().HasForeignKey(r => r.ReviewedByUserId).OnDelete(DeleteBehavior.SetNull);
         b.Entity<PaymentRequest>().HasOne<User>().WithMany().HasForeignKey(r => r.ArchivedByUserId).OnDelete(DeleteBehavior.SetNull);
         b.Entity<PaymentRequest>().HasOne<Transaction>().WithMany().HasForeignKey(r => r.TransactionId).OnDelete(DeleteBehavior.SetNull);
+
+        // Payment accounts (GCash / Maya / Bank) a store shows to its customers: one row per store and method.
+        // Deleting a store deletes its payment accounts. The QR picture itself lives in StoredFiles (QrPath is its key).
+        b.Entity<StorePaymentAccount>().HasIndex(a => new { a.StoreId, a.Method }).IsUnique();
+        b.Entity<StorePaymentAccount>().HasOne(a => a.Store).WithMany().HasForeignKey(a => a.StoreId).OnDelete(DeleteBehavior.Cascade);
     }
 }

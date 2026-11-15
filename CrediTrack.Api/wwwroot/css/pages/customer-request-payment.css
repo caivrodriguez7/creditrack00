@@ -66,3 +66,48 @@
 .cpr__big { font-size: 2rem; font-weight: var(--weight-bold); line-height: 1.1; color: var(--color-navy); overflow-wrap: anywhere; }
 .cpr__pending { padding: 0.3rem 0.9rem; }
 .cpr .jdone .jrows--card { text-align: left; }
+
+/* Store payment details: a collapsed card under the store field ("View payment details"). Theme tokens only, so light and dark follow. */
+.cpr__pay { border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-bg); overflow: hidden; }
+.cpr__pay__toggle { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); width: 100%; min-height: 3.25rem; padding: var(--space-3) var(--space-4); border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; transition: background-color var(--ease); }
+.cpr__pay__toggle:hover { background: var(--color-turquoise-soft); }
+.cpr__pay__toggle:focus-visible { outline: none; box-shadow: inset var(--focus-ring); }
+.cpr__pay__text { display: grid; gap: 0.1rem; min-width: 0; }
+.cpr__pay__text strong { font-size: var(--text-sm); color: var(--color-navy); }
+.cpr__pay__text span { font-size: var(--text-xs); color: var(--color-muted); }
+.cpr__pay__chev { flex: none; width: 0.6rem; height: 0.6rem; margin: -0.2rem 0.25rem 0 0; border-right: 2px solid var(--color-muted); border-bottom: 2px solid var(--color-muted); transform: rotate(45deg); transition: transform var(--ease); }
+.cpr__pay__toggle[aria-expanded="true"] .cpr__pay__chev { margin-top: 0.2rem; transform: rotate(-135deg); }
+.cpr__pay__panel { display: grid; gap: var(--space-3); padding: var(--space-3) var(--space-4) var(--space-4); border-top: 1px solid var(--color-border); }
+.cpr__pay__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+.cpr__acct { display: grid; gap: var(--space-2); min-width: 0; padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); }
+.cpr__acct__title { font-size: var(--text-sm); color: var(--color-navy); }
+.cpr__acct__rows { display: grid; gap: var(--space-2); margin: 0; }
+.cpr__acct__rows > div { display: grid; gap: 0.1rem; min-width: 0; }
+.cpr__acct__rows dt { font-size: var(--text-xs); color: var(--color-muted); }
+.cpr__acct__rows dd { margin: 0; font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-ink); overflow-wrap: anywhere; }
+.cpr__acct__num { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
+.cpr__copy { flex: none; min-height: 2.25rem; padding: 0 var(--space-3); border: 1.5px solid var(--color-turquoise); border-radius: var(--radius-pill); background: var(--color-bg); color: var(--color-teal); font: inherit; font-size: var(--text-xs); font-weight: var(--weight-semibold); cursor: pointer; }
+.cpr__copy:hover { background: var(--color-turquoise-soft); }
+.cpr__copy:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.cpr__qr { display: grid; justify-items: center; gap: var(--space-2); }
+.cpr__qr__zoom { display: block; width: min(14rem, 100%); padding: 0; border: 0; border-radius: var(--radius-lg); background: transparent; font: inherit; cursor: zoom-in; touch-action: manipulation; }   /* tap = open the big QR */
+.cpr__qr__zoom:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.cpr__qr__img { width: 100%; aspect-ratio: 1; padding: var(--space-2); object-fit: contain; background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-lg); }   /* a QR code needs a white background, also in dark mode */
+.cpr__qr__cap { font-size: var(--text-xs); color: var(--color-muted); text-align: center; }
+.cpr__qr .btn { min-height: 2.5rem; padding-inline: var(--space-5); font-size: var(--text-sm); text-decoration: none; }
+.cpr__qr .btn[aria-busy="true"] { opacity: 0.7; pointer-events: none; }
+.cpr__qr__hint { margin: 0; text-align: center; line-height: 1.5; }
+
+/* Big QR picture (a native <dialog> after the page, so it sits outside .cpr). Glass tokens with a fallback, so light and dark follow the theme.
+   The fixed / inset / margin lines are what a browser already does for a modal dialog; they only matter in an old browser without <dialog>. */
+.cpr-viewer { position: fixed; inset: 0; z-index: 1000; width: min(30rem, calc(100% - var(--space-3) * 2)); height: fit-content; max-height: calc(100% - var(--space-3) * 2); margin: auto; padding: 0; border: 1px solid var(--glass-edge, var(--color-border)); border-radius: var(--radius-lg); background: var(--glass-fill-strong, var(--color-bg)); color: var(--color-ink); overflow: hidden; box-shadow: 0 24px 60px -18px rgba(7, 26, 82, 0.5), var(--glass-shine, none); -webkit-backdrop-filter: var(--glass-blur-strong, none); backdrop-filter: var(--glass-blur-strong, none); }
+.cpr-viewer:not([open]) { display: none; }
+.cpr-viewer[open] { display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.cpr-viewer::backdrop { background: rgba(7, 26, 82, 0.65); }
+.cpr-viewer__bar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-border); }
+.cpr-viewer__title { font-size: var(--text-md); color: var(--color-navy); overflow-wrap: anywhere; }
+.cpr-viewer__close { min-height: 2.5rem; flex: none; }
+.cpr-viewer__body { display: grid; justify-items: center; gap: var(--space-3); padding: var(--space-3); text-align: center; overflow: auto; }
+.cpr-viewer__frame { width: 100%; padding: var(--space-2); background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-lg); }   /* white, also in dark mode: a QR code needs it */
+.cpr-viewer__img { display: block; width: 100%; max-height: 60vh; object-fit: contain; }   /* no pointer-events / user-select rules here: press and hold must reach the picture */
+.cpr-viewer__hint { margin: 0; font-size: var(--text-xs); line-height: 1.5; color: var(--color-muted); }
