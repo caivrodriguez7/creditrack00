@@ -1,0 +1,23 @@
+/* Pagination bar: Previous, page numbers, Next (js/components/pager.js) */
+.pager { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-4); }
+.pager[hidden] { display: none; }
+.pager__nums { display: inline-flex; align-items: center; gap: 0.25rem; }
+.pager__btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem;
+  min-width: 2.5rem; min-height: 2.5rem; padding: 0 var(--space-3);
+  border: 1px solid var(--color-navy-soft); border-radius: var(--radius-md);
+  background: #fff; color: var(--color-navy);
+  font: inherit; font-size: var(--text-sm); font-weight: var(--weight-semibold, 600); cursor: pointer;
+}
+.pager__btn:hover:not(:disabled) { background: var(--color-turquoise-soft); border-color: var(--color-turquoise); }
+.pager__btn:focus-visible { outline: 2px solid var(--color-turquoise); outline-offset: 2px; }
+.pager__btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.pager__btn.is-current { background: var(--color-navy); border-color: var(--color-navy); color: #fff; opacity: 1; cursor: default; }
+.pager__gap { min-width: 1.5rem; text-align: center; color: var(--color-navy); opacity: 0.6; }
+.pager__status { display: none; font-size: var(--text-sm); color: var(--color-navy); }
+/* Phones: Previous  "Page 2 of 5"  Next (the number buttons do not fit) */
+@media (max-width: 34rem) {
+  .pager { justify-content: space-between; flex-wrap: nowrap; }
+  .pager__nums { display: none; }
+  .pager__status { display: inline; }
+}

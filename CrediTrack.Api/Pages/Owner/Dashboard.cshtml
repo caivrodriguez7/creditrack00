@@ -1,0 +1,136 @@
+@page "/owner/dashboard"
+@{
+    ViewData["Title"] = @"Dashboard | CrediTrack";
+    ViewData["Body"] = @"class=""owner"" data-root=""/"" data-page=""dashboard""";
+}
+
+@section Head {
+  <meta name="description" content="Your store at a glance: outstanding balance, utang vs bayad chart, overdue accounts, and pending payments.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+  <link rel="stylesheet" href="/css/components/record-utang.css">
+  <link rel="stylesheet" href="/css/components/record-bayad.css">
+  <link rel="stylesheet" href="/css/pages/owner-dashboard.css?v=5">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <!-- Header, sidebar and bottom navigation are added here by js/components/owner-shell.js -->
+    <main class="owner-main" id="main">
+      <div class="dash" id="dash">
+
+        <section class="dash__welcome" aria-labelledby="welcome-title">
+          <h1 id="welcome-title">Welcome back!</h1>
+          <p class="text-muted">Here is your store&rsquo;s credit overview.</p>
+        </section>
+
+        <!-- Filled by js/pages/owner-dashboard.js: the setup tip or an error notice -->
+        <div class="dash__notice" id="dash-notice" hidden></div>
+
+        <div class="dash__col">
+          <section class="hero" aria-labelledby="balance-title">
+            <div class="hero__top">
+              <h2 class="hero__label" id="balance-title">Outstanding Balance</h2>
+             
+            </div>
+            <p class="hero__amount" id="balance-amount">&#8369;0.00</p>
+            <p class="hero__note" id="balance-note">No customers yet</p>
+          </section>
+
+          <div class="stats">
+            <a class="stat" href="#" data-route="owner-customers-debt">
+              <span class="stat__icon stat__icon--debt" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.2a6.5 6.5 0 0 1 3.5 5.8"/></svg></span>
+              <span class="stat__value" id="debt-count">0</span>
+              <span class="stat__label">Customers with Debt</span>
+              <span class="stat__sub" id="debt-sub">No customers yet</span>
+            </a>
+            <a class="stat" href="overdue" data-route="owner-overdue">
+              <span class="stat__icon stat__icon--overdue" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg></span>
+              <span class="stat__value" id="overdue-count">0</span>
+              <span class="stat__label">Overdue Accounts</span>
+              <span class="stat__sub" id="overdue-sub">None past due</span>
+            </a>
+          </div>
+
+          <!-- Utang vs Bayad for the last 6 months. Drawn by js/pages/owner-dashboard.js with js/components/utang-bayad-chart.js -->
+          <section class="panel" id="chart-panel" aria-labelledby="chart-title">
+            <div class="panel__head">
+              <h2 class="panel__title" id="chart-title">Utang vs Bayad</h2>
+              <a class="panel__link" href="reports" data-route="owner-reports" id="chart-link">View report</a>
+            </div>
+            <p class="dash-sub" id="chart-sub">Last 6 months</p>
+            <ul class="rp-legend" id="chart-legend" hidden>
+              <li><span class="rp-swatch rp-swatch--utang" aria-hidden="true"></span>Utang</li>
+              <li><span class="rp-swatch rp-swatch--bayad" aria-hidden="true"></span>Bayad</li>
+            </ul>
+            <div class="rp-chart" id="chart"></div>
+            <div class="visually-hidden"><table id="chart-table">
+              <caption id="chart-caption">Utang and Bayad by month, last 6 months</caption>
+              <thead><tr><th scope="col">Month</th><th scope="col">Utang</th><th scope="col">Bayad</th></tr></thead>
+              <tbody></tbody>
+            </table></div>
+            <div class="empty" id="chart-empty" hidden>
+              <span class="empty__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>
+              <h3 class="empty__title">Nothing to chart yet</h3>
+              <p class="empty__text">Utang and bayad you record will appear here, month by month.</p>
+            </div>
+            <p class="empty__text" id="chart-error" hidden>The chart could not be loaded. Refresh the page to try again.</p>
+          </section>
+
+          <section class="panel" id="recent-panel" aria-labelledby="recent-title">
+            <div class="panel__head">
+              <h2 class="panel__title" id="recent-title">Recent Transactions</h2>
+              <a class="panel__link" href="#" data-route="owner-transactions" id="tx-link" hidden>View all</a>
+            </div>
+            <ul class="list" id="tx-list" hidden></ul>
+            <div class="empty" id="tx-empty">
+              <span class="empty__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14l-3.5-3.5M20 16H6l3.5 3.5"/></svg></span>
+              <h3 class="empty__title">No transactions yet</h3>
+              <p class="empty__text">Credits and payments you record will show up here.</p>
+              <a class="btn btn--secondary" href="#" data-route="record-credit">Record Utang</a>
+            </div>
+          </section>
+        </div>
+
+        <div class="dash__col dash__col--side">
+          <!-- Payment Requests: a count badge and a short preview (the 3 newest waiting). The full list, with Approve / Reject
+               and the reviewed and archived requests, is on the Payment Requests page. -->
+          <section class="panel" id="pending-panel" aria-labelledby="pending-title">
+            <div class="panel__head">
+              <h2 class="panel__title" id="pending-title">Payment Requests <span class="pr-badge" id="pending-badge" hidden></span></h2>
+            </div>
+            <ul class="pending__list" id="pending-list"></ul>
+            <p class="pr-none" id="pending-none">Nothing to review. You are all caught up.</p>
+            <a class="btn btn--primary btn--block pr-review" id="pending-review" href="payment-requests" data-route="owner-payment-requests" hidden>Review all requests</a>
+            <a class="pr-archived" id="pending-past" href="payment-requests" data-route="owner-payment-requests">See past requests</a>
+          </section>
+
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/owner-api.js?v=5"></script>
+  <script src="/js/components/owner-shell.js?v=3"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js?v=8"></script>
+  <script src="/js/components/record-utang.js"></script>
+  <script src="/js/components/record-bayad.js"></script>
+  <script src="/js/components/utang-bayad-chart.js"></script>
+  <script src="/js/pages/owner-dashboard.js?v=4"></script>
+}

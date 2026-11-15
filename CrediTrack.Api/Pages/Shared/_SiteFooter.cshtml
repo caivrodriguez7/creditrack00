@@ -1,0 +1,24 @@
+@* Standard footer for the public pages (landing, Terms, Privacy): system name and tagline, links, contact details, copyright.
+   Values come from the "Site" settings (appsettings.json). *@
+@{
+    var site = SiteOptions.Value;
+}
+<footer class="site-foot" aria-label="Site information">
+  <div class="site-foot__grid">
+    <div class="site-foot__brand">
+      <strong>@site.SystemName</strong>
+      <span>@site.Tagline</span>
+    </div>
+    <nav class="site-foot__links" aria-label="Legal and help">
+      <a href="/terms">Terms and Conditions</a>
+      <a href="/privacy">Privacy Policy</a>
+      <a href="mailto:@site.SupportEmail?subject=@Uri.EscapeDataString(site.SystemName + " support")">Contact Us</a>
+    </nav>
+    <address class="site-foot__contact">
+      <a href="mailto:@site.SupportEmail">@site.SupportEmail</a>
+      <a href="tel:@site.PhoneHref">@site.SupportPhone</a>
+      <span>@site.SupportHours</span>
+    </address>
+  </div>
+  <p class="site-foot__copy">&copy; @DateTime.Now.Year @site.OperatorName. All rights reserved.</p>
+</footer>

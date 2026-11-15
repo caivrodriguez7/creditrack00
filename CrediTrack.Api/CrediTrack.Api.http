@@ -1,0 +1,338 @@
+@host = http://localhost:5224
+@json = application/json
+
+# Run these in VS Code with the "REST Client" extension (it keeps the login cookie between requests).
+# Run the sections in order. Two accounts are used: an owner and a customer.
+
+### ---------- 0. Accounts ----------
+# Registers an owner (skip if you already have one, and use /login instead)
+POST {{host}}/api/auth/register
+Content-Type: {{json}}
+
+{ "role": "owner", "fullName": "Test Owner", "email": "owner.test@example.com", "contactNumber": "09171234567",
+  "password": "Passw0rd!", "storeName": "Test Store", "storePhone": "09170000000", "storeAddress": "Sample St" }
+
+###
+POST {{host}}/api/auth/login
+Content-Type: {{json}}
+
+{ "email": "owner.test@example.com", "password": "Passw0rd!" }
+
+###
+GET {{host}}/api/auth/me
+
+### ---------- 1. Customers: paged search / filter / sort ----------
+POST {{host}}/api/owner/customers
+Content-Type: {{json}}
+
+{ "name": "Ana Santos", "phone": "0917 111 2222" }
+
+###
+POST {{host}}/api/owner/customers
+Content-Type: {{json}}
+
+{ "name": "Ben Cruz", "phone": "09183334444" }
+
+###
+# Existing endpoint (whole list) is unchanged
+GET {{host}}/api/owner/customers
+
+###
+GET {{host}}/api/owner/customers/query?search=ana&status=active&balance=all&sort=name&dir=asc&page=1&pageSize=10
+
+###
+# Filter by phone digits, sort by balance, page 1 of size 1
+GET {{host}}/api/owner/customers/query?search=0918&sort=balance&dir=desc&page=1&pageSize=1
+
+###
+GET {{host}}/api/owner/customers/query?status=archived
+
+### ---------- 2. Transactions: record, then paged query ----------
+POST {{host}}/api/owner/transactions/credits
+Content-Type: {{json}}
+
+{ "customerId": 3, "requestId": "t-credit-1",
+  "items": [ { "name": "Rice", "qty": 2, "unit": "kg", "price": 55 }, { "name": "Eggs", "qty": 6, "price": 9 } ] }
+
+###
+POST {{host}}/api/owner/transactions/payments
+Content-Type: {{json}}
+
+{ "customerId": 3, "amount": 50, "method": "Cash", "date": "2026-11-09", "requestId": "t-pay-1" }
+
+###
+GET {{host}}/api/owner/transactions/query?type=credit&status=partial&sort=amount&dir=desc
+
+###
+GET {{host}}/api/owner/transactions/query?search=ana&dateRange=30&page=1&pageSize=5
+
+###
+GET {{host}}/api/owner/transactions/query?dateRange=custom&from=2026-11-01&to=2026-11-09&customerId=1
+
+###
+# A custom range that starts after it ends -> invalidRange: true, no items
+GET {{host}}/api/owner/transactions/query?dateRange=custom&from=2026-11-09&to=2026-11-01
+
+### ---------- 3. Edit / history / void ----------
+# Change the quantity of Rice on transaction 1 (credit)
+PUT {{host}}/api/owner/transactions/1
+Content-Type: {{json}}
+
+{ "items": [ { "name": "Rice", "qty": 3, "unit": "kg", "price": 55 }, { "name": "Eggs", "qty": 6, "price": 9 } ] }
+
+###
+# Edit the payment (transaction 2): notes and reference
+PUT {{host}}/api/owner/transactions/2
+Content-Type: {{json}}
+
+{ "notes": "Paid at the counter", "reference": "REF-001" }
+
+###
+# A payment bigger than the credits is refused (400)
+PUT {{host}}/api/owner/transactions/2
+Content-Type: {{json}}
+
+{ "amount": 100000 }
+
+###
+GET {{host}}/api/owner/transactions/1/history
+
+###
+GET {{host}}/api/owner/transactions/2/void-preview
+
+###
+POST {{host}}/api/owner/transactions/2/void
+Content-Type: {{json}}
+
+{ "reason": "Other", "remarks": "Entered by mistake" }
+
+###
+# Second time -> 409
+POST {{host}}/api/owner/transactions/2/void
+Content-Type: {{json}}
+
+{ "reason": "Duplicate transaction" }
+
+### ---------- 4. Store information and dashboard ----------
+GET {{host}}/api/owner/store
+
+###
+PUT {{host}}/api/owner/store
+Content-Type: {{json}}
+
+{ "name": "Test Store", "phone": "09170000000", "address": "Sample St, Sample City", "businessType": "Sari-sari store", "storeHours": "7am - 9pm" }
+
+###
+GET {{host}}/api/owner/dashboard
+
+### ---------- 5. Account: profile, password, notification choices ----------
+PUT {{host}}/api/account/profile
+Content-Type: {{json}}
+
+{ "fullName": "Test Owner", "email": "owner.test@example.com", "contactNumber": "0917 123 4567" }
+
+###
+POST {{host}}/api/account/change-password
+Content-Type: {{json}}
+
+{ "currentPassword": "Passw0rd!", "newPassword": "Passw0rd!2", "confirmPassword": "Passw0rd!2" }
+
+###
+# Change it back
+POST {{host}}/api/account/change-password
+Content-Type: {{json}}
+
+{ "currentPassword": "Passw0rd!2", "newPassword": "Passw0rd!", "confirmPassword": "Passw0rd!" }
+
+###
+PUT {{host}}/api/account/notification-preferences
+Content-Type: {{json}}
+
+{ "paymentUpdates": true, "storeUpdates": false }
+
+###
+GET {{host}}/api/account/notification-preferences
+
+### ---------- 6. Customer account: join a store, history, payment request ----------
+# Replace CT-XXXXXX with the storeCode returned by /api/owner/store
+# SECURITY RULE: a matching mobile number NEVER links an account to an existing store record.
+# Existing records are linked only by the owner, using the customer's CT-CUS code (6b below).
+POST {{host}}/api/auth/register
+Content-Type: {{json}}
+
+{ "role": "customer", "fullName": "Ana Santos", "email": "ana.test@example.com", "contactNumber": "09171112222", "password": "Passw0rd!" }
+
+###
+# Note the customerCode (CT-CUS-xxxxxx) in this response: the customer shows it to the store owner
+POST {{host}}/api/auth/login
+Content-Type: {{json}}
+
+{ "email": "ana.test@example.com", "password": "Passw0rd!" }
+
+###
+POST {{host}}/api/customer/stores/lookup
+Content-Type: {{json}}
+
+{ "storeCode": "CT-XXXXXX" }
+
+###
+# 6a. NEGATIVE TEST. Her number equals the existing "Ana Santos" record, but it must NOT link to it.
+# Expected: joined = "created", balance 0, a NEW separate record (phone not copied). The old record stays unlinked.
+POST {{host}}/api/customer/stores/join
+Content-Type: {{json}}
+
+{ "storeCode": "CT-XXXXXX" }
+
+###
+# 6b. POSITIVE TEST (run as the OWNER: log in as owner.test@example.com first, see section 0).
+# To link the existing record, first unlink the new empty record Ana just got (if she already joined),
+# then link the existing record (use its real id) with her CT-CUS code:
+# POST {{host}}/api/owner/customers/{newRecordId}/unlink
+POST {{host}}/api/owner/customers/1/link
+Content-Type: {{json}}
+
+{ "customerCode": "CT-CUS-000000" }
+
+###
+# Log back in as Ana (6 above); her stores/home/history now show the linked record and its balance
+###
+GET {{host}}/api/customer/stores
+
+###
+GET {{host}}/api/customer/home
+
+###
+GET {{host}}/api/customer/history?type=all&page=1&pageSize=10
+
+###
+POST {{host}}/api/customer/payment-requests
+Content-Type: {{json}}
+
+{ "customerId": 1, "amount": 100, "method": "GCash", "reference": "GC123456", "message": "Sent today" }
+
+###
+GET {{host}}/api/customer/payment-requests?status=pending
+
+###
+GET {{host}}/api/customer/payment-requests/1
+
+### ---------- 7. Owner reviews the payment request (log in as the owner again) ----------
+POST {{host}}/api/auth/login
+Content-Type: {{json}}
+
+{ "email": "owner.test@example.com", "password": "Passw0rd!" }
+
+###
+GET {{host}}/api/owner/payment-requests?status=pending
+
+###
+GET {{host}}/api/owner/payment-requests/1
+
+###
+POST {{host}}/api/owner/payment-requests/1/approve
+
+###
+# Approving again -> 409
+POST {{host}}/api/owner/payment-requests/1/approve
+
+###
+POST {{host}}/api/owner/payment-requests/1/archive
+
+### ---------- 8. Authorization checks ----------
+# As the owner, a customer-only endpoint must answer 403
+GET {{host}}/api/customer/stores
+
+###
+POST {{host}}/api/auth/logout
+
+###
+# Signed out -> 401
+GET {{host}}/api/owner/customers/query
+
+### Filter transactions by date
+GET {{host}}/api/owner/transactions/query?from=2026-11-09&to=2026-11-09
+
+### Filter transactions by customer ID
+GET {{host}}/api/owner/transactions/query?customerId=3
+
+### Edit credit transaction
+PUT {{host}}/api/owner/transactions/5
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "name": "Rice (Edited)",
+      "qty": 2,
+      "qtyText": null,
+      "unit": "kg",
+      "price": 55
+    },
+    {
+      "name": "Eggs",
+      "qty": 6,
+      "qtyText": null,
+      "unit": "",
+      "price": 9
+    }
+  ]
+}
+
+### Verify transaction edit history
+GET {{host}}/api/owner/transactions/5/history
+
+### Preview transaction void
+GET {{host}}/api/owner/transactions/5/void-preview
+
+### Edit payment transaction
+PUT {{host}}/api/owner/transactions/6
+Content-Type: application/json
+
+{
+  "notes": "Payment edited for testing",
+  "reference": "TEST-REF-001"
+}
+
+### Verify payment edit history
+GET {{host}}/api/owner/transactions/6/history
+
+### Verify new password
+###
+POST {{host}}/api/auth/login
+Content-Type: {{json}}
+
+{
+  "email": "owner.test@example.com",
+  "password": "Passw0rd!",
+  "rememberMe": false
+}
+
+### Verify original password
+POST {{host}}/api/auth/login
+Content-Type: {{json}}
+
+{
+  "email": "owner.test@example.com",
+  "password": "Passw0rd!"
+}
+
+
+### ---------- 9. Reports API ----------
+# The API signs in with the "creditrack.auth" cookie (no bearer token). Section 8 logs out, so sign in again
+# right before these requests, and run them in the same window/session as the login.
+# 9a. Sign in as the owner (expect 200 and a Set-Cookie: creditrack.auth header)
+POST {{host}}/api/auth/login
+Content-Type: {{json}}
+
+{ "email": "owner.test@example.com", "password": "Passw0rd!", "rememberMe": true }
+
+###
+# 9b. Must answer 200 with role "owner". If this is 401, the client did not keep the cookie (not the Reports API).
+GET {{host}}/api/auth/me
+
+###
+# 9c. Reports
+GET {{host}}/api/owner/reports?period=month&page=1&pageSize=10
+
+###
+GET {{host}}/api/owner/reports?period=custom&startDate=2026-11-01&endDate=2026-11-11

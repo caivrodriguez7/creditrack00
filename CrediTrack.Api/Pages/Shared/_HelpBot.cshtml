@@ -1,0 +1,13 @@
+@* Help assistant (no AI service, no cost): finds the best answer in the Help page's own FAQs and in a built-in list of guides.
+   Logic: js/components/help-bot.js. Contact details are read from the Contact Support section of the same page. *@
+<section class="panel hbot" aria-labelledby="hbot-title" id="help-bot" data-help-bot>
+  <div class="panel__head"><h2 class="panel__title" id="hbot-title">Ask the CrediTrack Assistant</h2></div>
+  <p class="st-intro">Type a question in English or Tagalog, like &ldquo;paano mag-record ng bayad?&rdquo;. It answers from this Help page.</p>
+  <div class="hbot__log" id="hbot-log" role="log" aria-live="polite" aria-label="Conversation with the assistant" tabindex="0"></div>
+  <div class="hbot__chips" id="hbot-chips" aria-label="Suggested questions"></div>
+  <form class="hbot__form" id="hbot-form" autocomplete="off">
+    <label class="visually-hidden" for="hbot-input">Your question</label>
+    <input class="input hbot__input" id="hbot-input" type="text" maxlength="200" placeholder="Ask a question..." enterkeyhint="send">
+    <button class="btn btn--primary hbot__send" type="submit">Send</button>
+  </form>
+</section>

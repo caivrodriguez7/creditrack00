@@ -1,0 +1,83 @@
+/* Shared split layout: Welcome, Choose Account Type, Login and both Registration flows.
+
+   ONE structure on every screen:
+     <main class="split">
+       <aside class="split__brand">  logo, description, store illustration (identical markup everywhere)
+       <div class="split__main">     the only part that changes from screen to screen
+
+   Desktop (64rem+): two FIXED-width columns, centered. The brand column is sticky and
+   vertically centered in the window, so it keeps the exact same size, position and spacing
+   on every screen, whatever the height of the right-hand content.
+   Mobile / tablet: a vertical layout. The brand block is the same logo, centered at the top.
+
+   The official transparent logo sits directly on the light page. No card, band, circle,
+   filter, blend mode or background image is used behind it. */
+
+@media (min-width: 64rem) { html { scrollbar-gutter: stable; } }
+
+body.split-page { background: #fefefe; }
+/* No decorative gradient band or circles on these screens (shared rule in components.css) */
+.split-page::before { content: none; display: none; }
+
+/* ---------- Mobile (default): vertical ---------- */
+.split {
+  width: 100%; max-width: 30rem; margin-inline: auto;
+  min-height: 100vh; min-height: 100dvh;
+  display: flex; flex-direction: column; gap: var(--space-3);
+  padding: var(--space-2) var(--space-4) var(--space-3);
+}
+.split__brand { display: grid; justify-items: center; text-align: center; gap: var(--space-3); }
+.split__main { display: grid; gap: var(--space-2); min-width: 0; }
+
+.brand__logo { width: 15rem; max-width: 100%; height: auto; aspect-ratio: 1363 / 597; }
+.brand__lead { display: none; color: var(--color-muted); line-height: 1.5; }
+.brand__art { display: none; }
+.brand__art svg { width: 100%; height: auto; }
+.brand__art text { font-family: var(--font-sans); }
+
+/* Back link above the panel (auth screens only) */
+.auth__back {
+  justify-self: start; display: inline-flex; align-items: center; gap: var(--space-2);
+  min-height: 2.75rem; padding-right: var(--space-3);
+  color: var(--color-primary); font-size: var(--text-sm); font-weight: var(--weight-semibold);
+}
+.auth__back:hover { color: var(--color-primary-hover); }
+
+/* Back link on EVERY screen that has one (Login, Account Type, both Registrations), phone and tablet (under 64rem):
+   pinned to the TOP-LEFT corner, above the centered logo, the same place on every screen.
+   It is placed with position: absolute against .split, so it does not depend on source order or on any
+   wrapper, and it can never end up below the logo. The page reserves a strip at the top for it.
+   Desktop (64rem+) is untouched: Back stays above the panel in the right-hand column. */
+@media (max-width: 63.99rem) {
+  .auth .split { position: relative; padding-top: 3.5rem; }
+  .auth .auth__back {
+    position: absolute; top: var(--space-2); left: var(--space-4); right: auto; z-index: 2;
+    min-height: 2.75rem; padding: 0 var(--space-3) 0 var(--space-2);
+  }
+}
+
+/* ---------- Tablet portrait ---------- */
+@media (min-width: 40rem) and (max-width: 63.99rem) {
+  .split { max-width: 36rem; padding: var(--space-5) var(--space-5) var(--space-7); gap: var(--space-4); }
+  .brand__logo { width: 16rem; }
+  .auth .split { padding-top: 4.5rem; }
+  .auth .auth__back { top: var(--space-4); left: var(--space-5); }
+}
+
+/* ---------- Desktop: fixed-width columns ---------- */
+@media (min-width: 64rem) {
+  .split {
+    max-width: none; display: grid;
+    grid-template-columns: 26rem 30rem; column-gap: 4rem; justify-content: center; align-items: start;
+    gap: 0 4rem; padding: 0 var(--space-5);
+  }
+  .split__brand { position: sticky; top: 0; height: 100vh; height: 100dvh; align-content: center; gap: var(--space-4); }
+  .brand__logo { width: 26rem; }
+  .brand__lead { display: block; max-width: 23rem; font-size: var(--text-lg); }
+  .brand__art { display: block; width: 14rem; margin-top: var(--space-2); }
+  .split__main { min-height: 100vh; min-height: 100dvh; align-content: center; padding-block: var(--space-6); }
+}
+/* Very short windows: let the brand column scroll with the page instead of being clipped */
+@media (min-width: 64rem) and (max-height: 520px) {
+  .split__brand { position: static; height: auto; padding-block: var(--space-6); }
+}

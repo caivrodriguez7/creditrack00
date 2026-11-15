@@ -1,0 +1,114 @@
+@page "/customer/stores"
+@{
+    ViewData["Title"] = @"Connected Stores | CrediTrack";
+    ViewData["Body"] = @"class=""owner customer"" data-root=""/"" data-page=""profile"" data-nav=""sub"" data-title=""Connected Stores"" data-back=""profile""";
+}
+
+@section Head {
+  <meta name="description" content="The stores you have joined: each store's balance, payment status and details, with the option to leave a store.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+  <link rel="stylesheet" href="/css/components/customer-shell.css">
+  <link rel="stylesheet" href="/css/pages/customer-stores.css">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <!-- Back button and title are added here by js/components/customer-shell.js -->
+    <main class="owner-main" id="main">
+      <div class="page cs" id="page">
+
+        <!-- The title (h1) is inserted here by customer-shell.js -->
+        <p class="text-muted cs-sub">Each store keeps its own balance and records. Leaving a store never deletes them.</p>
+
+
+        <!-- Requests waiting for an answer: a store asking to link me (accept / decline) and join requests I sent (cancel) -->
+        <section class="cs-requests" id="requests-section" aria-labelledby="requests-title" hidden>
+          <div class="cs-head">
+            <h2 class="cs-head__title" id="requests-title">Requests</h2>
+            <span class="cs-head__count" id="requests-count"></span>
+          </div>
+          <div class="cs-req-list" id="requests-list"></div>
+        </section>
+
+        <!-- Nothing joined and nothing left -->
+        <section class="panel" id="empty-none" aria-labelledby="none-title" hidden>
+          <div class="empty">
+            <span class="empty__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5 5.5 4h13L20 9.5"/><path d="M4 9.5a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0"/><path d="M5.5 12.5V20h13v-7.5"/><path d="M10 20v-4.5h4V20"/></svg></span>
+            <h2 class="empty__title" id="none-title">No store joined yet</h2>
+            <p class="empty__text">Join your suking tindahan to see your credits, payments and balance for that store here.</p>
+            <a class="btn btn--primary" href="#" data-route="customer-join-store">Join a Store</a>
+          </div>
+        </section>
+
+        <!-- Stores the customer is connected to -->
+        <section id="connected-section" aria-labelledby="connected-title" hidden>
+          <div class="cs-head">
+            <h2 class="cs-head__title" id="connected-title">Connected</h2>
+            <span class="cs-head__count" id="connected-count"></span>
+          </div>
+          <div class="cs-grid" id="connected-list"></div>
+          <div class="empty cs-none" id="connected-empty" hidden>
+            <h3 class="empty__title">You are not connected to any store</h3>
+            <p class="empty__text">Your earlier stores are listed below with their records. Join a store to start again.</p>
+            <a class="btn btn--primary" href="#" data-route="customer-join-store">Join a Store</a>
+          </div>
+          <a class="cs-add" href="#" data-route="customer-join-store" id="join-another">
+            <span class="cs-add__icon" aria-hidden="true"></span>
+            <span><strong>Join Another Store</strong><span class="cs-add__text">Connect another suking tindahan.</span></span>
+          </a>
+        </section>
+
+        <!-- Stores the customer left: balance and records are kept -->
+        <section id="left-section" aria-labelledby="left-title" hidden>
+          <div class="cs-head">
+            <h2 class="cs-head__title" id="left-title">Disconnected</h2>
+            <span class="cs-head__count" id="left-count"></span>
+          </div>
+          <p class="cs-note">You left these stores. Your balance and every transaction there are kept, and still show in History and Payments.</p>
+          <div class="cs-grid" id="left-list"></div>
+        </section>
+
+        <p class="visually-hidden" id="live" role="status" aria-live="polite"></p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Leave Store: asks first, and says what is kept -->
+  <dialog class="cs-dialog" id="leave-dialog" aria-labelledby="leave-title" aria-describedby="leave-text">
+    <div class="cs-dialog__body">
+      <span class="cs-dialog__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 2.8 19.5h18.4z"/><path d="M12 10v4.5M12 17.5v.01"/></svg></span>
+      <h2 id="leave-title">Leave this store?</h2>
+      <p id="leave-text">You will stop seeing this store in My Stores, and you will not be able to send it payments from CrediTrack until you reconnect.</p>
+      <div class="cs-keep">
+        <strong>What stays on record</strong>
+        <ul id="leave-keeps"></ul>
+      </div>
+      <p class="cs-dialog__error" id="leave-error" role="alert" hidden></p>
+      <div class="cs-dialog__actions">
+        <button class="btn btn--secondary" type="button" id="leave-cancel">Stay Connected</button>
+        <button class="btn btn--danger" type="button" id="leave-confirm">Leave Store</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/customer-api.js"></script>
+  <script src="/js/components/customer-shell.js"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js?v=8"></script>
+  <script src="/js/pages/customer-stores.js"></script>
+}

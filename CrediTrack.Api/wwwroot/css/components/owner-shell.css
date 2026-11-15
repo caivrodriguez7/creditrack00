@@ -1,0 +1,197 @@
+/* Store Owner shell: header, sidebar, bottom navigation, quick actions (phone "+" and desktop button).
+   Phone first. From 56rem up (same breakpoint as the auth pages) the sidebar
+   replaces the bottom navigation. Shared by every Store Owner page. */
+.owner { background: var(--color-surface); }
+
+.owner-app { min-height: 100vh; min-height: 100dvh; }
+
+/* Header: white bar with the wordmark on phones, store identity on desktop */
+.owner-header {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+  height: 3.75rem; padding-inline: var(--space-4);
+  background: var(--color-bg); color: var(--color-navy);
+  box-shadow: 0 1px 0 var(--color-border);
+}
+.owner-header::after { content: ""; position: absolute; inset: auto 0 -3px 0; height: 3px; background: var(--gradient-bar); }
+.owner-header__brand { display: block; line-height: 0; }
+.owner-header__brand img { height: 1.7rem; width: auto; }
+.owner-header__store { display: none; align-items: center; gap: var(--space-3); color: var(--color-ink); }
+.owner-header__store:hover { text-decoration: none; color: var(--color-ink); }
+.owner-header__avatar {
+  display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 50%;
+  background: var(--color-navy); color: var(--color-lime);
+  font-size: var(--text-xs); font-weight: var(--weight-bold);
+}
+.owner-header__avatar { overflow: hidden; }
+.owner-header__avatar img, .profile__avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.owner-header__name { font-weight: var(--weight-semibold); font-size: var(--text-sm); }
+.owner-header__tools { display: flex; gap: var(--space-1); }
+.owner-header__btn {
+  position: relative; display: grid; place-items: center; width: 2.75rem; height: 2.75rem;
+  border-radius: var(--radius-md); color: var(--color-navy);
+}
+.owner-header__btn:hover { background: var(--color-turquoise-soft); color: var(--color-teal); text-decoration: none; }
+.owner-header__dot { position: absolute; top: 0.65rem; right: 0.7rem; width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--color-danger); border: 2px solid var(--color-bg); }
+
+/* Main area */
+.owner-main { padding: var(--space-5) var(--space-4) calc(6rem + env(safe-area-inset-bottom)); max-width: 62rem; margin-inline: auto; }
+
+/* Sidebar: hidden on phones */
+.owner-sidebar { display: none; }
+.owner-nav__link {
+  position: relative; display: flex; align-items: center; gap: var(--space-3);
+  min-height: 2.9rem; padding: 0 var(--space-4);
+  border-radius: var(--radius-md); color: var(--color-muted);
+  font-size: var(--text-sm); font-weight: var(--weight-semibold);
+}
+.owner-nav__link:hover { background: var(--color-turquoise-soft); color: var(--color-navy); text-decoration: none; }
+/* Active page: solid turquoise with navy text, plus a small lime marker */
+.owner-nav__link[aria-current="page"] { background: var(--color-turquoise); color: var(--color-navy); }
+.owner-nav__link[aria-current="page"]::after { content: ""; position: absolute; right: var(--space-3); width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--color-lime); box-shadow: 0 0 0 2px rgba(7, 26, 82, 0.15); }
+
+/* Bottom navigation (phone) */
+.owner-bottomnav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+  display: grid; grid-template-columns: repeat(5, 1fr); align-items: end;
+  padding: var(--space-1) var(--space-1) calc(var(--space-1) + env(safe-area-inset-bottom));
+  background: var(--color-bg); border-top: 1px solid var(--color-border);
+  box-shadow: 0 -8px 24px -14px rgba(7, 26, 82, 0.3);
+}
+.owner-tab {
+  position: relative; display: grid; justify-items: center; align-content: center; gap: 0.15rem;
+  min-height: 3.5rem; padding: 0; background: none; border: 0; cursor: pointer;
+  color: var(--color-muted); font-size: 0.75rem; font-weight: var(--weight-semibold);
+}
+.owner-tab:hover { color: var(--color-navy); text-decoration: none; }
+.owner-tab svg { width: 1.4rem; height: 1.4rem; }
+.owner-tab[aria-current="page"] { color: var(--color-navy); }
+/* Active tab: turquoise pill behind the icon */
+.owner-tab[aria-current="page"] svg { box-sizing: content-box; width: 1.4rem; height: 1.4rem; padding: 0.2rem 0.95rem; border-radius: var(--radius-pill); background: var(--color-turquoise); color: var(--color-navy); }
+.owner-tab--add { align-content: start; }
+.owner-tab__plus, .owner-fab {
+  display: grid; place-items: center; border-radius: 50%; color: var(--color-lime);
+  background: var(--gradient-brand); border: 3px solid var(--color-bg);
+  box-shadow: 0 8px 20px -6px rgba(7, 26, 82, 0.65);
+}
+.owner-tab__plus { position: relative; width: 3.5rem; height: 3.5rem; margin-top: -1.2rem; }
+.owner-tab__plus svg, .owner-fab svg { width: 1.75rem; height: 1.75rem; stroke-width: 2.4; }
+.owner-tab--add:hover { color: var(--color-muted); }
+/* ---- Floating action button animation (phone "+" and desktop button) ----
+   Nothing moves on its own. The effects happen only when the button is hovered or pressed:
+   hover lifts it (see the end of this file), press squeezes it, and opening turns the plus into a minus
+   (the upright bar folds away while the icon spins half a turn). */
+.owner-tab__plus, .owner-fab {
+  transition: transform 240ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 240ms ease;
+}
+.owner-tab--add:active .owner-tab__plus, .owner-fab:active { transform: scale(0.92); }
+.owner-tab__plus svg, .owner-fab svg { transition: transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+.plus-v { transform-box: fill-box; transform-origin: center; transition: transform 200ms ease, opacity 200ms ease; }
+/* Open state: the plus becomes a minus */
+.owner-tab--add[aria-expanded="true"] svg, .owner-fab[aria-expanded="true"] svg { transform: rotate(180deg); }
+.owner-tab--add[aria-expanded="true"] .plus-v, .owner-fab[aria-expanded="true"] .plus-v { transform: scaleY(0); opacity: 0; }
+
+/* Desktop floating button: hidden on phones (the center "+" is used there) */
+.owner-fab { display: none; }
+
+/* Quick actions: dimmed page with two buttons just above the "+" */
+.quick-sheet { position: fixed; inset: 0; z-index: 25; }
+.quick-sheet__backdrop { position: absolute; inset: 0; background: rgba(7, 26, 82, 0.55); }
+.quick-sheet__actions {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  display: grid; gap: var(--space-3); width: min(17rem, calc(100% - 2rem));
+}
+.quick-sheet__btn {
+  display: flex; align-items: center; justify-content: center; gap: var(--space-3);
+  min-height: 3.5rem; border-radius: var(--radius-pill); color: #fff;
+  font-size: var(--text-md); font-weight: var(--weight-bold);
+  box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.5);
+}
+.quick-sheet__btn { transition: transform var(--ease), filter var(--ease); }
+.quick-sheet__btn:hover { color: #fff; text-decoration: none; filter: brightness(1.08); }
+.quick-sheet__btn:active { transform: scale(0.97); }
+
+/* Opening the quick actions: the page dims smoothly and the buttons spring up from the + (nearest one first) */
+@keyframes sheet-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sheet-rise {
+  from { opacity: 0; transform: translateY(18px) scale(0.9); }
+  to   { opacity: 1; transform: none; }
+}
+.quick-sheet__backdrop { animation: sheet-fade 200ms ease-out; }
+.quick-sheet__btn { transform-origin: bottom center; animation: sheet-rise 300ms cubic-bezier(0.22, 1.2, 0.36, 1) backwards; }
+.quick-sheet__btn--payment { animation-delay: 30ms; }
+.quick-sheet__btn--credit { animation-delay: 100ms; }
+.quick-sheet__btn--credit { background: var(--color-navy); }
+.quick-sheet__btn--payment { background: var(--color-teal); }
+
+/* The toast must clear the bottom navigation */
+.owner .toast { bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+
+/* Desktop: sidebar on the left, floating button bottom-right, no bottom navigation */
+@media (min-width: 56rem) {
+  .owner { --fab-right: max(var(--space-6), calc((100vw - 16rem - 62rem) / 2 + var(--space-6))); }
+  .owner-app { padding-left: 16rem; }
+  .owner-sidebar {
+    position: fixed; inset: 0 auto 0 0; width: 16rem; z-index: 25;
+    display: flex; flex-direction: column; gap: var(--space-4);
+    padding: var(--space-4) var(--space-4) var(--space-5);
+    background: var(--color-bg); border-right: 1px solid var(--color-border);
+  }
+  .owner-sidebar::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: linear-gradient(180deg, var(--color-navy), var(--color-teal) 45%, var(--color-turquoise) 80%, var(--color-lime)); }
+  .owner-sidebar__logo { display: block; padding-inline: var(--space-2); }
+  .owner-sidebar__logo img { width: 11rem; height: auto; margin-inline: auto; }
+  .owner-sidebar__nav { display: grid; gap: var(--space-1); }
+  .owner-sidebar__logout { margin-top: auto; }
+  .owner-header { justify-content: flex-end; gap: var(--space-4); height: 4rem; padding-inline: var(--space-6); }
+  .owner-header::after { display: none; }
+  .owner-header__brand, .owner-header__btn--profile { display: none; }
+  .owner-header__store { display: flex; order: 2; }
+  .owner-main { padding: var(--space-6) var(--space-6) calc(var(--space-8) + 2rem); }
+  .owner-bottomnav { display: none; }
+
+  /* Sits at the bottom-right corner of the main content (the content is centered, max 62rem wide) */
+  .owner-fab { display: grid; position: fixed; right: var(--fab-right); bottom: var(--space-6); z-index: 30; width: 3.75rem; height: 3.75rem; cursor: pointer; }
+  .quick-sheet__btn { transform-origin: bottom right; }
+  .quick-sheet__backdrop { background: rgba(7, 26, 82, 0.3); }
+  .quick-sheet__actions { left: auto; right: var(--fab-right); transform: none; bottom: calc(var(--space-6) + 4.75rem); width: 15rem; }
+  .owner .toast { bottom: var(--space-5); }
+}
+
+/* Detail pages and subpages (data-nav="sub"): no header, sidebar, bottom bar or "+".
+   Only a Back button and the page title. The shell builds this bar; see js/components/owner-shell.js. */
+.subbar {
+  position: sticky; top: 0; z-index: 20;
+  background: var(--color-bg); box-shadow: 0 1px 0 var(--color-border);
+  padding-top: env(safe-area-inset-top);
+}
+.subbar__inner { display: flex; align-items: center; max-width: 62rem; height: 3.5rem; margin-inline: auto; padding-inline: var(--space-2) var(--space-4); }
+.subbar__back {
+  display: inline-flex; align-items: center; gap: var(--space-1); flex: none;
+  min-height: 2.75rem; padding: 0 var(--space-3) 0 var(--space-2); border: 0; border-radius: var(--radius-md);
+  background: transparent; color: var(--color-teal); font: inherit; font-size: var(--text-sm); font-weight: var(--weight-semibold); cursor: pointer;
+  transition: background-color var(--ease), color var(--ease);
+}
+.subbar__back:hover { background: var(--color-turquoise-soft); color: var(--color-navy); }
+.subbar__back svg { width: 1.35rem; height: 1.35rem; }
+/* Page title: a heading in the page content, directly under the bar (same size as a main page's heading) */
+.subpage-title { font-size: 1.25rem; line-height: 1.25; color: var(--color-navy); overflow-wrap: anywhere; }
+.owner--subpage .owner-app { padding-left: 0; }
+.owner--subpage .owner-main { padding-bottom: calc(var(--space-7) + env(safe-area-inset-bottom)); }
+.owner--subpage .toast { bottom: calc(var(--space-5) + env(safe-area-inset-bottom)); }
+@media (min-width: 56rem) {
+  .subbar__inner { height: 4rem; padding-inline: var(--space-4) var(--space-6); }
+  .subpage-title { font-size: 1.5rem; }
+  .owner--subpage .owner-main { padding-bottom: var(--space-8); }
+  .owner--subpage .toast { bottom: var(--space-5); }
+}
+
+/* Hover lift only for devices that really hover (avoids a stuck "hover" after a tap on phones and tablets) */
+@media (hover: hover) {
+  .owner-fab:hover { transform: translateY(-3px) scale(1.06); box-shadow: 0 14px 28px -8px rgba(7, 26, 82, 0.7); }
+  .owner-fab:active { transform: scale(0.92); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quick-sheet__backdrop, .quick-sheet__btn { animation: none !important; }
+  .owner-tab__plus svg, .owner-fab svg, .plus-v { transition: none; }
+}

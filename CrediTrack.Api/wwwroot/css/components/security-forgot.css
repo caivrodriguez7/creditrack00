@@ -1,0 +1,18 @@
+/* "Forgot your current password?" under the Current password field (Security pages, owner and customer). */
+.pw-forgot { margin: var(--space-2) 0 0; }
+.pw-forgot__btn {
+  display: inline-block; padding: 0.35rem 0; min-height: 2.25rem;
+  background: none; border: 0; font: inherit; font-size: var(--text-xs); font-weight: 600;
+  color: var(--color-teal); text-decoration: underline; text-underline-offset: 2px; cursor: pointer;
+}
+.pw-forgot__btn:hover:not(:disabled) { text-decoration-thickness: 2px; }
+.pw-forgot__btn:focus-visible { outline: none; box-shadow: var(--focus-ring); border-radius: 0.2rem; }
+.pw-forgot__btn:disabled { color: var(--color-muted, #5b6b7a); text-decoration: none; cursor: default; }
+.pw-forgot__msg { margin: var(--space-2) 0 0; font-size: var(--text-xs); line-height: 1.45; color: var(--color-navy); }
+.pw-forgot__msg.is-error { color: var(--color-danger, #b3261e); }
+
+/* Result of finishing a reset from the emailed link (js/components/security-reset.js) */
+.pw-reset__msg { margin: 0 0 var(--space-3); padding: 0.6rem 0.8rem; border-radius: 0.6rem; font-size: var(--text-sm, 0.9rem); line-height: 1.45; }
+.pw-reset__msg[hidden] { display: none; }
+.pw-reset__msg.is-success { background: #e6f5ee; color: #0b5d3b; border: 1px solid #b7e0c9; }
+.pw-reset__msg.is-error { background: #fdecea; color: var(--color-danger, #b3261e); border: 1px solid #f5c2bd; }

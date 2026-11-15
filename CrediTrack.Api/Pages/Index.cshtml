@@ -1,0 +1,44 @@
+@page "/"
+@{
+    ViewData["Title"] = @"CrediTrack | Every Credit, On Track.";
+    ViewData["Body"] = @"class=""splash-page"" data-root=""/""";
+}
+
+@section Head {
+  <meta name="description" content="CrediTrack is a store credit management system for sari-sari stores and their customers.">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v9=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="preload" href="/assets/images/creditrack-logo-transparent.png?v=3" as="image" media="(prefers-color-scheme: light)">
+  <link rel="preload" href="/assets/images/creditrack-logo-dark.png?v=3" as="image" media="(prefers-color-scheme: dark)">
+  <link rel="stylesheet" href="/css/pages/splash.css?v=3">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+  <noscript><style>.splash__logo, .splash__status { opacity: 1 !important; animation: none !important; } .splash__bar { transform: none !important; animation: none !important; }</style></noscript>
+}
+
+  <!-- Launch screen. Shown on every start; js/pages/splash.js then sends the person to the
+       right place (dashboard when signed in, Welcome screen when not). -->
+  <main class="splash" id="splash">
+    <div class="splash__stage">
+      <img class="logo-light splash__logo" id="splash-logo" src="/assets/images/creditrack-logo-transparent.png?v=3" width="1363" height="597" fetchpriority="high" decoding="async"
+           alt="CrediTrack. Every Credit, On Track.">
+      <img class="logo-dark splash__logo"  src="/assets/images/creditrack-logo-dark.png?v=3" width="1363" height="597"  decoding="async"
+           alt="" aria-hidden="true">
+      <div class="splash__progress" aria-hidden="true"><span class="splash__bar"></span></div>
+      <p class="splash__status" id="splash-status" role="status" aria-live="polite">Getting things ready…</p>
+      <div class="splash__actions" id="splash-actions" hidden>
+        <button class="btn btn--secondary" type="button" id="splash-logout">Log Out</button>
+      </div>
+      <noscript><p class="splash__status" style="opacity:1"><a href="/welcome">Continue to CrediTrack</a></p></noscript>
+    </div>
+  </main>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/pages/splash.js?v=3"></script>
+}

@@ -1,0 +1,209 @@
+@page "/owner/reports"
+@{
+    ViewData["Title"] = @"Reports | CrediTrack";
+    ViewData["Body"] = @"class=""owner"" data-root=""/"" data-page=""reports""";
+}
+
+@section Head {
+  <meta name="description" content="An overview of your store's utang, bayad, outstanding and overdue balances.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+  <link rel="stylesheet" href="/css/components/record-utang.css">
+  <link rel="stylesheet" href="/css/components/record-bayad.css">
+  <!-- Shared list-page styles (page heading): same look as Customers and Transactions -->
+  <link rel="stylesheet" href="/css/pages/owner-customers.css">
+  <link rel="stylesheet" href="/css/pages/owner-reports.css?v=8">
+  <link rel="stylesheet" href="/css/components/pager.css">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <!-- Header, sidebar and bottom navigation are added here by js/components/owner-shell.js -->
+    <main class="owner-main" id="main">
+      <div class="page" id="page">
+
+        <header class="page-head">
+          <div class="page-head__text">
+            <h1 id="page-title">Reports</h1>
+            <p class="text-muted" id="page-sub">See how your store&rsquo;s utang and bayad are doing.</p>
+          </div>
+          <!-- Export Report: compact button that opens a small PDF / CSV menu -->
+          <div class="rp-export" id="export">
+            <button class="btn btn--secondary rp-export__btn" type="button" id="export-btn" aria-label="Export Report" aria-haspopup="menu" aria-expanded="false" aria-controls="export-menu">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19.5h14"/></svg>
+              <span>Export Report</span>
+              <svg class="rp-export__chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="rp-export__menu" id="export-menu" role="menu" aria-label="Export the report as" hidden>
+              <button class="rp-export__item" type="button" role="menuitem" data-format="pdf">
+                <span class="rp-export__name">PDF</span>
+                <span class="rp-export__hint">Summary, chart and table</span>
+              </button>
+              <button class="rp-export__item" type="button" role="menuitem" data-format="csv">
+                <span class="rp-export__name">CSV</span>
+                <span class="rp-export__hint">Summary and table, opens in Excel</span>
+              </button>
+            </div>
+          </div>
+        </header>
+
+
+        <!-- Reporting period: compact bar with the selected period and the filter chips.
+             The Start/End date fields only appear when Custom Date Range is selected. -->
+        <section class="rp-period" aria-labelledby="period-label">
+          <div class="rp-period__text">
+            <p class="rp-period__label" id="period-label">Reporting period</p>
+            <p class="rp-period__value"><span id="period-name">This Month</span> <span class="rp-period__range" id="period-range"></span></p>
+          </div>
+
+          <div class="rp-filters">
+            <div class="chips" role="group" aria-label="Choose the reporting period" id="period-chips">
+              <button class="chip" type="button" data-period="week" aria-pressed="false">This Week</button>
+              <button class="chip" type="button" data-period="month" aria-pressed="true">This Month</button>
+              <button class="chip" type="button" data-period="last-month" aria-pressed="false">Last Month</button>
+              <button class="chip" type="button" data-period="year" aria-pressed="false">This Year</button>
+              <button class="chip" type="button" data-period="custom" aria-pressed="false" aria-expanded="false" aria-controls="custom">Custom Date Range</button>
+            </div>
+
+            <form class="rp-custom" id="custom" novalidate hidden>
+              <div class="field">
+                <label class="field__label" for="start-date">Start Date</label>
+                <input class="input" type="date" id="start-date" aria-describedby="custom-error">
+              </div>
+              <div class="field">
+                <label class="field__label" for="end-date">End Date</label>
+                <input class="input" type="date" id="end-date" aria-describedby="custom-error">
+              </div>
+              <button class="btn btn--primary rp-custom__apply" type="submit">Apply</button>
+              <p class="field__error rp-custom__error" id="custom-error" role="alert" hidden></p>
+            </form>
+          </div>
+
+          <p class="rp-period__note">Total Utang and Total Bayad cover the selected period. Outstanding and Overdue balances are always as of today.</p>
+          <p class="visually-hidden" id="period-live" role="status" aria-live="polite"></p>
+        </section>
+
+        <!-- Summary cards -->
+        <section class="rp-cards" aria-label="Report summary">
+          <article class="rp-card rp-card--utang">
+            <span class="rp-card__icon" aria-hidden="true" data-icon="credit"></span>
+            <h2 class="rp-card__label">Total Utang</h2>
+            <p class="rp-card__value" id="v-utang">&#8369;0.00</p>
+            <p class="rp-card__sub" id="s-utang">Credit recorded</p>
+          </article>
+          <article class="rp-card rp-card--bayad">
+            <span class="rp-card__icon" aria-hidden="true" data-icon="payment"></span>
+            <h2 class="rp-card__label">Total Bayad</h2>
+            <p class="rp-card__value" id="v-bayad">&#8369;0.00</p>
+            <p class="rp-card__sub" id="s-bayad">Confirmed payments</p>
+          </article>
+          <article class="rp-card rp-card--balance">
+            <span class="rp-card__icon" aria-hidden="true" data-icon="customers"></span>
+            <h2 class="rp-card__label">Outstanding Balance</h2>
+            <p class="rp-card__value" id="v-balance">&#8369;0.00</p>
+            <p class="rp-card__sub" id="s-balance">Unpaid by customers</p>
+          </article>
+          <!-- Opens the Overdue Accounts page (same route as the Dashboard card); Back there returns here -->
+          <a class="rp-card rp-card--overdue rp-card--link" href="overdue" data-route="owner-overdue" aria-label="Overdue Balance. View overdue accounts">
+            <span class="rp-card__icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>
+            </span>
+            <h2 class="rp-card__label">Overdue Balance</h2>
+            <p class="rp-card__value" id="v-overdue">&#8369;0.00</p>
+            <p class="rp-card__sub" id="s-overdue">From overdue accounts</p>
+          </a>
+        </section>
+
+        <div class="rp-grid">
+
+          <!-- Monthly overview: Utang vs Bayad -->
+          <section class="panel rp-chart-panel" aria-labelledby="chart-title">
+            <div class="panel__head">
+              <h2 class="panel__title" id="chart-title">Monthly Overview</h2>
+            </div>
+            <p class="rp-sub" id="chart-sub">Utang versus Bayad by month</p>
+            <ul class="rp-legend" id="chart-legend">
+              <li><span class="rp-swatch rp-swatch--utang" aria-hidden="true"></span>Utang</li>
+              <li><span class="rp-swatch rp-swatch--bayad" aria-hidden="true"></span>Bayad</li>
+            </ul>
+            <div class="rp-chart" id="chart"></div>
+            <div class="visually-hidden"><table id="chart-table">
+              <caption id="chart-caption">Utang and Bayad by month</caption>
+              <thead><tr><th scope="col">Month</th><th scope="col">Utang</th><th scope="col">Bayad</th></tr></thead>
+              <tbody></tbody>
+            </table></div>
+            <div class="empty" id="chart-empty" hidden>
+              <span class="empty__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>
+              <h3 class="empty__title" id="chart-empty-title">Nothing to chart yet</h3>
+              <p class="empty__text" id="chart-empty-text">Utang and bayad you record will appear here, month by month.</p>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Detailed transaction table: every Utang and confirmed Bayad in the selected period, newest first -->
+        <section class="panel rp-table-panel" aria-labelledby="detail-title">
+          <div class="panel__head">
+            <h2 class="panel__title" id="detail-title">Detailed Transactions</h2>
+            <p class="rp-count" id="detail-count" hidden></p>
+          </div>
+          <p class="rp-sub" id="detail-sub">Utang and confirmed Bayad in the selected period</p>
+
+          <div class="rp-tablewrap" id="detail-wrap" hidden>
+            <table class="rp-table" role="table">
+              <caption class="visually-hidden" id="detail-caption">Utang and Bayad transactions</caption>
+              <thead>
+                <tr role="row">
+                  <th scope="col" role="columnheader" class="rp-th rp-th--id">Transaction ID</th>
+                  <th scope="col" role="columnheader" class="rp-th rp-th--date">Date</th>
+                  <th scope="col" role="columnheader" class="rp-th rp-th--cust">Customer Name</th>
+                  <th scope="col" role="columnheader" class="rp-th rp-th--type">Transaction Type</th>
+                  <th scope="col" role="columnheader" class="rp-th rp-th--amt">Amount</th>
+                </tr>
+              </thead>
+              <tbody id="detail-body"></tbody>
+            </table>
+          </div>
+
+          <div class="rp-more" id="detail-more" hidden>
+            <p class="rp-more__text" id="detail-shown" role="status" aria-live="polite"></p>
+            <nav class="pager" id="pager" hidden></nav>
+          </div>
+
+          <div class="empty" id="detail-empty" hidden>
+            <span class="empty__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><path d="M3.5 9.5h17M9 9.5v10"/></svg></span>
+            <h3 class="empty__title" id="detail-empty-title">No transactions in this period</h3>
+            <p class="empty__text" id="detail-empty-text">Try a different reporting period.</p>
+            <a class="btn btn--secondary" href="#" data-route="record-credit" id="empty-record">Record Utang</a>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/owner-api.js"></script>
+  <script src="/js/components/owner-shell.js"></script>
+  <script src="/js/components/pager.js"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/components/record-utang.js"></script>
+  <script src="/js/components/record-bayad.js"></script>
+  <script src="/js/components/pdf-lite.js"></script>
+  <script src="/js/components/report-export.js"></script>
+  <script src="/js/pages/owner-reports.js"></script>
+}

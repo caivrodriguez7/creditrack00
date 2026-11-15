@@ -1,0 +1,248 @@
+/* ==========================================================
+   CrediTrack "glass" theme
+   Loaded LAST on every page. It only changes how things look
+   (translucent frosted surfaces, soft light edges, blur, a
+   colourful backdrop). Layout, markup and behaviour are untouched,
+   and the brand palette (navy, teal, turquoise, lime) is unchanged.
+   To go back to the flat look, remove the glass.css <link> line.
+   ========================================================== */
+:root {
+  /* Glass surfaces: the same white as before, but see-through */
+  --glass-fill: rgba(255, 255, 255, 0.58);
+  --glass-fill-strong: rgba(255, 255, 255, 0.78);   /* dialogs, menus: need to stay readable */
+  --glass-fill-soft: rgba(255, 255, 255, 0.34);     /* inner rows inside a glass card */
+  --glass-edge: rgba(255, 255, 255, 0.75);          /* bright rim light */
+  --glass-line: rgba(8, 107, 112, 0.16);            /* hairlines / dividers */
+  --glass-blur: blur(18px) saturate(160%);
+  --glass-blur-strong: blur(28px) saturate(170%);
+  --glass-shadow: 0 8px 28px -12px rgba(7, 26, 82, 0.28);
+  --glass-shine: inset 0 1px 0 rgba(255, 255, 255, 0.85), inset 0 -1px 0 rgba(255, 255, 255, 0.25);
+
+  /* Re-point the existing tokens so every component turns to glass */
+  --color-bg: var(--glass-fill);
+  --color-surface: var(--glass-fill-soft);
+  --color-border: var(--glass-line);
+  --color-teal-soft: rgba(8, 107, 112, 0.12);
+  --color-turquoise-soft: rgba(53, 165, 160, 0.20);
+  --color-navy-soft: rgba(7, 26, 82, 0.08);
+  --color-lime-soft: rgba(240, 245, 154, 0.55);
+  --color-amber-soft: rgba(255, 236, 196, 0.7);
+  --color-danger-soft: rgba(253, 226, 226, 0.7);
+  --shadow-soft: var(--glass-shadow), var(--glass-shine);
+}
+
+/* ---------- Backdrop: soft palette-coloured light behind the glass ---------- */
+html { background: #e4f2f2; }
+body, .owner, body.welcome {
+  background-color: #e4f2f2;
+  background-image:
+    radial-gradient(42rem 34rem at 8% -6%, rgba(53, 165, 160, 0.55), transparent 65%),
+    radial-gradient(38rem 32rem at 96% 8%, rgba(8, 107, 112, 0.34), transparent 65%),
+    radial-gradient(34rem 28rem at 88% 98%, rgba(240, 245, 154, 0.75), transparent 65%),
+    radial-gradient(40rem 34rem at 0% 100%, rgba(7, 26, 82, 0.22), transparent 65%),
+    linear-gradient(160deg, #f2fbfb 0%, #d9eeee 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* ---------- Frosted surfaces ---------- */
+.card, .panel, .stat, .cstat, .store-card, .cs-card, .psum__card, .tx-sum, .od-sum, .od-panel, .od-row,
+.pr-item, .nt-item, .rp-card, .rp-period, .jstep, .jcard, .jchoice, .jsample, .choice, .la-sample,
+.eitem, .prq-viewer, .cp-viewer, .cpr__full, .cpr__drop, .ru-item, .ru-opt, .ru-row, .ru-ac__list,
+.payopt, .chip, .rb-chip span, .picker__select, .hpick__select, .tx-date__select, .auth__panel,
+.owner-header, .owner-bottomnav, .owner-sidebar, .subbar, .input, .select, .textarea {
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+}
+.card, .panel, .stat, .cstat, .store-card, .cs-card, .psum__card, .tx-sum, .od-sum, .od-panel, .pr-item,
+.nt-item, .rp-card, .jcard, .eitem, .prq-viewer, .cp-viewer, .choice, .auth__panel {
+  border-color: var(--glass-edge);
+  box-shadow: var(--glass-shadow), var(--glass-shine);
+}
+
+/* Dialogs, sheets and menus: more opaque and more blur so text stays crisp */
+.ru__dialog, .paysheet__dialog, .cs-dialog, .ru-confirm__card, .etx-confirm__card, .rp-export__menu {
+  background: var(--glass-fill-strong);
+  -webkit-backdrop-filter: var(--glass-blur-strong);
+  backdrop-filter: var(--glass-blur-strong);
+  border: 1px solid var(--glass-edge);
+  box-shadow: 0 24px 60px -18px rgba(7, 26, 82, 0.5), var(--glass-shine);
+}
+.quick-sheet__backdrop, .ru__backdrop, .paysheet__backdrop, .cs-backdrop {
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* ---------- Navigation ---------- */
+.owner-header { background: var(--glass-fill); box-shadow: 0 1px 0 var(--glass-edge), 0 6px 20px -14px rgba(7, 26, 82, 0.35); }
+.owner-bottomnav {
+  background: var(--glass-fill-strong); border-top: 1px solid var(--glass-edge);
+  box-shadow: 0 -10px 30px -14px rgba(7, 26, 82, 0.35), var(--glass-shine);
+}
+.owner-sidebar { background: var(--glass-fill); border-right: 1px solid var(--glass-edge); box-shadow: 8px 0 30px -18px rgba(7, 26, 82, 0.35); }
+.subbar { background: var(--glass-fill); box-shadow: 0 1px 0 var(--glass-edge), 0 6px 20px -14px rgba(7, 26, 82, 0.35); }
+.owner-nav__link:hover, .owner-header__btn:hover, .subbar__back:hover { background: rgba(255, 255, 255, 0.55); }
+.owner-nav__link[aria-current="page"] {
+  background: linear-gradient(135deg, rgba(53, 165, 160, 0.85), rgba(53, 165, 160, 0.6));
+  box-shadow: var(--glass-shine), 0 6px 16px -8px rgba(8, 107, 112, 0.6);
+}
+.owner-tab[aria-current="page"] svg { background: rgba(53, 165, 160, 0.75); box-shadow: var(--glass-shine); }
+.owner-tab__plus, .owner-fab { border-color: rgba(255, 255, 255, 0.85); box-shadow: 0 8px 22px -6px rgba(7, 26, 82, 0.6), var(--glass-shine); }
+
+/* ---------- Buttons ---------- */
+.btn { transition: background-color var(--ease), border-color var(--ease), color var(--ease), box-shadow var(--ease), transform var(--ease); }
+.btn--primary {
+  background: linear-gradient(180deg, rgba(53, 165, 160, 0.95) -40%, rgba(8, 107, 112, 0.94) 60%);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 18px -8px rgba(8, 107, 112, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+.btn--primary:hover { background: linear-gradient(180deg, rgba(53, 165, 160, 1) -40%, rgba(5, 83, 88, 0.96) 60%); }
+.btn--primary:active { background: var(--color-navy); }
+.btn--secondary, .btn--danger-outline, .pending-item .btn {
+  background: rgba(255, 255, 255, 0.5); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shine);
+}
+.btn--secondary:hover { background: rgba(255, 255, 255, 0.8); }
+.btn--danger { box-shadow: 0 8px 18px -8px rgba(201, 60, 60, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.35); }
+.btn--ghost:hover { background: rgba(255, 255, 255, 0.55); }
+.btn--lg.btn--primary, .btn--primary.btn--lg { box-shadow: 0 8px 18px -8px rgba(8, 107, 112, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.45); }
+
+/* ---------- Form fields ---------- */
+.input, .select, .textarea {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-color: rgba(255, 255, 255, 0.85);
+  box-shadow: inset 0 1px 3px rgba(7, 26, 82, 0.08), 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.input:focus, .select:focus, .textarea:focus { background-color: rgba(255, 255, 255, 0.82); border-color: var(--color-turquoise); }
+.choice:has(input:checked), .choice.is-selected { background: rgba(225, 244, 243, 0.8); }
+
+/* ---------- Badges / chips ---------- */
+.badge { -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6); }
+.badge--lime { background: rgba(240, 245, 154, 0.9); }
+
+/* ---------- Inner rows inside a glass card: lighter glass, no extra blur cost ---------- */
+.pending-item, .ru-chosen--plain, .ru-totals { background: rgba(255, 255, 255, 0.4); border-color: rgba(255, 255, 255, 0.7); box-shadow: var(--glass-shine); }
+
+/* ---------- The bold hero cards: tinted glass in the same navy > teal > turquoise ---------- */
+.hero {
+  background:
+    linear-gradient(135deg, rgba(7, 26, 82, 0.9) 0%, rgba(8, 107, 112, 0.84) 62%, rgba(53, 165, 160, 0.78) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 18px 36px -18px rgba(7, 26, 82, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+}
+.hero__note { background: rgba(255, 255, 255, 0.2); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.25); }
+
+/* Toast */
+.toast { background: rgba(7, 26, 82, 0.82); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); border: 1px solid rgba(255, 255, 255, 0.2); }
+
+/* Browsers without backdrop-filter: make glass a little more solid so text stays readable */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root { --color-bg: rgba(255, 255, 255, 0.9); --color-surface: rgba(255, 255, 255, 0.7); --glass-fill: rgba(255, 255, 255, 0.9); --glass-fill-strong: rgba(255, 255, 255, 0.96); }
+}
+
+/* ---------- Full-screen pages (splash, welcome, login, register): let the glass backdrop show ---------- */
+body.split-page, .splash-page { background-color: #e4f2f2; }
+.splash, .wel {
+  background:
+    radial-gradient(34rem 26rem at 78% 46%, rgba(53, 165, 160, 0.18), transparent 70%),
+    radial-gradient(28rem 22rem at 8% 92%, rgba(240, 245, 154, 0.35), transparent 70%);
+}
+.auth__panel { background: var(--glass-fill); border: 1px solid var(--glass-edge); }
+.input-wrap__icon { z-index: 1; }
+
+/* ==========================================================
+   v2: header and footer in lighter white glass, and the palette-coloured
+   surfaces (navy, teal, turquoise, lime) turned into tinted glass
+   that keeps the same colour.
+   ========================================================== */
+
+/* ---------- Header, footer, sidebar: white glass, clearly different from the page ---------- */
+.owner-header, .subbar {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.78));
+  -webkit-backdrop-filter: blur(22px) saturate(180%); backdrop-filter: blur(22px) saturate(180%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9), 0 10px 28px -16px rgba(7, 26, 82, 0.45);
+}
+.owner-bottomnav {
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.8));
+  -webkit-backdrop-filter: blur(22px) saturate(180%); backdrop-filter: blur(22px) saturate(180%);
+  border-top: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 -10px 30px -14px rgba(7, 26, 82, 0.4);
+}
+.owner-sidebar {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.78));
+  -webkit-backdrop-filter: blur(22px) saturate(180%); backdrop-filter: blur(22px) saturate(180%);
+  border-right: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 10px 0 34px -20px rgba(7, 26, 82, 0.45);
+}
+.owner-header__dot { border-color: #fff; }
+
+/* ---------- Tinted glass: shared look (colour layer + sheen + rim light) ---------- */
+.notice--demo, .rb-after, .ru-totals__main, .la-tab[aria-selected="true"], .ptab[aria-selected="true"],
+.htab[aria-selected="true"], .chip[aria-pressed="true"], .btn--navy, .quick-sheet__btn--credit,
+.jscan.is-live, .rb-after.is-cleared, .rb-chip input:checked + span, .quick-sheet__btn--payment {
+  -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+/* Navy glass */
+.notice--demo, .rb-after, .ru-totals__main, .la-tab[aria-selected="true"], .ptab[aria-selected="true"],
+.htab[aria-selected="true"], .chip[aria-pressed="true"], .btn--navy, .quick-sheet__btn--credit, .jscan.is-live {
+  background: linear-gradient(145deg, rgba(7, 26, 82, 0.84), rgba(7, 26, 82, 0.7));
+  box-shadow: 0 10px 24px -12px rgba(7, 26, 82, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.32);
+}
+.notice--demo { border-left: 4px solid var(--color-lime); }
+/* Teal glass */
+.rb-after.is-cleared, .rb-chip input:checked + span, .quick-sheet__btn--payment {
+  background: linear-gradient(145deg, rgba(8, 107, 112, 0.9), rgba(8, 107, 112, 0.74));
+  box-shadow: 0 10px 24px -12px rgba(8, 107, 112, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+/* Lime glass (small highlights) */
+.sample-tag, .badge--lime, .cs-pending, .chero__note--pending, .balance__note, .la-samples__tag, .jsamples__tag {
+  background: linear-gradient(180deg, rgba(247, 250, 190, 0.95), rgba(240, 245, 154, 0.8));
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  box-shadow: 0 4px 10px -6px rgba(77, 84, 16, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+/* Turquoise glass: avatars, icons, active chips */
+.owner-header__avatar { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 4px 10px -4px rgba(7, 26, 82, 0.5); }
+.cust-row__avatar, .profile__avatar, .pending-item__avatar, .stat__icon--debt, .choice__icon--customer {
+  background: linear-gradient(145deg, rgba(53, 165, 160, 0.95), rgba(53, 165, 160, 0.72));
+  box-shadow: 0 6px 14px -8px rgba(8, 107, 112, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.choice__icon--owner, .join-card__icon {
+  background: linear-gradient(145deg, rgba(7, 26, 82, 0.9), rgba(7, 26, 82, 0.72));
+  box-shadow: 0 6px 14px -8px rgba(7, 26, 82, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* ---------- Big gradient cards (owner hero, customer hero, customer balance): glass + glossy sheen ---------- */
+.hero, .chero, .balance {
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0) 38%),
+    linear-gradient(135deg, rgba(7, 26, 82, 0.9) 0%, rgba(8, 107, 112, 0.84) 62%, rgba(53, 165, 160, 0.78) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 20px 40px -20px rgba(7, 26, 82, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+}
+.hero::before, .chero::before, .balance::before { opacity: 0.4; filter: blur(2px); }
+.hero::after, .chero::after, .balance::after { opacity: 0.35; filter: blur(2px); }
+
+/* Floating "+" and PAY buttons */
+.owner-tab__plus, .owner-fab {
+  background: linear-gradient(160deg, rgba(53, 165, 160, 0.95) -20%, rgba(8, 107, 112, 0.92) 55%, rgba(7, 26, 82, 0.92) 120%);
+  border: 3px solid rgba(255, 255, 255, 0.9);
+}
+.quick-sheet__btn { border: 1px solid rgba(255, 255, 255, 0.3); }
+
+/* ---------- Extra polish ---------- */
+.card, .panel, .stat, .cstat, .store-card, .cs-card, .psum__card, .tx-sum, .od-sum, .od-panel, .pr-item,
+.nt-item, .rp-card, .jcard, .eitem, .auth__panel {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.48));
+}
+::selection { background: rgba(53, 165, 160, 0.35); }
+
+/* Customer archiving */
+.confirm__card { background: var(--glass-fill-strong); -webkit-backdrop-filter: var(--glass-blur-strong); backdrop-filter: var(--glass-blur-strong); border: 1px solid var(--glass-edge); }
+.confirm { -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.seg { background: rgba(7, 26, 82, 0.08); box-shadow: inset 0 1px 2px rgba(7, 26, 82, 0.1); }
+.seg__btn[aria-pressed="true"] { background: rgba(255, 255, 255, 0.85); }
+.notice--archived { background: rgba(7, 26, 82, 0.08); color: var(--color-navy); border-color: rgba(255, 255, 255, 0.6); border-left: 4px solid var(--color-turquoise); box-shadow: none; }

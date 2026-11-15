@@ -1,0 +1,13 @@
+@* Support contact details from the "Site" settings (appsettings.json). Used by both Help & Support pages. *@
+@{
+    var site = SiteOptions.Value;
+}
+<dl class="info__list">
+  <div><dt>Email</dt><dd><a href="mailto:@site.SupportEmail?subject=@Uri.EscapeDataString(site.SystemName + " support")">@site.SupportEmail</a></dd></div>
+  <div><dt>Phone</dt><dd><a href="tel:@site.PhoneHref">@site.SupportPhone</a></dd></div>
+  <div><dt>Support Hours</dt><dd>@site.SupportHours</dd></div>
+</dl>
+@if (site.IsSample)
+{
+  <p class="form-note"><strong>Sample contact details</strong>These are placeholders until @site.SystemName support is set up.</p>
+}

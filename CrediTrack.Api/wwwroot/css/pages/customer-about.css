@@ -1,0 +1,16 @@
+/* Customer Portal > Profile > About CrediTrack (about.html), a subpage.
+   Reuses the Store Owner's About panel (owner-settings.css: .st-about, .st-about__logo, .info__list) and the note (owner-customers.css).
+   Only what is new lives here: name, tagline and description text, the "What You Can Do" list and the two bottom buttons. */
+.ab-name { font-size: var(--text-xl); font-weight: var(--weight-bold); color: var(--color-navy); }
+.ab-tagline { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-teal); }
+.ab-desc { max-width: 38rem; font-size: var(--text-xs); line-height: 1.6; color: var(--color-muted); }
+
+.ab-list { list-style: none; margin: 0; padding: 0; }
+.ab-list li { display: grid; gap: 0.15rem; padding: var(--space-3) 0; font-size: var(--text-xs); line-height: 1.5; color: var(--color-muted); }
+.ab-list li:first-child { padding-top: 0; }
+.ab-list li:last-child { padding-bottom: 0; }
+.ab-list li + li { border-top: 1px solid var(--color-border); }
+.ab-list strong { font-size: var(--text-sm); color: var(--color-navy); }
+
+.ab-links { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-4); }
+.ab-links .btn { min-height: 2.875rem; padding-inline: var(--space-2); font-size: var(--text-sm); white-space: nowrap; }

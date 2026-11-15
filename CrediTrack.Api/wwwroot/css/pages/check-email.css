@@ -1,0 +1,28 @@
+/* Check Your Email screen. Builds on auth.css (shared auth layout and panel). */
+.check-email { display: grid; gap: var(--space-4); text-align: center; }
+.check-email__icon {
+  width: 4.5rem; height: 4.5rem; margin-inline: auto; display: grid; place-items: center;
+  border-radius: 50%; background: var(--color-turquoise-soft); color: var(--color-teal);
+}
+.check-email__heading { margin-bottom: 0; }
+.check-email__address {
+  margin: 0; padding: var(--space-3) var(--space-4);
+  background: var(--color-navy-soft); border-radius: var(--radius-md);
+  color: var(--color-navy); font-weight: var(--weight-bold); font-size: var(--text-md);
+  overflow-wrap: anywhere;
+}
+.check-email__hint { margin: 0; font-size: var(--text-sm); line-height: var(--leading-body); }
+.check-email__message {
+  margin: 0; padding: var(--space-3) var(--space-4); border-radius: var(--radius-md);
+  font-size: var(--text-sm); line-height: var(--leading-body); text-align: left;
+}
+.check-email__message.is-success { background: var(--color-turquoise-soft); color: var(--color-navy); }
+.check-email__message.is-error { background: var(--color-danger-soft); color: var(--color-danger); }
+.check-email__actions { display: grid; gap: var(--space-3); margin-top: var(--space-2); }
+.check-email__actions .btn { text-decoration: none; }
+.check-email__actions .btn[disabled] { opacity: 0.6; cursor: not-allowed; }
+
+@media (max-width: 39.99rem) {
+  .check-email { gap: var(--space-3); }
+  .check-email__icon { width: 4rem; height: 4rem; }
+}

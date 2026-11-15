@@ -1,0 +1,73 @@
+@page "/customer/personal-info"
+@{
+    ViewData["Title"] = @"Personal Information | CrediTrack";
+    ViewData["Body"] = @"class=""owner customer"" data-root=""/"" data-page=""profile"" data-nav=""sub"" data-title=""Personal Information"" data-back=""profile""";
+}
+
+@section Head {
+  <meta name="description" content="Your name, email address, contact number and customer code.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+  <link rel="stylesheet" href="/css/components/customer-shell.css">
+  <!-- Same look as the Profile card: page grid (owner-customers.css), info rows (owner-settings.css), customer profile styles -->
+  <link rel="stylesheet" href="/css/pages/owner-customers.css?v=3">
+  <link rel="stylesheet" href="/css/pages/owner-settings.css?v=3">
+  <link rel="stylesheet" href="/css/pages/customer-profile.css?v=2">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <!-- Back button and title are added here by js/components/customer-shell.js -->
+    <main class="owner-main" id="main">
+      <div class="page page--settings page--settings-sub" id="page">
+
+        <section class="panel pinfo" aria-labelledby="pi-name" aria-busy="true" id="pi-card">
+          <div class="pinfo__head">
+            <span class="profile__avatar" id="pi-avatar" aria-hidden="true"></span>
+            <div class="pinfo__who">
+              <h2 class="profile__name" id="pi-name"></h2>
+              <p class="pinfo__role">Customer</p>
+              <p class="st-badges" id="pi-verified" hidden><span class="badge badge--success"><span class="st-dot" aria-hidden="true"></span>Email verified</span></p>
+            </div>
+          </div>
+
+          <dl class="st-info" aria-label="Personal information">
+              <div class="st-info__row"><span class="st-info__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-4 3.6-6 7-6s6.2 2 7 6"/></svg></span><div><dt>Full Name</dt><dd id="pi-fullName"></dd></div></div>
+              <div class="st-info__row"><span class="st-info__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></svg></span><div><dt>Email Address</dt><dd id="pi-email"></dd></div></div>
+              <div class="st-info__row"><span class="st-info__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h3l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5v3a2 2 0 0 1-2 2A14 14 0 0 1 4 5a2 2 0 0 1 2-2z"/></svg></span><div><dt>Contact Number</dt><dd id="pi-contactNumber"></dd></div></div>
+              <div class="st-info__row"><span class="st-info__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M20 20h.01"/></svg></span><div><dt>Customer Code</dt><dd id="pi-customerCode"></dd></div></div>
+              <div class="st-info__row"><span class="st-info__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></svg></span><div><dt>Member Since</dt><dd id="pi-memberSince"></dd></div></div>
+          </dl>
+
+          <p class="text-muted pinfo__note">To change your name, email address, contact number or photo, use Edit Profile. Your customer code cannot be changed.</p>
+
+          <a class="btn btn--primary btn--block profile__edit" href="#" data-route="customer-profile-edit" id="edit-open">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.1 2.1 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>
+            <span>Edit Profile</span>
+          </a>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/customer-api.js"></script>
+  <script src="/js/components/customer-shell.js"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js?v=8"></script>
+  <script src="/js/pages/customer-personal-info.js"></script>
+}

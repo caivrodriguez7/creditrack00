@@ -1,0 +1,75 @@
+/* Store Owner > Payment Requests (payment-requests.html) and Review Payment (payment-request-details.html).
+   Builds on owner-customers.css (page heading, filter chips, info list, form fields and actions) and owner-ui.css (panels, notices, empty states).
+   Phone first: one column; a centered column on tablet and desktop. */
+
+.page--payments { max-width: 44rem; margin-inline: auto; width: 100%; }
+.page--payments.page--narrow { max-width: 36rem; }
+
+/* ---- List ---- */
+.pr-panel { padding: var(--space-3); }
+.pr-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+.pr-list[hidden], .pr-panel .empty[hidden] { display: none; }
+.pr-item { display: grid; gap: var(--space-3); padding: var(--space-3); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+.pr-item--pending { background: var(--color-turquoise-soft); border-color: var(--color-turquoise); }
+.pr-item__top { display: flex; align-items: center; gap: var(--space-3); }
+.pr-item__avatar { flex: none; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--color-navy-soft); color: var(--color-navy); font-size: var(--text-xs); font-weight: var(--weight-bold); }
+.pr-item__main { flex: 1; min-width: 0; display: grid; gap: 0.1rem; }
+.pr-item__name { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-navy); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pr-item__meta { font-size: 0.75rem; color: var(--color-muted); }
+.pr-item__side { flex: none; display: grid; justify-items: end; gap: 0.25rem; }
+.pr-item__amount { font-size: var(--text-md); font-weight: var(--weight-bold); color: var(--color-navy); }
+.pr-item .badge { padding: 0.05rem 0.5rem; font-size: 0.6875rem; }
+.pr-item .btn { min-height: 2.5rem; }
+
+/* Status colors (shared by the list and the detail page) */
+.badge--pending { background: var(--color-amber-soft); color: var(--color-amber); }
+
+/* ---- Review Payment ---- */
+.prd { display: grid; gap: var(--gap); min-width: 0; }
+.prd[hidden] { display: none; }
+.prd-result { border-left: 4px solid var(--color-teal); background: var(--color-teal-soft); color: var(--color-ink); }
+.prd-result strong { display: block; color: var(--color-navy); }
+.prd-result--rejected { border-left-color: var(--color-danger); background: var(--color-danger-soft); }
+.prd-head__top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.prd-head__label { font-size: var(--text-xs); color: var(--color-muted); }
+.prd-head__amount { margin-top: 0.1rem; font-size: 2rem; font-weight: var(--weight-bold); line-height: 1.15; letter-spacing: -0.015em; color: var(--color-navy); }
+.prd-head__customer { margin-top: var(--space-2); font-size: var(--text-sm); color: var(--color-muted); }
+.prd-head__customer a { font-weight: var(--weight-semibold); }
+.prd .info__list dd { text-wrap: balance; }
+.prd-tx { margin-top: var(--space-4); }
+.prd-warn { margin-top: var(--space-3); border-left-color: var(--color-danger); background: var(--color-danger-soft); }
+
+/* Proof of payment: a picture that can be shown larger in place */
+.prd-proof { display: grid; justify-items: center; gap: var(--space-3); }
+.prd-proof__frame { width: min(14rem, 100%); padding: var(--space-2); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+.prd-proof.is-large .prd-proof__frame { width: min(26rem, 100%); }
+.prd-proof__frame img { display: block; width: 100%; height: auto; border-radius: var(--radius-sm); }
+.prd-proof__toggle { min-height: 2.5rem; }
+.prd-noproof { display: grid; justify-items: center; gap: var(--space-1); padding: var(--space-3); text-align: center; font-size: var(--text-xs); color: var(--color-muted); }
+.prd-noproof strong { font-size: var(--text-sm); color: var(--color-navy); }
+
+/* Actions and the two confirmation steps */
+.prd-actions { display: grid; gap: var(--space-4); }
+.prd-actions[hidden], .prd-confirm[hidden], .form-actions[hidden] { display: none; }
+#archive-buttons { grid-template-columns: 1fr; }   /* one button: full width and centered, not stuck in the left half */
+.prd-reject { color: var(--color-danger); border-color: var(--color-danger); }
+.prd-reject:hover { background: var(--color-danger-soft); border-color: var(--color-danger); color: var(--color-danger); }
+.prd-confirm { display: grid; gap: var(--space-3); }
+.prd-confirm__title { font-size: var(--text-md); color: var(--color-navy); }
+.prd-confirm__text { font-size: var(--text-sm); line-height: 1.5; color: var(--color-ink); }
+.prd .textarea { min-height: 5rem; padding-inline: var(--space-4); font-size: 1rem; line-height: 1.45; }
+.prd .textarea[aria-invalid="true"] { border-color: var(--color-danger); }
+.prd .field__label span[aria-hidden="true"] { color: var(--color-danger); }
+
+@media (min-width: 40rem) {
+  .pr-item { grid-template-columns: 1fr auto; align-items: center; }
+  .pr-item .btn { min-width: 10rem; }
+  .prd-head__amount { font-size: 2.25rem; }
+}
+
+/* Voided payment: muted navy, so it is never mistaken for a confirmed one */
+.badge--voided { background: var(--color-navy-soft); color: var(--color-navy); }
+.pr-item--voided .pr-item__amount { text-decoration: line-through; color: var(--color-muted); }
+
+/* Show more (same look as Transaction History) */
+.pr-more { margin-top: var(--space-4); min-height: 2.75rem; font-size: var(--text-sm); }

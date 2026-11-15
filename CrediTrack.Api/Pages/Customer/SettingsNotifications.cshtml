@@ -1,0 +1,108 @@
+@page "/customer/settings-notifications"
+@{
+    ViewData["Title"] = @"Notifications | CrediTrack";
+    ViewData["Body"] = @"class=""owner customer"" data-root=""/"" data-page=""profile"" data-nav=""sub"" data-title=""Notifications"" data-back=""profile""";
+}
+
+@section Head {
+  <meta name="description" content="Choose which CrediTrack updates you want to be notified about: payment requests, credit and payment activity, stores, and account alerts.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+  <link rel="stylesheet" href="/css/components/customer-shell.css">
+  <!-- Shared with the Store Owner's Notifications settings: preference rows and switches (owner-settings.css), form actions (owner-customers.css) -->
+  <link rel="stylesheet" href="/css/pages/owner-customers.css">
+  <link rel="stylesheet" href="/css/pages/owner-settings.css">
+  <link rel="stylesheet" href="/css/pages/customer-settings-notifications.css">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <!-- Back button and title are added here by js/components/customer-shell.js -->
+    <main class="owner-main" id="main">
+      <div class="page page--settings page--settings-sub" id="page">
+
+
+        <!-- Notification Preferences -->
+        <section class="panel" aria-labelledby="np-title">
+          <div class="panel__head"><h2 class="panel__title" id="np-title">Notification Preferences</h2></div>
+          <p class="st-intro">Choose which updates you want to be notified about. Your choices are kept until you change them.</p>
+
+          <!-- Shown after Save Changes -->
+          <div class="np-success" id="np-success" role="status" aria-live="polite" tabindex="-1" hidden>
+            <span class="np-success__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+            <div><strong>Preferences saved</strong><span id="np-success-text"></span></div>
+          </div>
+
+          <form class="np-form" id="np-form" novalidate>
+            <ul class="st-prefs" id="pref-list">
+                <li>
+                  <label class="st-pref">
+                    <span class="st-pref__text">
+                      <span class="st-pref__label" id="np-payments-label">Payment request updates</span>
+                      <span class="st-pref__desc" id="np-payments-desc">When a payment request you sent is pending, approved or rejected.</span>
+                    </span>
+                    <span class="switch"><input type="checkbox" role="switch" data-pref="payments" checked autocomplete="off" aria-labelledby="np-payments-label" aria-describedby="np-payments-desc"><span class="switch__track" aria-hidden="true"></span></span>
+                  </label>
+                </li>
+                <li>
+                  <label class="st-pref">
+                    <span class="st-pref__text">
+                      <span class="st-pref__label" id="np-activity-label">Credit and payment activity</span>
+                      <span class="st-pref__desc" id="np-activity-desc">When a store records a credit or a payment for you, and balance and overdue reminders.</span>
+                    </span>
+                    <span class="switch"><input type="checkbox" role="switch" data-pref="activity" checked autocomplete="off" aria-labelledby="np-activity-label" aria-describedby="np-activity-desc"><span class="switch__track" aria-hidden="true"></span></span>
+                  </label>
+                </li>
+                <li>
+                  <label class="st-pref">
+                    <span class="st-pref__text">
+                      <span class="st-pref__label" id="np-stores-label">Store updates</span>
+                      <span class="st-pref__desc" id="np-stores-desc">When you join a store, or a store connection changes.</span>
+                    </span>
+                    <span class="switch"><input type="checkbox" role="switch" data-pref="stores" checked autocomplete="off" aria-labelledby="np-stores-label" aria-describedby="np-stores-desc"><span class="switch__track" aria-hidden="true"></span></span>
+                  </label>
+                </li>
+                <li>
+                  <label class="st-pref">
+                    <span class="st-pref__text">
+                      <span class="st-pref__label" id="np-account-label">Account and security alerts</span>
+                      <span class="st-pref__desc" id="np-account-desc">Password changes and other alerts that protect your account.</span>
+                    </span>
+                    <span class="switch"><input type="checkbox" role="switch" data-pref="account" checked autocomplete="off" aria-labelledby="np-account-label" aria-describedby="np-account-desc"><span class="switch__track" aria-hidden="true"></span></span>
+                  </label>
+                    <p class="np-warn" id="np-account-warn" hidden>If this is off, you may not hear about changes to your password or account. We recommend keeping it on.</p>
+                </li>
+            </ul>
+
+            <p class="np-status" id="np-status" aria-live="polite"></p>
+
+            <div class="form-actions">
+              <button class="btn btn--secondary" type="button" id="np-cancel">Cancel</button>
+              <button class="btn btn--primary" type="submit" id="np-save" disabled>Save Changes</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/customer-api.js"></script>
+  <script src="/js/components/customer-shell.js"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js?v=8"></script>
+  <script src="/js/pages/customer-settings-notifications.js"></script>
+}

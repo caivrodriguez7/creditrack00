@@ -1,0 +1,3 @@
+/* Customer Portal > Notifications (notifications.html): only what differs from the Store Owner's notifications screen
+   (owner-notifications.css supplies the rows, chips and date groups). */
+.nt-more { margin-top: var(--space-3); min-height: 2.75rem; font-size: var(--text-sm); }

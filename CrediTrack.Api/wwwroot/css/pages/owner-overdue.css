@@ -1,0 +1,106 @@
+/* Store Owner > Overdue Accounts (overdue.html), a subpage opened from the Dashboard's Overdue Accounts card.
+   Builds on owner-customers.css (page grid) and owner-ui.css (panel, empty state, notice).
+   Phone: each account is a card (name and days overdue, three labelled values, View Details).
+   Wide screens (56rem+): one table-like row per account under column headings. */
+
+.page--overdue { max-width: 62rem; margin-inline: auto; width: 100%; }
+.od-sub { margin-top: calc(var(--gap) * -0.5); font-size: var(--text-xs); }
+
+/* Totals */
+.od-summary { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.od-sum { min-width: 0; padding: var(--space-3) var(--ui-pad); background: var(--color-bg); border: 1px solid var(--color-border); border-left: 4px solid var(--color-danger); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); }
+.od-sum__label { font-size: 0.75rem; font-weight: var(--weight-semibold); color: var(--color-muted); }
+.od-sum__value { margin-top: 0.15rem; font-size: 1.5rem; font-weight: var(--weight-bold); line-height: 1.2; color: var(--color-navy); overflow-wrap: anywhere; }
+.od-sum__value--money { color: var(--color-danger); }
+.od-sum__note { margin-top: 0.1rem; font-size: 0.75rem; color: var(--color-muted); }
+
+/* List (phone: cards) */
+.od-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+.od-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: var(--space-3); padding: var(--space-3); background: var(--color-bg); border: 1px solid var(--color-border); border-left: 4px solid var(--color-danger); border-radius: var(--radius-md); }
+.od-name { grid-column: 1; grid-row: 1; min-width: 0; display: grid; gap: 0.1rem; }
+.od-name__text { font-size: var(--text-sm); font-weight: var(--weight-bold); color: var(--color-navy); overflow-wrap: anywhere; }
+.od-name__code { font-size: 0.75rem; color: var(--color-muted); }
+.od-days { grid-column: 2; grid-row: 1; justify-self: end; white-space: nowrap; }
+.od-fields { grid-column: 1 / -1; grid-row: 2; display: grid; margin: 0; }
+.od-fields > div { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); padding: 0.5rem 0; }
+.od-fields > div + div { border-top: 1px solid var(--color-border); }
+.od-fields dt { font-size: var(--text-xs); color: var(--color-muted); }
+.od-fields dd { margin: 0; font-size: var(--text-xs); font-weight: var(--weight-semibold); color: var(--color-navy); text-align: right; }
+.od-fields .od-amount { color: var(--color-danger); font-weight: var(--weight-bold); }
+.od-fields .od-more { display: block; font-size: 0.75rem; font-weight: var(--weight-regular); color: var(--color-muted); }
+.od-action { grid-column: 1 / -1; grid-row: 3; min-height: 2.75rem; font-size: var(--text-sm); }
+.od-head { display: none; }
+
+/* Loading and error states (Part 5B) */
+.od-loading { margin: 0; padding: var(--space-4); text-align: center; font-size: var(--text-sm); color: var(--color-muted); }
+.od-loading[hidden] { display: none; }
+.od-panel.is-loading .od-list, .od-panel.is-loading .result-line { opacity: 0.55; transition: opacity 0.15s; }
+
+.od-panel { padding: 0; background: transparent; border: 0; box-shadow: none; }
+.od-panel .empty { padding: var(--space-6) var(--space-4); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-lg); }
+.od-panel .empty .btn { min-width: 12rem; }
+
+/* Tablet and desktop */
+@media (min-width: 56rem) {
+  .od-sub { font-size: var(--text-sm); }
+  .od-summary { gap: var(--space-4); }
+  .od-sum { padding: var(--space-4) var(--ui-pad); }
+  .od-sum__label, .od-sum__note { font-size: var(--text-xs); }
+  .od-sum__value { font-size: 1.875rem; }
+
+  .od-panel { padding: var(--ui-pad); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); }
+  .od-panel .empty { padding: var(--space-6) var(--space-4); background: none; border: 0; border-radius: 0; }
+
+  .od-head, .od-row { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.1fr) 8.5rem 7.5rem; column-gap: var(--space-4); }
+  .od-head { display: grid; padding: 0 var(--space-3) var(--space-2); border-bottom: 1px solid var(--color-border); font-size: 0.75rem; font-weight: var(--weight-bold); letter-spacing: 0.03em; text-transform: uppercase; color: var(--color-muted); }
+  .od-head__action { text-align: right; }
+  .od-head[hidden] { display: none; }
+
+  .od-list { gap: 0; }
+  .od-row { align-items: center; padding: var(--space-3); background: transparent; border: 0; border-left: 0; border-radius: var(--radius-md); }
+  .od-row + .od-row { border-top: 1px solid var(--color-border); border-radius: 0 0 var(--radius-md) var(--radius-md); }
+  .od-name, .od-days, .od-action { grid-column: auto; grid-row: auto; }
+  .od-days { justify-self: start; }
+  .od-fields { display: contents; }
+  .od-fields > div { display: block; padding: 0; min-width: 0; }
+  .od-fields > div + div { border-top: 0; }
+  /* the column heading above replaces each label, which stays available to screen readers */
+  .od-fields dt { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+  .od-fields dd { font-size: var(--text-sm); text-align: left; }
+  .od-action { min-height: 2.5rem; padding-inline: var(--space-3); font-size: var(--text-xs); justify-self: end; width: 100%; }
+}
+
+@media (max-width: 22.5rem) {
+  .od-sum__value { font-size: 1.25rem; }
+  .od-summary { gap: var(--space-2); }
+}
+
+/* Search, filter and sort (Step 2).
+   Phone: search + a "Filter & Sort" button on one row; the filter chips and the sort box sit in a collapsible panel.
+   40rem and wider: no button, the panel is always shown (search | sort, then the chips). */
+.od-tools { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-2) var(--space-2); align-items: center; margin-bottom: var(--space-3); }
+.od-search { min-width: 0; }
+.od-toggle { min-height: 2.75rem; padding-inline: var(--space-3); gap: 0.4rem; font-size: var(--text-sm); white-space: nowrap; }
+.od-tools.is-open .od-toggle { background: var(--color-turquoise-soft); border-color: var(--color-teal); }
+.od-toggle__count { display: inline-grid; place-items: center; min-width: 1.25rem; height: 1.25rem; padding: 0 0.3rem; border-radius: var(--radius-pill); background: var(--color-navy); color: var(--color-lime); font-size: 0.75rem; font-weight: var(--weight-bold); }
+.od-toggle__count[hidden] { display: none; }
+.od-active { grid-column: 1 / -1; margin: 0; font-size: var(--text-xs); color: var(--color-muted); }
+.od-active strong { color: var(--color-navy); }
+.od-active[hidden] { display: none; }
+.od-extra { display: none; grid-column: 1 / -1; gap: var(--space-3); padding: var(--space-3); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+.od-tools.is-open .od-extra { display: grid; }
+.od-sort .select { min-height: 2.5rem; font-size: var(--text-sm); }
+.od-chips { gap: 0.375rem; }
+.od-chips .chip { min-height: 2.125rem; padding-inline: 0.65rem; font-size: var(--text-xs); white-space: nowrap; }
+.od-panel .result-line { margin: 0 0 var(--space-2); }
+@media (min-width: 40rem) {
+  .od-tools { grid-template-columns: minmax(0, 1fr) 15rem; gap: var(--space-3); }
+  .od-toggle, .od-active { display: none; }
+  .od-extra { display: contents; }
+  .od-chips { grid-column: 1 / -1; }
+}
+.od-search .search__input { padding-right: 0.75rem; }
+.od-search:has(.search__clear:not([hidden])) .search__input { padding-right: 2.5rem; }
+
+/* Show more (same look as Transaction History) */
+.od-load { margin-top: var(--space-4); min-height: 2.75rem; font-size: var(--text-sm); }

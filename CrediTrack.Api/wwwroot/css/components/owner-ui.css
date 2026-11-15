@@ -1,0 +1,56 @@
+/* Shared Store Owner UI: panels, list rows, empty states, notices and the "Sample" tag.
+   Used by the dashboard and the Customers pages so every card looks the same.
+   --ui-pad is the inner padding of a card; it grows a little on desktop. */
+.owner-main { --ui-pad: var(--space-4); }
+@media (min-width: 56rem) { .owner-main { --ui-pad: var(--space-5); } }
+
+.sample-tag { display: none; vertical-align: middle; margin-left: var(--space-2); padding: 0.1rem 0.55rem; border-radius: var(--radius-pill); background: var(--color-lime); color: var(--color-navy); font-size: 0.6875rem; font-weight: var(--weight-bold); letter-spacing: 0.04em; text-transform: uppercase; }
+.is-sample .sample-tag { display: inline-flex; }
+.notice { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; padding: var(--space-3) var(--ui-pad); border-radius: var(--radius-lg); font-size: var(--text-xs); line-height: 1.45; }
+.notice p { flex: 1 1 14rem; }
+.notice .btn { min-height: 2.25rem; padding-inline: var(--space-4); font-size: var(--text-xs); }
+.notice--tip { background: var(--color-lime-soft); border: 1px solid #dfe67e; border-left: 4px solid var(--color-lime); color: var(--color-lime-ink); }
+.notice--tip strong { color: var(--color-navy); }
+.notice--demo { background: var(--color-navy); color: #fff; border-left: 4px solid var(--color-lime); }
+.notice--demo strong { color: var(--color-lime); }
+.notice--demo .btn { background: transparent; color: #fff; border-color: rgba(255, 255, 255, 0.55); }
+.notice--demo .btn:hover { background: rgba(255, 255, 255, 0.12); }
+.panel { padding: var(--ui-pad); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); }
+.panel__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-3); }
+.panel__title { display: flex; align-items: center; flex-wrap: wrap; row-gap: 0.25rem; min-width: 0; font-size: var(--text-sm); color: var(--color-navy); }
+.panel__title::before { content: ""; flex: none; width: 0.3rem; height: 1.1em; margin-right: var(--space-2); border-radius: 2px; background: var(--color-turquoise); }
+.panel__link { flex: none; white-space: nowrap; font-size: var(--text-xs); color: var(--color-teal); }
+.list { list-style: none; margin: 0; padding: 0; }
+.list__row { display: flex; align-items: center; gap: var(--space-3); padding: 0.625rem 0; }
+.list__row + .list__row { border-top: 1px solid var(--color-border); }
+.list__row:first-child { padding-top: 0; }
+.list__row:last-child { padding-bottom: 0; }
+/* A row that opens a record: the whole row is the link */
+.list__row--link { display: block; padding: 0; }
+.list__link { display: flex; align-items: center; gap: var(--space-3); padding: 0.625rem var(--space-2); margin-inline: calc(var(--space-2) * -1); border-radius: var(--radius-md); color: inherit; transition: background-color var(--ease); }
+.list__link:hover { background: var(--color-turquoise-soft); text-decoration: none; color: inherit; }
+.list__link:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.list__main { flex: 1; min-width: 0; display: grid; }
+.list__name { font-weight: var(--weight-semibold); font-size: var(--text-xs); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.list__meta { font-size: 0.75rem; color: var(--color-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.list__amount { font-weight: var(--weight-bold); font-size: var(--text-xs); white-space: nowrap; color: var(--color-navy); }
+.list__amount--in { color: var(--color-teal); }
+.tx-icon { flex: none; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: var(--radius-sm); }
+.tx-icon svg { width: 1.05rem; height: 1.05rem; }
+.tx-icon--credit { background: var(--color-navy-soft); color: var(--color-navy); }
+.tx-icon--payment { background: var(--color-turquoise-soft); color: var(--color-teal); }
+.empty { display: grid; justify-items: center; gap: var(--space-2); padding: var(--space-4) var(--space-3) var(--space-1); text-align: center; }
+.empty[hidden] { display: none; }
+.empty__icon { display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; background: var(--color-lime); color: var(--color-navy); margin-bottom: var(--space-1); }
+.empty__icon svg { width: 1.4rem; height: 1.4rem; }
+.empty__title { font-size: var(--text-sm); color: var(--color-navy); }
+.empty__text { max-width: 18rem; margin-bottom: var(--space-2); font-size: var(--text-xs); color: var(--color-muted); }
+
+/* Voided transactions stay in lists for reference: the amount is struck through, the icon fades and a "Voided" tag is shown. */
+.is-voided .tx-row__amount, .is-voided .list__amount { text-decoration: line-through; color: var(--color-muted); }
+.is-voided .tx-icon { opacity: 0.55; }
+.void-tag { display: inline-block; margin-left: 0.35rem; padding: 0 0.45rem; border-radius: var(--radius-pill); background: var(--color-danger-soft); color: var(--color-danger); font-size: 0.6875rem; font-weight: var(--weight-bold); line-height: 1.5; vertical-align: baseline; }
+
+/* Void details shown under a voided transaction in lists (who voided it and when) */
+.tx-row__void, .list__meta--void { display: block; font-size: 0.75rem; font-weight: var(--weight-semibold); color: var(--color-danger); }
+.list__meta--void { white-space: normal; overflow: visible; text-overflow: clip; }

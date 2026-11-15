@@ -1,0 +1,94 @@
+@page "/owner/profile-edit"
+@{
+    ViewData["Title"] = @"Edit Profile | CrediTrack";
+    ViewData["Body"] = @"class=""owner"" data-root=""/"" data-page=""settings"" data-nav=""sub"" data-title=""Edit Profile"" data-back=""settings""";
+}
+
+@section Head {
+  <meta name="description" content="Update your photo, name, email and contact number.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+    <!-- Shared owner page styles (page grid, heading, profile card, info list, form actions): same look as Customers -->
+  <link rel="stylesheet" href="/css/pages/owner-customers.css">
+  <link rel="stylesheet" href="/css/pages/owner-settings.css">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <!-- Back button and title are added here by js/components/owner-shell.js -->
+    <main class="owner-main" id="main">
+      <div class="page page--settings page--settings-sub" id="page">
+
+
+        <form class="panel form-panel st-form" id="profile-form" novalidate aria-label="Edit Profile">
+          <p class="form-panel__intro">Update your photo and personal details. Fields marked <span aria-hidden="true">*</span><span class="visually-hidden">with an asterisk</span> are required.</p>
+
+              <!-- Profile photo: pick an image (it is shrunk and saved with the profile), or remove it to go back to initials -->
+              <div class="st-photo">
+                <span class="profile__avatar st-photo__preview" id="ef-photo-preview" aria-hidden="true"></span>
+                <div class="st-photo__actions">
+                  <label class="btn btn--secondary st-photo__btn" for="ef-photo">Change Photo</label>
+                  <input class="visually-hidden" id="ef-photo" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="ef-photo-hint ef-photo-error">
+                  <button class="btn btn--ghost st-photo__btn" type="button" id="ef-photo-remove" hidden>Remove Photo</button>
+                </div>
+                <p class="field__hint" id="ef-photo-hint">JPG, PNG or WebP, up to 5 MB.</p>
+                <p class="field__error" id="ef-photo-error" role="alert" hidden></p>
+              </div>
+
+              <fieldset class="st-fieldset">
+                <legend class="st-fieldset__title">Personal Information</legend>
+                <div class="st-fields">
+                  <div class="field">
+                    <label class="field__label" for="ef-fullName">Full Name <span aria-hidden="true">*</span></label>
+                    <input class="input" id="ef-fullName" type="text" autocomplete="name" maxlength="60" placeholder="e.g., Maria Dela Cruz" required aria-describedby="ef-fullName-error">
+                    <p class="field__error" id="ef-fullName-error" hidden></p>
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="ef-email">Email <span aria-hidden="true">*</span></label>
+                    <input class="input" id="ef-email" type="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" maxlength="100" placeholder="you@@example.com" required aria-describedby="ef-email-error">
+                    <p class="field__error" id="ef-email-error" hidden></p>
+                  </div>
+                  <div class="field" id="ef-currentPassword-field" hidden style="display:none">
+                    <label class="field__label" for="ef-currentPassword">Current Password <span aria-hidden="true">*</span></label>
+                    <input class="input" id="ef-currentPassword" type="password" autocomplete="current-password" maxlength="100" aria-describedby="ef-currentPassword-hint ef-currentPassword-error">
+                    <p class="field__hint" id="ef-currentPassword-hint">To protect your account, enter your password to change your email. We will send a confirmation link to the new address, and your current email stays active until you confirm it.</p>
+                    <p class="field__error" id="ef-currentPassword-error" hidden></p>
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="ef-contactNumber">Contact Number <span aria-hidden="true">*</span></label>
+                    <input class="input" id="ef-contactNumber" type="tel" autocomplete="tel" inputmode="tel" maxlength="16" placeholder="09XX XXX XXXX" required aria-describedby="ef-contactNumber-error">
+                    <p class="field__error" id="ef-contactNumber-error" hidden></p>
+                  </div>
+                </div>
+              </fieldset>
+
+          <div class="form-actions">
+            <button class="btn btn--secondary" type="button" id="edit-cancel">Cancel</button>
+            <button class="btn btn--primary" type="submit" id="edit-save">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/owner-api.js"></script>
+  <script src="/js/components/owner-shell.js"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/components/photo-camera.js"></script>
+  <script src="/js/pages/owner-profile-edit.js"></script>
+}

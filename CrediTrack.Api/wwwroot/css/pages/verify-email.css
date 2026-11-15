@@ -1,0 +1,24 @@
+/* Verify Email screen. Builds on auth.css (shared auth layout and panel) and check-email.css (icon, heading, actions). */
+.verify-email [hidden] { display: none !important; }
+.verify-email__icon { position: relative; }
+.verify-email__glyph, .verify-email__spinner { display: none; }
+
+/* One state at a time, driven by data-state on the panel. */
+.verify-email[data-state="loading"] .verify-email__spinner { display: block; }
+.verify-email[data-state="success"] .verify-email__glyph--success { display: block; }
+.verify-email:not([data-state="loading"]):not([data-state="success"]) .verify-email__glyph--error { display: block; }
+.verify-email:not([data-state="loading"]):not([data-state="success"]) .verify-email__icon {
+  background: var(--color-danger-soft); color: var(--color-danger);
+}
+
+.verify-email__spinner {
+  width: 2.25rem; height: 2.25rem; border-radius: 50%;
+  border: 3px solid var(--color-navy-soft); border-top-color: var(--color-teal);
+  animation: verify-email-spin 0.8s linear infinite;
+}
+@keyframes verify-email-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .verify-email__spinner { animation-duration: 2.4s; }
+}
+
+.verify-email .auth__heading p { overflow-wrap: anywhere; }

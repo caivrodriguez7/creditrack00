@@ -1,0 +1,10 @@
+/* Customer shell: only what differs from the Store Owner shell (css/components/owner-shell.css), whose
+   header, sidebar, bottom bar and active-tab styles the Customer Portal reuses as they are.
+   Differences: four bottom tabs (no "+" in the middle) and no floating action button. */
+.customer .owner-bottomnav { grid-template-columns: repeat(4, 1fr); align-items: center; }
+.customer .owner-header__avatar:empty { display: none; }
+
+/* The bell (Notifications) shows a pressed background while it is tapped, and keeps it until the page opens */
+.customer .owner-header__btn:active,
+.customer .owner-header__btn.is-pressed { background: var(--color-turquoise); color: var(--color-navy); }
+.customer .owner-header__btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }

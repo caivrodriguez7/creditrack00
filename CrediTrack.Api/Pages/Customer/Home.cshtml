@@ -1,0 +1,183 @@
+@page "/customer/home"
+@{
+    ViewData["Title"] = @"Home | CrediTrack";
+    ViewData["Body"] = @"class=""owner customer"" data-root=""/"" data-page=""home""";
+}
+
+@section Head {
+  <meta name="description" content="Your credit at a glance: balance, payment status, recent activity and the stores you have joined.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+  <link rel="stylesheet" href="/css/components/customer-shell.css">
+  <link rel="stylesheet" href="/css/pages/customer-home.css?v=3">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <!-- Header, sidebar and bottom navigation are added here by js/components/customer-shell.js -->
+    <main class="owner-main" id="main">
+      <div class="chome" id="chome">
+
+        <section class="chome__welcome" aria-labelledby="welcome-title">
+          <h1 id="welcome-title">Hi there!</h1>
+          <p class="text-muted" id="welcome-sub">Welcome to CrediTrack.</p>
+        </section>
+
+        <!-- ============ State 1: No Store Joined ============ -->
+        <div class="join" id="state-empty" hidden>
+          <section class="join-card" aria-labelledby="join-title">
+            <span class="join-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5 5.5 4h13L20 9.5"/><path d="M4 9.5a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0"/><path d="M5.5 12.5V20h13v-7.5"/><path d="M10 20v-4.5h4V20"/></svg></span>
+            <h2 id="join-title">Join a Store</h2>
+            <p>Connect with your suking tindahan to start tracking your credits, payments, and balance.</p>
+            <a class="btn btn--primary join-card__btn" href="#" data-route="customer-join-store">Join a Store</a>
+          </section>
+
+          <section class="panel why" aria-labelledby="why-title">
+            <div class="panel__head"><h2 class="panel__title" id="why-title">Why join a store?</h2></div>
+            <ul class="why__list">
+              <li class="why__item">
+                <span class="why__check" aria-hidden="true"></span>
+                <span><strong>View your credit transactions</strong><span class="why__text">See what you took on credit and when, in one place.</span></span>
+              </li>
+              <li class="why__item">
+                <span class="why__check" aria-hidden="true"></span>
+                <span><strong>Track your recorded payments</strong><span class="why__text">Know which payments your store has recorded or is still checking.</span></span>
+              </li>
+              <li class="why__item">
+                <span class="why__check" aria-hidden="true"></span>
+                <span><strong>Check your outstanding balance</strong><span class="why__text">Always see how much you still owe, store by store.</span></span>
+              </li>
+            </ul>
+          </section>
+
+        </div>
+
+        <!-- ============ State 2: After Joining a Store ============ -->
+        <div class="chome__joined" id="state-joined" hidden>
+
+          <div class="chome__overview">
+            <div class="chome__overview-main">
+              <!-- 1. Outstanding Balance Dashboard -->
+              <section class="chero" aria-labelledby="balance-title">
+                <div class="chero__top">
+                  <h2 class="chero__label" id="balance-title">Total Outstanding Balance</h2>
+                </div>
+                <p class="chero__amount" id="balance-amount" aria-live="polite">&#8369;0.00</p>
+                <div class="chero__notes">
+                  <p class="chero__note" id="balance-note"></p>
+                  <p class="chero__note chero__note--pending" id="pending-note" hidden></p>
+                </div>
+                <dl class="chero__split">
+                  <div><dt>Total Credits</dt><dd id="total-credit">&#8369;0.00</dd></div>
+                  <div><dt>Total Payments</dt><dd id="total-paid">&#8369;0.00</dd></div>
+                </dl>
+              </section>
+
+              <!-- 2. Account Status and Payment Status, side by side -->
+              <div class="cstats">
+                <div class="cstat">
+                  <span class="cstat__label">Account Status</span>
+                  <span class="cstat__value"><span class="dot dot--success"></span>Active</span>
+                  <span class="cstat__sub" id="account-sub"></span>
+                </div>
+                <div class="cstat" id="payment-card">
+                  <span class="cstat__label">Payment Status</span>
+                  <span class="cstat__value" id="payment-status"></span>
+                  <span class="cstat__bar" aria-hidden="true"><span id="paid-bar"></span></span>
+                  <span class="cstat__sub" id="payment-sub"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Payment reminders: overdue, due today or due within a week -->
+            <section class="cdue" id="due-section" aria-labelledby="due-title" hidden>
+              <div class="cdue__head">
+                <h2 class="cdue__title" id="due-title">Payment reminders</h2>
+                <span class="cdue__count" id="due-count" role="status"></span>
+              </div>
+              <ul class="cdue__list" id="due-list"></ul>
+              <a class="cdue__more" id="due-more" href="history" data-route="customer-history" hidden></a>
+            </section>
+          </div>
+
+          <!-- 3. My Stores dropdown -->
+          <div class="picker">
+            <label class="picker__label" for="store-select">Select a store</label>
+            <div class="picker__box">
+              <span class="picker__icon" aria-hidden="true"></span>
+              <select class="picker__select" id="store-select"></select>
+              <span class="picker__chev" aria-hidden="true"></span>
+            </div>
+          </div>
+
+          <!-- 4. My Stores section -->
+          <section class="stores" id="stores-section" aria-labelledby="stores-title">
+            <div class="panel__head">
+              <h2 class="panel__title" id="stores-title">My Stores</h2>
+              <span class="stores__count" id="stores-count"></span>
+            </div>
+            <div class="stores__grid" id="stores-grid"></div>
+          </section>
+
+          <!-- 5. Recent Activity (always last) -->
+          <section class="panel" id="activity-panel" aria-labelledby="activity-title">
+            <div class="panel__head">
+              <h2 class="panel__title" id="activity-title">Recent Activity</h2>
+              <a class="panel__link" href="#" data-route="customer-history" id="activity-link">View all</a>
+            </div>
+            <ul class="list" id="activity-list"></ul>
+            <div class="empty" id="activity-empty" hidden>
+              <span class="empty__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+              <h3 class="empty__title">No activity yet</h3>
+              <p class="empty__text">Credits and payments recorded at this store will show up here.</p>
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Floating PAY button (lower-right). Opens the store chooser, then continues to Make a Payment. -->
+  <button class="pay-fab" type="button" id="pay-fab" aria-haspopup="dialog" aria-label="Pay: make a payment" hidden>
+    <span class="pay-fab__icon" aria-hidden="true"></span><span class="pay-fab__text">PAY</span>
+  </button>
+
+  <div class="paysheet" id="paysheet" hidden>
+    <div class="paysheet__backdrop" data-pay-close></div>
+    <div class="paysheet__dialog" role="dialog" aria-modal="true" aria-labelledby="paysheet-title">
+      <div class="paysheet__head">
+        <h2 id="paysheet-title">Make a Payment</h2>
+        <button class="paysheet__close" type="button" data-pay-close aria-label="Close">&times;</button>
+      </div>
+      <p class="paysheet__lead">Choose the store you want to pay.</p>
+      <div class="paysheet__list" id="paysheet-list" role="radiogroup" aria-labelledby="paysheet-title"></div>
+      <p class="paysheet__error" id="paysheet-error" role="alert" hidden>Select a store to continue.</p>
+      <div class="paysheet__actions">
+        <button class="btn btn--secondary" type="button" data-pay-close>Cancel</button>
+        <button class="btn btn--primary" type="button" id="paysheet-continue">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/customer-api.js"></script>
+  <script src="/js/components/customer-shell.js"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js?v=8"></script>
+  <script src="/js/pages/customer-home.js?v=2"></script>
+}

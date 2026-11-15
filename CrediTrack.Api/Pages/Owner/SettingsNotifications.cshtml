@@ -1,0 +1,89 @@
+@page "/owner/settings-notifications"
+@{
+    ViewData["Title"] = @"Notifications | CrediTrack";
+    ViewData["Body"] = @"class=""owner"" data-root=""/"" data-page=""settings"" data-nav=""sub"" data-title=""Notifications"" data-back=""settings""";
+}
+
+@section Head {
+  <meta name="description" content="Choose which payment request and customer activity updates you get.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+  <!-- Shared owner page styles (page grid, heading, profile card, info list, form actions): same look as Customers -->
+  <link rel="stylesheet" href="/css/pages/owner-customers.css">
+  <link rel="stylesheet" href="/css/pages/owner-settings.css">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <!-- Back button and title are added here by js/components/owner-shell.js -->
+    <main class="owner-main" id="main">
+      <div class="page page--settings page--settings-sub" id="page">
+
+
+        <!-- Notification Preferences -->
+            <section class="panel" aria-labelledby="np-title">
+              <div class="panel__head"><h2 class="panel__title" id="np-title">Notification Preferences</h2></div>
+              <p class="st-intro">Choose which updates you want to be notified about. Changes are saved right away.</p>
+              <ul class="st-prefs" id="pref-list">
+                <li>
+                  <label class="st-pref">
+                    <span class="st-pref__text">
+                      <span class="st-pref__label" id="np-payments-label">Payment requests</span>
+                      <span class="st-pref__desc" id="np-payments-desc">A customer sends a payment request, or you approve or reject one.</span>
+                    </span>
+                    <span class="switch"><input type="checkbox" role="switch" data-pref="payments" checked aria-labelledby="np-payments-label" aria-describedby="np-payments-desc"><span class="switch__track" aria-hidden="true"></span></span>
+                  </label>
+                </li>
+                <li>
+                  <label class="st-pref">
+                    <span class="st-pref__text">
+                      <span class="st-pref__label" id="np-overdue-label">Overdue accounts</span>
+                      <span class="st-pref__desc" id="np-overdue-desc">A customer&rsquo;s account passes its due date.</span>
+                    </span>
+                    <span class="switch"><input type="checkbox" role="switch" data-pref="overdue" checked aria-labelledby="np-overdue-label" aria-describedby="np-overdue-desc"><span class="switch__track" aria-hidden="true"></span></span>
+                  </label>
+                </li>
+                <li>
+                  <label class="st-pref">
+                    <span class="st-pref__text">
+                      <span class="st-pref__label" id="np-customers-label">New customers</span>
+                      <span class="st-pref__desc" id="np-customers-desc">A customer joins your store or links their CrediTrack account.</span>
+                    </span>
+                    <span class="switch"><input type="checkbox" role="switch" data-pref="customers" checked aria-labelledby="np-customers-label" aria-describedby="np-customers-desc"><span class="switch__track" aria-hidden="true"></span></span>
+                  </label>
+                </li>
+                <li>
+                  <label class="st-pref">
+                    <span class="st-pref__text">
+                      <span class="st-pref__label" id="np-activity-label">Recorded utang and bayad</span>
+                      <span class="st-pref__desc" id="np-activity-desc">Utang or bayad is recorded for a customer.</span>
+                    </span>
+                    <span class="switch"><input type="checkbox" role="switch" data-pref="activity" checked aria-labelledby="np-activity-label" aria-describedby="np-activity-desc"><span class="switch__track" aria-hidden="true"></span></span>
+                  </label>
+                </li>
+              </ul>
+            </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/owner-api.js"></script>
+  <script src="/js/components/owner-shell.js"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/pages/owner-settings-notifications.js"></script>
+}

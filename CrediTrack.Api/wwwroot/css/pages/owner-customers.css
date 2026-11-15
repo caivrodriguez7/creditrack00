@@ -1,0 +1,224 @@
+/* Store Owner > Customers (list) and Customer Details.
+   Same compact sizing, card padding (--ui-pad, from owner-ui.css) and colors as the dashboard. */
+[hidden] { display: none !important; }
+
+.page { --gap: var(--space-3); display: grid; gap: var(--gap); min-width: 0; }
+
+/* Page heading */
+.page-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.page-head__text { min-width: 0; }
+.page-head h1 { font-size: 1.25rem; color: var(--color-navy); }
+.page-head p { margin-top: 0.125rem; font-size: var(--text-xs); }
+.page-head__add { flex: none; min-height: 2.5rem; padding-inline: var(--space-4); font-size: var(--text-sm); }
+
+/* Search and filter chips */
+.toolbar { display: grid; gap: var(--space-3); margin-bottom: var(--space-3); }
+.search { position: relative; }
+.search__icon { position: absolute; left: var(--space-3); top: 50%; transform: translateY(-50%); color: var(--color-muted); pointer-events: none; }
+.search__input { min-height: 2.75rem; padding-inline: 2.5rem; font-size: 1rem; }   /* 16px stops iOS zoom on focus */
+.search__input::-webkit-search-cancel-button { display: none; }
+.search__clear { position: absolute; right: 0.25rem; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--color-muted); cursor: pointer; }
+.search__clear:hover { color: var(--color-navy); background: var(--color-turquoise-soft); }
+.chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.chip { display: inline-flex; align-items: center; gap: 0.4rem; min-height: 2.25rem; padding: 0 var(--space-3); border: 1.5px solid var(--color-border); border-radius: var(--radius-pill); background: var(--color-bg); color: var(--color-ink); font-size: var(--text-xs); font-weight: var(--weight-semibold); cursor: pointer; transition: background-color var(--ease), border-color var(--ease), color var(--ease); }
+.chip span { font-weight: var(--weight-bold); opacity: 0.8; }
+.chip:hover { border-color: var(--color-turquoise); background: var(--color-turquoise-soft); }
+.chip[aria-pressed="true"] { background: var(--color-navy); border-color: var(--color-navy); color: #fff; }
+.chip[aria-pressed="true"] span { color: var(--color-lime); opacity: 1; }
+.result-line { margin-bottom: var(--space-2); font-size: 0.75rem; color: var(--color-muted); }
+
+/* Customer list */
+.cust-list { list-style: none; margin: 0; padding: 0; }
+.cust-list li + li { border-top: 1px solid var(--color-border); }
+.cust-row { display: flex; align-items: center; gap: var(--space-3); min-height: 3.75rem; margin-inline: calc(var(--space-2) * -1); padding: var(--space-2); border-radius: var(--radius-md); color: var(--color-ink); transition: background-color var(--ease); }
+.cust-row:hover { background: var(--color-turquoise-soft); text-decoration: none; color: var(--color-ink); }
+.cust-row__avatar { flex: none; display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--color-turquoise); color: var(--color-navy); font-size: 0.75rem; font-weight: var(--weight-bold); }
+.cust-row__main { flex: 1; min-width: 0; display: grid; }
+.cust-row__name { font-size: var(--text-xs); font-weight: var(--weight-semibold); color: var(--color-navy); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cust-row__meta { font-size: 0.75rem; color: var(--color-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cust-row__side { flex: none; display: grid; justify-items: end; gap: 0.1rem; }
+.cust-row__amount { font-size: var(--text-xs); font-weight: var(--weight-bold); color: var(--color-navy); white-space: nowrap; }
+.cust-row__amount.is-paid { color: var(--color-teal); }
+.cust-row__state { font-size: 0.75rem; color: var(--color-muted); }
+.cust-row__state.is-overdue { color: var(--color-danger); font-weight: var(--weight-semibold); }
+.cust-row__state.is-debt { color: var(--color-amber); font-weight: var(--weight-semibold); }
+.cust-row__status .badge { padding: 0.05rem 0.5rem; font-size: 0.6875rem; }
+.cust-row__chev { flex: none; color: var(--color-muted); }
+
+/* Customer Details */
+.detail { display: grid; gap: var(--gap); min-width: 0; }
+.detail__col { display: contents; }                      /* phone: one column, ordered below */
+.detail .profile { order: 1; }
+.detail .balance { order: 2; }
+.detail .actions { order: 3; }
+.detail .account { order: 4; }                           /* Customer Account sits under Record Utang / Record Bayad, above Transaction History */
+.detail .history { order: 5; }
+.detail .info { order: 6; }
+
+.profile { display: flex; align-items: center; gap: var(--space-3); }
+.profile__avatar { flex: none; display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; background: var(--color-turquoise); color: var(--color-navy); font-size: var(--text-sm); font-weight: var(--weight-bold); }
+.profile__main { flex: 1; min-width: 0; display: grid; justify-items: start; gap: 0.2rem; }
+.profile__name { font-size: var(--text-md); line-height: 1.25; overflow-wrap: anywhere; }
+.profile__code { font-size: 0.75rem; color: var(--color-muted); }
+.profile__edit { flex: none; min-height: 2.25rem; padding-inline: var(--space-3); font-size: var(--text-xs); }
+
+.balance { position: relative; overflow: hidden; padding: var(--space-4) var(--ui-pad); border-radius: var(--radius-lg); color: #fff; background: var(--gradient-brand); box-shadow: 0 12px 26px -16px rgba(7, 26, 82, 0.7); }
+.balance::before, .balance::after { content: ""; position: absolute; border-radius: 50%; pointer-events: none; }
+.balance::before { width: 9rem; height: 9rem; right: -2.5rem; top: -4rem; background: var(--color-turquoise); opacity: 0.35; }
+.balance::after { width: 5rem; height: 5rem; right: 2rem; bottom: -2.75rem; background: var(--color-lime); opacity: 0.28; }
+.balance > * { position: relative; }
+.balance__label { font-size: var(--text-xs); font-weight: var(--weight-semibold); color: rgba(255, 255, 255, 0.85); }
+.balance__amount { margin-top: var(--space-1); font-size: 2rem; font-weight: var(--weight-bold); line-height: 1.1; letter-spacing: -0.015em; }
+.balance__note { display: inline-block; margin-top: var(--space-2); padding: 0.15rem 0.65rem; border-radius: var(--radius-pill); background: var(--color-lime); color: var(--color-navy); font-size: 0.75rem; font-weight: var(--weight-bold); }
+.balance__split { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin: var(--space-3) 0 0; padding-top: var(--space-3); border-top: 1px solid rgba(255, 255, 255, 0.22); }
+.balance__split dt { font-size: 0.75rem; color: rgba(255, 255, 255, 0.8); }
+.balance__split dd { margin: 0.1rem 0 0; font-size: var(--text-sm); font-weight: var(--weight-bold); }
+
+.actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.actions .btn { min-height: 2.75rem; padding-inline: var(--space-2); font-size: var(--text-sm); white-space: nowrap; }
+.actions .btn svg { width: 1.1rem; height: 1.1rem; }
+.btn--navy { background: var(--color-navy); color: #fff; }
+.btn--navy:hover { background: #0b2a73; color: #fff; }
+
+.info__list { display: grid; margin: 0; }
+.info__list > div { display: flex; justify-content: space-between; gap: var(--space-4); padding: 0.625rem 0; }
+.info__list > div + div { border-top: 1px solid var(--color-border); }
+.info__list > div:first-child { padding-top: 0; }
+.info__list > div:last-child { padding-bottom: 0; }
+.info__list dt { font-size: var(--text-xs); color: var(--color-muted); }
+.info__list dd { margin: 0; font-size: var(--text-xs); font-weight: var(--weight-semibold); color: var(--color-navy); text-align: right; overflow-wrap: anywhere; }
+.info__list dd.is-empty { color: var(--color-muted); font-weight: var(--weight-regular); }
+
+/* Customer Account: icon + title + message, then a full-width Link button (or the linked account's details) */
+.account__head { display: flex; align-items: center; gap: var(--space-3); }
+.account__icon { flex: none; display: grid; place-items: center; width: 2.25rem; height: 2.25rem; color: var(--color-navy); }
+.account__icon svg { width: 1.4rem; height: 1.4rem; }
+.account__main { min-width: 0; display: grid; gap: 0.125rem; }
+.account__title { font-size: var(--text-sm); color: var(--color-navy); }
+.account__text { font-size: var(--text-xs); color: var(--color-muted); }
+.account__link { margin-top: var(--space-3); min-height: 2.75rem; border-radius: var(--radius-pill); font-size: var(--text-xs); }
+.account__info { margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--color-border); }
+.account__info dd .badge { padding: 0.1rem 0.6rem; font-size: 0.75rem; }
+
+.history .chips { margin-bottom: var(--space-3); }
+.history__list .list__row:first-child { padding-top: 0.25rem; }
+.list__amount--credit { color: var(--color-amber); }
+.history__more { margin-top: var(--space-3); min-height: 2.5rem; font-size: var(--text-xs); }
+
+/* Add / Edit Customer page */
+.page--form { max-width: 34rem; margin-inline: auto; width: 100%; }
+.form-panel { display: grid; gap: var(--space-4); }
+.form-panel .input { min-height: 3rem; font-size: 1rem; }
+.form-panel__intro { font-size: var(--text-sm); color: var(--color-muted); }
+.field__opt { font-weight: var(--weight-regular); color: var(--color-muted); }
+.form-note { padding: var(--space-3); border-radius: var(--radius-md); background: var(--color-turquoise-soft); border-left: 4px solid var(--color-turquoise); font-size: var(--text-xs); color: var(--color-ink); }
+.form-note strong { display: block; margin-bottom: 0.125rem; color: var(--color-navy); }
+.form-actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.form-actions .btn { min-height: 2.875rem; padding-inline: var(--space-2); font-size: var(--text-sm); white-space: nowrap; }
+
+/* Tablet and desktop */
+@media (min-width: 56rem) {
+  .page { --gap: var(--space-4); }
+  .page-head h1 { font-size: 1.5rem; }
+  .page-head p { font-size: var(--text-sm); }
+  .page-head__add { min-height: 2.75rem; }
+
+  .toolbar { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--space-4); }
+  .search { max-width: 26rem; }
+  .cust-row { min-height: 4rem; gap: var(--space-4); }
+  .cust-row__avatar { width: 2.5rem; height: 2.5rem; font-size: var(--text-xs); }
+  .cust-row__name, .cust-row__amount { font-size: var(--text-sm); }
+  .cust-row__meta, .cust-row__state { font-size: var(--text-xs); }
+  .panel__title { font-size: var(--text-md); }
+  .list__name, .list__amount { font-size: var(--text-sm); }
+  .list__meta { font-size: var(--text-xs); }
+  .empty__title { font-size: var(--text-md); }
+  .empty__text { font-size: var(--text-sm); }
+
+  .detail { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr); column-gap: var(--space-5); align-items: start; }
+  .detail__col { display: grid; gap: var(--gap); align-content: start; min-width: 0; }
+  .profile__name { font-size: var(--text-lg); }
+  .balance { padding: var(--space-5); }
+  .balance__label { font-size: var(--text-sm); }
+  .balance__amount { font-size: 2.25rem; }
+  .balance__split dd { font-size: var(--text-md); }
+  .info__list dt, .info__list dd { font-size: var(--text-sm); }
+  .account__title { font-size: var(--text-md); }
+  .account__text, .account__link { font-size: var(--text-sm); }
+  .history__more { font-size: var(--text-sm); }
+}
+
+/* Very narrow phones */
+@media (max-width: 22.5rem) {
+  .page-head__add span { display: none; }
+  .page-head__add { padding-inline: var(--space-3); }
+  .cust-row__chev { display: none; }
+  .actions .btn { font-size: var(--text-xs); }
+}
+
+/* ---------- Customer archiving ---------- */
+/* Active / Archived switch above the search */
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem; padding: 0.25rem; border-radius: var(--radius-md); background: var(--color-navy-soft); }
+.seg__btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; min-height: 2.5rem; border: 0; border-radius: calc(var(--radius-md) - 3px); background: transparent; color: var(--color-muted); font-size: var(--text-sm); font-weight: var(--weight-semibold); cursor: pointer; transition: background-color var(--ease), color var(--ease), box-shadow var(--ease); }
+.seg__btn span { font-weight: var(--weight-bold); opacity: 0.8; }
+.seg__btn:hover { color: var(--color-navy); }
+.seg__btn[aria-pressed="true"] { background: var(--color-bg); color: var(--color-navy); box-shadow: 0 1px 3px rgba(7, 26, 82, 0.18); }
+.seg__btn[aria-pressed="true"] span { color: var(--color-teal); opacity: 1; }
+.badge--archived { background: var(--color-navy-soft); color: var(--color-navy); }
+/* Archived customers look quieter in the list */
+.cust-row:has(.badge--archived) .cust-row__avatar { background: var(--color-navy-soft); color: var(--color-navy); }
+.notice--archived { background: var(--color-navy-soft); color: var(--color-navy); border-left: 4px solid var(--color-turquoise); }
+.notice--archived p { font-size: var(--text-xs); }
+.actions .btn[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; pointer-events: auto; }
+.archive-box { display: grid; gap: var(--space-3); margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--color-border); }
+.archive-box__text { font-size: var(--text-xs); color: var(--color-muted); }
+/* Archive / Restore confirmation */
+.confirm { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: var(--space-4); background: rgba(7, 26, 82, 0.5); }
+.confirm__card { width: 100%; max-width: 22rem; display: grid; gap: var(--space-2); padding: var(--space-5) var(--space-4) var(--space-4); border-radius: var(--radius-lg); background: var(--color-bg); box-shadow: 0 24px 60px -18px rgba(7, 26, 82, 0.5); }
+.confirm__title { font-size: var(--text-md); overflow-wrap: anywhere; }
+.confirm__text { font-size: var(--text-xs); color: var(--color-muted); margin-bottom: var(--space-2); }
+.confirm__actions { display: grid; gap: var(--space-2); }
+.confirm__actions .btn { min-height: 2.75rem; font-size: var(--text-sm); }
+
+/* Show more (same look as Transaction History) */
+.cust-more { margin-top: var(--space-4); min-height: 2.75rem; font-size: var(--text-sm); }
+
+/* Customer profile photos (linked accounts): the picture fills the round avatar */
+.cust-row__avatar, .profile__avatar { overflow: hidden; }
+.cust-row__avatar img, .profile__avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Join requests: customers waiting for the owner's approval */
+.jr-panel { display: grid; gap: var(--space-2); border-color: var(--color-turquoise); }
+.jr-panel[hidden] { display: none; }
+.jr-title { font-size: var(--text-sm); color: var(--color-navy); }
+.jr-count { color: var(--color-teal); }
+.jr-sub { font-size: var(--text-xs); }
+.jr-list { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.jr-item { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-3); padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); }
+.jr-item__avatar { flex: none; display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--color-turquoise-soft); color: var(--color-teal); font-size: var(--text-xs); font-weight: 700; }
+.jr-item__main { flex: 1 1 12rem; min-width: 0; display: grid; gap: 0.125rem; }
+.jr-item__name { overflow-wrap: anywhere; }
+.jr-item__facts { font-size: var(--text-xs); color: var(--color-muted); overflow-wrap: anywhere; }
+.jr-item__actions { display: flex; gap: var(--space-2); }
+.jr-item__attach { flex: 1 1 100%; display: grid; gap: 0.25rem; padding-top: var(--space-2); border-top: 1px dashed var(--color-border); }
+.jr-item__attach-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); color: var(--color-navy); }
+.jr-item__select { min-height: 2.5rem; font-size: var(--text-sm); }
+.jr-hint { font-size: var(--text-xs); color: var(--color-muted); }
+
+/* ---------- Compact filters (Customers) ----------
+   Active/Archived, search and the All / With Debt / Fully Paid chips take less room: tighter gaps and heights,
+   chips share one row instead of wrapping, and on desktop everything sits on a single line. */
+.cust-panel .toolbar { gap: var(--space-2); margin-bottom: var(--space-2); }
+.cust-panel .seg { padding: 0.1875rem; }
+.cust-panel .seg__btn { min-height: 2.125rem; font-size: var(--text-xs); }
+.cust-panel .search__input { min-height: 2.5rem; }
+.cust-panel .chips { flex-wrap: nowrap; gap: var(--space-1); }
+.cust-panel .chip { flex: 1 1 0; justify-content: center; min-width: 0; min-height: 2.125rem; padding-inline: var(--space-2); white-space: nowrap; }
+@media (min-width: 56rem) {
+  .cust-panel .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); margin-bottom: var(--space-3); }
+  .cust-panel .seg { grid-template-columns: repeat(2, auto); flex: none; }
+  .cust-panel .seg__btn { padding-inline: var(--space-3); }
+  .cust-panel .search { flex: 1 1 14rem; max-width: 22rem; }
+  .cust-panel .chips { flex: none; }
+  .cust-panel .chip { flex: none; padding-inline: var(--space-3); }
+}

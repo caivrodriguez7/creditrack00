@@ -1,0 +1,135 @@
+@page "/terms"
+@{
+    var site = SiteOptions.Value;
+    ViewData["Title"] = @"Terms and Conditions | CrediTrack";
+    ViewData["Body"] = @"class=""legal"" data-root=""/""";
+}
+
+@section Head {
+  <meta name="description" content="Terms and Conditions of CrediTrack, a store credit management system for sari-sari stores and their customers.">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/site-footer.css">
+  <link rel="stylesheet" href="/css/pages/legal.css">
+}
+
+  <div class="legal__wrap">
+    <header class="legal__top">
+      <a class="legal__back" href="/welcome" aria-label="Go back">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span>Back</span>
+      </a>
+      <img class="logo-light legal__logo" src="/assets/images/creditrack-logo-transparent.png?v=3" width="1363" height="597" alt="CrediTrack logo">
+      <img class="logo-dark legal__logo" src="/assets/images/creditrack-logo-dark.png?v=3" width="1363" height="597" alt="" aria-hidden="true">
+    </header>
+
+    <main class="legal__main" id="main">
+      <article class="legal__doc card">
+        <h1>Terms and Conditions</h1>
+        <p class="legal__meta">Last updated: @site.LastUpdated</p>
+        <p>These Terms and Conditions (&ldquo;Terms&rdquo;) are the agreement between you and @site.OperatorName (&ldquo;we&rdquo;, &ldquo;us&rdquo;) for the use of @site.SystemName, a store credit management system for sari-sari stores and their customers. Please read them carefully. By creating an account, ticking &ldquo;I agree&rdquo; when you register, or using the system, you accept these Terms and our <a href="/privacy">Privacy Policy</a>. If you do not agree, please do not create an account or use the system.</p>
+
+        <h2>1. About @site.SystemName</h2>
+        <p>@site.SystemName helps a store owner record credit (utang), payments and due dates, and lets a customer see the credits and payments the store has recorded for them, send payment requests and receive reminders. @site.SystemName is a record-keeping tool only. It does not hold, receive or move money, it does not process payments, and it is not a lender, bank or collection agency. Any payment happens outside the system, between the store and the customer.</p>
+
+        <h2>2. Who may use it</h2>
+        <ul>
+          <li>You must be at least 18 years old, or use the system with the guidance of a parent or guardian, and be able to enter into a binding agreement.</li>
+          <li>A store owner must be the owner, or be authorized by the owner, of the store they register.</li>
+          <li>There are two kinds of account, Store Owner and Customer. Each can only use the features of its own kind. An email address can be used for one account only, so a person who wants both kinds needs a different email address for each.</li>
+        </ul>
+
+        <h2>3. Your account</h2>
+        <ul>
+          <li>Give correct and complete information when you register and keep it up to date (name, email address, contact number and, for stores, the store details).</li>
+          <li>Verify your email address before you log in. Keep your password private and do not share it. You are responsible for everything that happens under your account.</li>
+          <li>Tell us right away if you think someone else is using your account. You may change your password at any time in Security.</li>
+          <li>Your Customer Code, Store Code and QR codes identify your account or store. Share them only with people you want to connect with.</li>
+        </ul>
+
+        <h2>4. Joining and linking (consent)</h2>
+        <ul>
+          <li>A customer who enters a store code only sends a join request. The store owner approves or declines it, unless the owner has switched on automatic approval of joins for the store. A customer who reconnects to a store they already had is connected again at once.</li>
+          <li>A store owner who enters a customer's code only sends a link request. The customer accepts or declines it. Nothing on the customer's record changes until the customer accepts.</li>
+          <li>Requests that are not answered expire after 14 days. You may send a new request afterwards.</li>
+        </ul>
+
+        <h2>5. Store owners</h2>
+        <ul>
+          <li>You are responsible for the credits, payments, due dates and customer records you enter, and for keeping them accurate and up to date.</li>
+          <li>Confirming or rejecting a customer's payment request, editing a record and voiding a record are your decisions as the store. Every edit and void stays in the Change History with its date and the person who made it, and a void also keeps its reason. Records are never silently deleted.</li>
+          <li>Only record information about customers that you are allowed to keep, and use it only to manage credit in your store. Do not use the system to harass, shame or threaten a customer.</li>
+          <li>Archiving a customer hides the record from the active list; its credits, payments and history stay in the store's records.</li>
+          <li>You are responsible for any report you export and for how you share it.</li>
+        </ul>
+
+        <h2>6. Customers</h2>
+        <ul>
+          <li>The balances and history shown to you come from the records of the stores you joined. You cannot edit them yourself. If a record looks wrong, ask the store owner: the store keeps those records.</li>
+          <li>You can leave a store and reconnect later. Leaving only disconnects you; the store keeps its records of past credits and payments.</li>
+          <li>A payment request is not a payment until the store owner confirms it. Your balance changes only after that.</li>
+          <li>Send only true information and real proof of payment. A payment request has the amount, the payment method, a reference number and an optional picture (JPG or PNG) as proof. Pictures you upload must be yours to share. The store owner may confirm or reject a request, and a rejection shows its reason.</li>
+        </ul>
+
+        <h2>7. Acceptable use</h2>
+        <p>You agree that you will not:</p>
+        <ul>
+          <li>use another person's account, or try to get into data that is not yours;</li>
+          <li>enter false records, fake payments or fake proof of payment;</li>
+          <li>try to break, overload, copy, reverse-engineer or bypass the security of the system, or use bots or scripts to access it;</li>
+          <li>upload anything unlawful, harmful or that you do not have the right to share;</li>
+          <li>use the system for anything unlawful or to harm other users.</li>
+        </ul>
+
+        <h2>8. Reminders and notifications</h2>
+        <p>The system may show reminders and notifications, for example when a credit is due soon (within the next 7 days), due today or overdue, or when a payment request, join request or link request is received or answered. The system sends email only for account matters such as email verification and password reset. They follow the due dates recorded by the store and are a convenience. They are not a legal demand for payment and do not change what is owed between the store and the customer. You can choose which notifications you receive in Settings.</p>
+
+        <h2>9. Your information</h2>
+        <p>You keep ownership of the information you enter. You allow us to store and process it, and to show it to the other people it concerns (for example a store and its connected customers), only to run @site.SystemName. How we collect, use and protect personal information is explained in the <a href="/privacy">Privacy Policy</a>, in line with the Data Privacy Act of 2012 (Republic Act No. 10173).</p>
+
+        <h2>10. Our rights in the system</h2>
+        <p>@site.SystemName, including its name, logo, design and software, belongs to @site.OperatorName. We give you a limited, personal, non-transferable and revocable right to use it under these Terms. You may not copy, sell or reuse any part of it without our written permission.</p>
+
+        <h2>11. Availability and accuracy</h2>
+        <p>We try to keep @site.SystemName working and accurate, but it is provided &ldquo;as is&rdquo; and &ldquo;as available&rdquo;. The system may be unavailable from time to time for maintenance or for reasons beyond our control, and we cannot promise it will be free of errors. Keep your own copy of important records if you need one.</p>
+
+        <h2>12. Limitation of liability</h2>
+        <p>To the fullest extent allowed by law, @site.OperatorName is not liable for losses that come from the records entered by users, from disagreements between a store and its customers about amounts owed or paid, from payments made outside the system, from unauthorized use of an account caused by a shared or weak password, or from interruptions or errors in the system. Nothing in these Terms limits any right you have under Philippine law that cannot be limited by agreement.</p>
+
+        <h2>13. Suspension and closing an account</h2>
+        <p>We may suspend or close an account that breaks these Terms or puts other users or the system at risk. You can stop using @site.SystemName at any time. To ask for your account to be closed, contact us using the details below. Credit and payment records that other users still need may be kept, as explained in the Privacy Policy.</p>
+
+        <h2>14. Changes to these Terms</h2>
+        <p>We may update these Terms. The date at the top shows when they were last changed. If you keep using @site.SystemName after a change, you accept the updated Terms. If you do not agree with a change, stop using the system and contact us to close your account.</p>
+
+        <h2>15. General</h2>
+        <ul>
+          <li><strong>Governing law:</strong> these Terms are governed by the laws of the Republic of the Philippines.</li>
+          <li><strong>If a part is invalid:</strong> the other parts of these Terms stay in force.</li>
+          <li><strong>Whole agreement:</strong> these Terms and the Privacy Policy are the whole agreement between you and us about the use of @site.SystemName.</li>
+        </ul>
+
+        <h2>16. Contact</h2>
+        <p>Questions about these Terms and Conditions? Contact @site.OperatorName:</p>
+        <p class="legal__contact">
+          Email: <a href="mailto:@site.SupportEmail">@site.SupportEmail</a><br>
+          Phone: <a href="tel:@site.PhoneHref">@site.SupportPhone</a><br>
+          Hours: @site.SupportHours
+          @if (!string.IsNullOrWhiteSpace(site.Address)) { <text><br>Address: @site.Address</text> }
+        </p>
+      </article>
+    </main>
+
+    @await Html.PartialAsync("_SiteFooter")
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/pages/legal-nav.js"></script>
+}

@@ -1,0 +1,352 @@
+@page "/welcome"
+@{
+    ViewData["Title"] = @"Welcome | CrediTrack";
+    ViewData["Body"] = @"class=""welcome"" data-root=""/""";
+    var site = SiteOptions.Value;
+}
+
+@section Head {
+  <meta name="description" content="CrediTrack is a store credit management system for sari-sari stores and their customers.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages/welcome.css?v=32">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+  <!-- Runs before the page paints: signed-in people go to their dashboard, and a fresh launch
+       (new visit, reload, bookmark, restored tab) goes through the splash screen first. -->
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/pages/welcome.js?v=24"></script>
+}
+
+  <div class="lp">
+    <!-- ================= Navbar (fixed, compact pill): Features / How It Works / About ================= -->
+    <header class="lp-nav" id="top">
+      <nav class="lp-nav__pill" id="lp-menu" aria-label="Sections">
+        <a class="lp-nav__brand" href="#top" aria-label="CrediTrack home"><img src="/assets/images/creditrack-wordmark-dark.png?v=3" width="1363" height="214" alt="CrediTrack"></a>
+        <span class="lp-nav__sep" aria-hidden="true"></span>
+        <a href="#features"><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg><span>Features</span></a>
+        <a href="#how"><svg class="ic" aria-hidden="true"><use href="#i-play-outline"/></svg><span>How it Works</span></a>
+        <a href="#about"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span>About</span></a>
+      </nav>
+    </header>
+
+    <!-- Shared icons -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+      <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2l2.7 5.6 6.1.8-4.5 4.2 1.1 6-5.4-3-5.4 3 1.1-6-4.5-4.2 6.1-.8z"/></symbol>
+      <symbol id="i-play-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M10.2 8.4v7.2l5.8-3.6z"/></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6" fill="currentColor"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><path d="M10 8.5v7l6-3.5z" fill="#071A52"/></symbol>
+      <symbol id="i-notebook" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M9 3v18M12.5 8h3.5M12.5 12h3.5M12.5 16h2"/></symbol>
+      <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.7a3.5 3.5 0 010 6.6M18 14.3c2.2.7 3.5 2.7 3.5 5.7"/></symbol>
+      <symbol id="i-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.5A2.5 2.5 0 016.5 5H18v3"/><path d="M4 7.5V17a2.5 2.5 0 002.5 2.5h12A1.5 1.5 0 0020 18V9.5A1.5 1.5 0 0018.5 8h-12A2.5 2.5 0 014 7.5z"/><circle cx="16" cy="13.5" r="1.1" fill="currentColor"/></symbol>
+      <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4.5" width="14" height="16.5" rx="2.5"/><path d="M9 4.5V3.8A.8.8 0 019.8 3h4.4a.8.8 0 01.8.8v.7"/><path d="M8.8 13l2.4 2.4 4.2-4.6"/></symbol>
+      <symbol id="i-user" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7.5" r="4"/><path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7z"/></symbol>
+      <symbol id="i-user-plus" viewBox="0 0 24 24" fill="currentColor"><circle cx="10" cy="7.5" r="4"/><path d="M2.5 21c0-4.2 3.3-7 7.5-7 1.2 0 2.300.2 3.300.6V21z"/><path d="M19 11v3h3v2h-3v3h-2v-3h-3v-2h3v-3z"/></symbol>
+      <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l5 5v11.500a1.500 1.500 0 01-1.500 1.500h-11A1.500 1.500 0 015 19.500v-15A1.500 1.500 0 016.500 3z"/><path d="M8.500 12h7M8.500 15.500h7M8.500 8.500h3"/></symbol>
+      <symbol id="i-check-circle" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><path d="M7.500 12.300l3 3 6-6.300" fill="none" stroke="#fff" stroke-width="2.400" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6.5 15h4"/></symbol>
+      <symbol id="i-bag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.500 8h15l-1 12h-13z"/><path d="M9 8V6.500a3 3 0 016 0V8"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24" fill="currentColor"><rect x="3.500" y="3.500" width="7" height="7" rx="1.600"/><rect x="13.500" y="3.500" width="7" height="7" rx="1.600"/><rect x="3.500" y="13.500" width="7" height="7" rx="1.600"/><rect x="13.500" y="13.500" width="7" height="7" rx="1.600"/></symbol>
+      <symbol id="i-swap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14M14 4l4 4-4 4M20 16H6M10 12l-4 4 4 4"/></symbol>
+      <symbol id="i-bars" viewBox="0 0 24 24" fill="currentColor"><rect x="3.500" y="12" width="4.500" height="8.500" rx="1.200"/><rect x="9.800" y="7.500" width="4.500" height="13" rx="1.200"/><rect x="16" y="3.500" width="4.500" height="17" rx="1.200"/></symbol>
+      <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.800" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.200"/><path d="M12 2.500v2.700M12 18.800v2.700M2.500 12h2.700M18.800 12h2.700M5.300 5.300l1.900 1.900M16.800 16.800l1.900 1.900M18.700 5.300l-1.900 1.900M7.200 16.800l-1.900 1.900"/></symbol>
+    </defs></svg>
+
+    <!-- ================= Hero ================= -->
+    <section class="lp-hero" id="hero" aria-labelledby="welcome-title">
+      <div class="lp-hero__bg" aria-hidden="true"><i class="sw sw1"></i><i class="sw sw2"></i><i class="sw sw3"></i></div>
+      <div class="lp-hero__inner">
+        <div class="lp-hero__copy">
+          <h1 id="welcome-title" class="lp-hero__title"><span>Store Credit</span> <span>Made Smarter.</span> <em>Trust Grows Stronger.</em></h1>
+          <p class="lp-hero__lead">Track customer balances, record payments, and manage your store&rsquo;s credit transactions in one place.</p>
+          <div class="lp-hero__actions">
+            <a class="btn btn--lime" href="account-type" data-route="account-type">Create Account</a>
+            <a class="btn btn--outline-teal" href="login" data-route="login">Log In</a>
+          </div>
+        </div>
+
+        <div class="lp-hero__visual" aria-hidden="true">
+          <!-- Desktop: browser window with the credit overview -->
+          <div class="hv hv--browser">
+            <span class="hv__ring"></span>
+            <i class="hv__glass hv__glass--a"></i><i class="hv__glass hv__glass--b"></i><i class="hv__glass hv__glass--c"></i>
+            <div class="hv__win">
+              <div class="hv__bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
+              <div class="hv__body">
+                <aside class="hv__side">
+                  <svg class="ic hv__wallet"><use href="#i-wallet"/></svg>
+                  <span><i></i><b></b></span><span><i></i><b></b></span><span><i></i><b></b></span>
+                </aside>
+                <div class="hv__main">
+                  <div class="hv__panel">
+                    <p class="hv__h">Credit Overview</p>
+                    <svg class="hv__chart" viewBox="0 0 200 90" preserveAspectRatio="none">
+                      <defs><linearGradient id="hvg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#35c9c0" stop-opacity=".55"/><stop offset="1" stop-color="#35c9c0" stop-opacity=".05"/></linearGradient></defs>
+                      <path d="M0 80L30 60L50 68L80 44L100 52L125 30L150 38L175 12L200 6V90H0Z" fill="url(#hvg)"/>
+                      <polyline points="0,80 30,60 50,68 80,44 100,52 125,30 150,38 175,12" fill="none" stroke="#0a8fc4" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <div class="hv__total"><small>Total Credit</small><b>&#8369;12,500</b></div>
+                </div>
+              </div>
+            </div>
+            <div class="hv__toast">
+              <span class="hv__ok"><svg class="ic"><use href="#i-check"/></svg></span>
+              <div><small>Payment Recorded</small><b>&#8369;1,000</b></div>
+            </div>
+          </div>
+
+          <!-- Mobile: laptop dashboard + phone -->
+          <div class="hv hv--device">
+            <i class="hv__glass hv__glass--a"></i><i class="hv__glass hv__glass--b"></i>
+            <div class="dv__laptop">
+              <div class="dv__screen">
+                <aside class="dv__side">
+                  <img src="/assets/images/creditrack-wordmark-dark.png?v=3" width="1363" height="214" alt="">
+                  <span class="is-on"><svg class="ic"><use href="#i-grid"/></svg>Dashboard</span>
+                  <span><svg class="ic"><use href="#i-users"/></svg>Customers</span>
+                  <span><svg class="ic"><use href="#i-swap"/></svg>Transactions</span>
+                  <span><svg class="ic"><use href="#i-bars"/></svg>Reports</span>
+                  <span><svg class="ic"><use href="#i-gear"/></svg>Settings</span>
+                </aside>
+                <div class="dv__main">
+                  <p class="dv__h">Overview</p>
+                  <div class="dv__stats">
+                    <div><small>Total Credit</small><b>&#8369;12,500</b></div>
+                    <div><small>Total Payments</small><b class="g">&#8369;8,200</b></div>
+                    <div><small>Active Customers</small><b class="bl">24</b></div>
+                  </div>
+                  <p class="dv__sub">Recent Transactions</p>
+                  <table class="dv__tbl">
+                    <thead><tr><th>Customer</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead>
+                    <tbody>
+                      <tr><td>Juan Dela Cruz</td><td>&#8369;1,000</td><td>Oct 14, 2025</td><td><em class="ok">Paid</em></td></tr>
+                      <tr><td>Maria Santos</td><td>&#8369;500</td><td>Oct 14, 2025</td><td><em class="ok">Paid</em></td></tr>
+                      <tr><td>Pedro Reyes</td><td>&#8369;1,200</td><td>Oct 13, 2025</td><td><em class="wait">Pending</em></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="dv__base"></div>
+            </div>
+            <div class="dv__phone">
+              <p>Customer Balance</p>
+              <span class="dv__av"><svg class="ic"><use href="#i-user"/></svg></span>
+              <small>Maria Santos</small>
+              <b>&#8369;2,800</b>
+              <span class="dv__btn">View Transactions</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a class="lp-cue" href="#challenges" aria-label="Scroll down"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9.500l7 7 7-7"/></svg></a>
+
+      <!-- animated wave edge -->
+      <div class="lp-wave lp-wave--hero" aria-hidden="true">
+        <svg viewBox="0 0 2880 140" preserveAspectRatio="none"><path class="w2" d="M0 70C240 20 480 120 720 70S1200 20 1440 70S1920 120 2160 70S2640 20 2880 70V140H0Z"/><path class="w1" d="M0 96C240 56 480 128 720 96S1200 56 1440 96S1920 128 2160 96S2640 56 2880 96V140H0Z"/></svg>
+      </div>
+    </section>
+
+    <main>
+      <!-- ================= Challenges ================= -->
+      <section class="lp-sec lp-chal" id="challenges" aria-labelledby="h-chal">
+        <div class="lp-chal__intro" data-reveal>
+          <p class="lp-kicker">The Challenges</p>
+          <h2 id="h-chal">Running a store is hard enough. <em>Credit shouldn&rsquo;t be.</em></h2>
+          <p class="lp-chal__lead">Keep your business organized and avoid the hassle of manual tracking.</p>
+        </div>
+        <ul class="lp-chal__list">
+          <li class="chal" data-reveal><span class="chal__ic"><svg class="ic" aria-hidden="true"><use href="#i-notebook"/></svg></span><p>Keep track of every utang without relying on notebooks.</p></li>
+          <li class="chal" data-reveal><span class="chal__ic"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg></span><p>Know exactly how much each customer owes.</p></li>
+          <li class="chal" data-reveal><span class="chal__ic"><svg class="ic" aria-hidden="true"><use href="#i-wallet"/></svg></span><p>See collected payments and remaining balances.</p></li>
+          <li class="chal" data-reveal><span class="chal__ic"><svg class="ic" aria-hidden="true"><use href="#i-clipboard"/></svg></span><p>Organize customer records in one place.</p></li>
+        </ul>
+      </section>
+
+      <!-- ================= Features ================= -->
+      <section class="lp-feat" id="features" aria-labelledby="h-feat">
+        <div class="lp-wave lp-wave--top" aria-hidden="true"><svg viewBox="0 0 2880 100" preserveAspectRatio="none"><path d="M0 50C240 10 480 90 720 50S1200 10 1440 50S1920 90 2160 50S2640 10 2880 50V0H0Z"/></svg></div>
+        <div class="lp-feat__inner">
+          <div class="lp-feat__copy" data-reveal>
+            <p class="lp-kicker lp-kicker--left">Powerful Features</p>
+            <h2 id="h-feat">Everything You Need to Manage Store Credit</h2>
+            <p class="lp-feat__lead">Simple tools. Powerful insights.</p>
+            <ul class="lp-ticks">
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Customer Management</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Credit &amp; Payment Tracking</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Overdue Accounts</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Reports &amp; Analytics</li>
+              <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Customer Portal</li>
+            </ul>
+            <a class="btn btn--navy-solid" href="account-type" data-route="account-type">Explore Features <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </div>
+
+          <!-- Animated dashboard mockup (pure HTML/CSS, numbers count up when it scrolls into view) -->
+          <div class="lp-feat__art" data-reveal>
+            <div class="dash" aria-label="Preview of the CrediTrack store owner dashboard" role="img">
+              <aside class="dash__side" aria-hidden="true">
+                <img src="/assets/images/creditrack-wordmark-dark.png?v=3" width="1363" height="214" alt="">
+                <span class="dash__nav is-on"><svg class="ic"><use href="#i-grid"/></svg>Dashboard</span>
+                <span class="dash__nav"><svg class="ic"><use href="#i-users"/></svg>Customers</span>
+                <span class="dash__nav"><svg class="ic"><use href="#i-swap"/></svg>Transactions</span>
+                <span class="dash__nav"><svg class="ic"><use href="#i-bars"/></svg>Reports</span>
+                <span class="dash__nav"><svg class="ic"><use href="#i-gear"/></svg>Settings</span>
+              </aside>
+              <div class="dash__main" aria-hidden="true">
+                <p class="dash__title">Dashboard</p>
+                <div class="dash__stats">
+                  <div class="dash__stat"><small>Total Customers</small><b data-count="128">128</b><span class="spark"><i></i><i></i><i></i><i></i><i></i></span></div>
+                  <div class="dash__stat"><small>Outstanding Balance</small><b data-count="26500" data-prefix="&#8369;">&#8369;26,500</b><span class="spark spark--warn"><i></i><i></i><i></i><i></i><i></i></span></div>
+                  <div class="dash__stat"><small>Collected This Month</small><b data-count="54200" data-prefix="&#8369;">&#8369;54,200</b><span class="spark"><i></i><i></i><i></i><i></i><i></i></span></div>
+                </div>
+                <div class="dash__tx">
+                  <p><b>Recent Transactions</b><span>View All &rarr;</span></p>
+                  <div class="tx tx--1"><b>Juan Dela Cruz</b><em class="tag tag--pay">Payment Recorded</em><i>&#8369;1,000</i><span>Nov 12, 2026</span></div>
+                  <div class="tx tx--2"><b>Maria Santos</b><em class="tag tag--credit">Credit Charge</em><i>&#8369;500</i><span>Nov 11, 2026</span></div>
+                  <div class="tx tx--3"><b>Pedro Reyes</b><em class="tag tag--pay">Payment Recorded</em><i>&#8369;2,000</i><span>Nov 10, 2026</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="lp-wave lp-wave--bottom" aria-hidden="true"><svg viewBox="0 0 2880 100" preserveAspectRatio="none"><path d="M0 50C240 90 480 10 720 50S1200 90 1440 50S1920 10 2160 50S2640 90 2880 50V100H0Z"/></svg></div>
+      </section>
+
+      <!-- ================= How it works ================= -->
+      <section class="lp-sec lp-how-sec" id="how" aria-labelledby="h-how">
+        <header class="lp-head" data-reveal><p class="lp-kicker lp-kicker--pill">How It Works</p><h2 id="h-how">Start Managing Credit in Three Simple Steps</h2></header>
+        <div class="lp-how">
+          <article class="how" data-reveal>
+            <div class="how__who">
+              <svg class="avatar avatar--owner" viewBox="0 0 64 64" aria-hidden="true">
+                <circle cx="32" cy="32" r="31" fill="#dff0f0"/>
+                <path d="M10 62c2-12 10-17 22-17s20 5 22 17z" fill="#8cc9e8"/>
+                <path d="M20 62l3-16h18l3 16z" fill="#0a2f73"/>
+                <rect x="28" y="36" width="8" height="10" rx="3" fill="#e9a67a"/>
+                <ellipse cx="32" cy="27" rx="11" ry="12" fill="#f4b88f"/>
+                <path d="M20 26C18 14 28 9 34 10c8 1 12 8 10 16-3-6-7-8-12-8-5 0-9 3-12 8z" fill="#14234f"/>
+                <g class="av-eyes"><circle cx="27.500" cy="28" r="1.500" fill="#14234f"/><circle cx="36.500" cy="28" r="1.500" fill="#14234f"/></g>
+                <path d="M28 33q4 3.500 8 0" fill="none" stroke="#14234f" stroke-width="1.400" stroke-linecap="round"/>
+              </svg>
+              <span class="pill">For Store Owners</span>
+            </div>
+            <ol class="steps">
+              <li><span class="steps__n">1</span><svg class="ic steps__ic" aria-hidden="true"><use href="#i-user-plus"/></svg><p>Create your store account.</p></li>
+              <li class="steps__arrow" aria-hidden="true"><svg class="ic"><use href="#i-arrow"/></svg></li>
+              <li><span class="steps__n">2</span><svg class="ic steps__ic" aria-hidden="true"><use href="#i-users"/></svg><p>Add customers and set credit limits.</p></li>
+              <li class="steps__arrow" aria-hidden="true"><svg class="ic"><use href="#i-arrow"/></svg></li>
+              <li><span class="steps__n">3</span><svg class="ic steps__ic" aria-hidden="true"><use href="#i-card"/></svg><p>Record credit transactions and payments.</p></li>
+            </ol>
+          </article>
+          <article class="how" data-reveal>
+            <div class="how__who">
+              <svg class="avatar avatar--cust" viewBox="0 0 64 64" aria-hidden="true">
+                <circle cx="32" cy="32" r="31" fill="#e1f4f3"/>
+                <path d="M10 62c2-12 10-17 22-17s20 5 22 17z" fill="#ffffff"/>
+                <path d="M16 62c1-8 5-12 8-13l8 6 8-6c3 1 7 5 8 13z" fill="#35A5A0" opacity=".0"/>
+                <rect x="28" y="36" width="8" height="10" rx="3" fill="#e9a67a"/>
+                <path d="M17 32C13 12 26 8 34 9c10 1 15 10 12 24-1 6-3 10-3 10l-6-4V22c-6 0-12-2-14-6-1 4-3 10-6 16z" fill="#14234f"/>
+                <ellipse cx="32" cy="28" rx="10.500" ry="12" fill="#f4b88f"/>
+                <path d="M21 25c0-9 8-12 13-11 6 1 9 6 9 11-4-5-9-7-13-7-4 0-7 3-9 7z" fill="#14234f"/>
+                <g class="av-eyes"><circle cx="27.500" cy="28.500" r="1.500" fill="#14234f"/><circle cx="36.500" cy="28.500" r="1.500" fill="#14234f"/></g>
+                <path d="M28 33.500q4 3.500 8 0" fill="none" stroke="#14234f" stroke-width="1.400" stroke-linecap="round"/>
+              </svg>
+              <span class="pill">For Customers</span>
+            </div>
+            <ol class="steps">
+              <li><span class="steps__n">1</span><svg class="ic steps__ic" aria-hidden="true"><use href="#i-user"/></svg><p>Access your customer account.</p></li>
+              <li class="steps__arrow" aria-hidden="true"><svg class="ic"><use href="#i-arrow"/></svg></li>
+              <li><span class="steps__n">2</span><svg class="ic steps__ic" aria-hidden="true"><use href="#i-doc"/></svg><p>View your outstanding balance.</p></li>
+              <li class="steps__arrow" aria-hidden="true"><svg class="ic"><use href="#i-arrow"/></svg></li>
+              <li><span class="steps__n">3</span><svg class="ic steps__ic" aria-hidden="true"><use href="#i-check-circle"/></svg><p>Review your payment activity.</p></li>
+            </ol>
+          </article>
+        </div>
+      </section>
+
+      <!-- ================= About ================= -->
+      <section class="lp-sec lp-about-sec" id="about" aria-labelledby="h-about">
+        <div class="lp-about" data-reveal>
+          <figure class="shop">
+            <svg class="shop__bg" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs>
+                <linearGradient id="sh-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a3a66"/><stop offset="1" stop-color="#086B70"/></linearGradient>
+                <g id="sh-set">
+                  <rect x="0" y="8" width="16" height="26" rx="3"/><rect x="20" y="0" width="14" height="34" rx="3"/>
+                  <rect x="38" y="12" width="18" height="22" rx="3"/><rect x="60" y="4" width="14" height="30" rx="3"/>
+                  <rect x="78" y="14" width="16" height="20" rx="3"/>
+                </g>
+              </defs>
+              <rect width="400" height="300" fill="url(#sh-bg)"/>
+              <g stroke="#6fe0d9" stroke-opacity=".35" stroke-width="4" stroke-linecap="round"><path d="M0 92H400M0 172H400M0 252H400"/></g>
+              <g class="sh-row s1"><g fill="#F0F59A"><use href="#sh-set" x="10" y="58"/><use href="#sh-set" x="210" y="58"/></g><g fill="#35A5A0"><use href="#sh-set" x="110" y="58"/><use href="#sh-set" x="310" y="58"/></g></g>
+              <g class="sh-row s2"><g fill="#ffffff" opacity=".9"><use href="#sh-set" x="10" y="138"/><use href="#sh-set" x="210" y="138"/></g><g fill="#F0F59A"><use href="#sh-set" x="110" y="138"/><use href="#sh-set" x="310" y="138"/></g></g>
+              <g class="sh-row s3"><g fill="#35A5A0"><use href="#sh-set" x="10" y="218"/><use href="#sh-set" x="210" y="218"/></g><g fill="#ffffff" opacity=".9"><use href="#sh-set" x="110" y="218"/><use href="#sh-set" x="310" y="218"/></g></g>
+            </svg>
+            <picture class="shop__owner">
+              <source srcset="/assets/images/store-owner.webp" type="image/webp">
+              <img src="/assets/images/store-owner.png" width="520" height="737" alt="Smiling store owner checking customer balances on her phone" loading="lazy" decoding="async">
+            </picture>
+            <div class="shop__pop" aria-hidden="true">
+              <span class="shop__pop-ic"><svg class="ic"><use href="#i-check"/></svg></span>
+              <div><small>Payment verified</small><b>&#8369;500 recorded</b></div>
+            </div>
+            <div class="shop__pop shop__pop--b" aria-hidden="true">
+              <span class="shop__pop-ic shop__pop-ic--lime"><svg class="ic"><use href="#i-bars"/></svg></span>
+              <div><small>Balance</small><b>&#8369;26,000</b></div>
+            </div>
+          </figure>
+          <div class="lp-about__copy">
+            <p class="lp-kicker lp-kicker--pill">About CrediTrack</p>
+            <h2 id="h-about">Built for the Way Your Store Handles Credit</h2>
+            <p>CrediTrack helps sari-sari stores and small businesses organize customer credit, track payments, and maintain clear transaction records through a simple and accessible platform.</p>
+          </div>
+          <ul class="lp-about__list">
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg>Made for small businesses</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg>Easy to use</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg>Always accessible</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ================= Call to action ================= -->
+      <section class="lp-cta-sec" aria-labelledby="h-cta">
+        <div class="lp-wave lp-wave--cta" aria-hidden="true"><svg viewBox="0 0 2880 100" preserveAspectRatio="none"><path d="M0 50C240 10 480 90 720 50S1200 10 1440 50S1920 90 2160 50S2640 10 2880 50V100H0Z"/></svg></div>
+        <div class="lp-cta__coins" aria-hidden="true"><i>&#8369;</i><i>&#8369;</i><i>&#8369;</i><i>&#8369;</i><i>&#8369;</i></div>
+        <div class="lp-cta" data-reveal>
+          <h2 id="h-cta">Ready to Keep Every Credit on Track?</h2>
+          <p>Manage customer balances and payments with greater clarity using CrediTrack.</p>
+          <a class="btn btn--lime" href="account-type" data-route="account-type">Create Your Account <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </div>
+      </section>
+    </main>
+
+    <!-- ================= Footer ================= -->
+    <footer class="lp-foot" data-reveal aria-label="Site information">
+      <div class="lp-foot__row">
+        <a class="lp-foot__brand" href="#top" aria-label="CrediTrack home"><img class="logo-light" src="/assets/images/creditrack-wordmark-transparent.png?v=3" width="1363" height="214" alt="CrediTrack"><img class="logo-dark" src="/assets/images/creditrack-wordmark-dark.png?v=3" width="1363" height="214" alt="" aria-hidden="true"></a>
+        <nav class="lp-foot__links" aria-label="Footer">
+          <a href="#features">Features</a>
+          <a href="#how">How it Works</a>
+          <a href="#about">About</a>
+          <a href="mailto:@site.SupportEmail?subject=@Uri.EscapeDataString(site.SystemName + " support")">Contact</a>
+        </nav>
+      </div>
+      <p class="lp-foot__legal"><a href="/terms">Terms and Conditions</a><span aria-hidden="true">&middot;</span><a href="/privacy">Privacy Policy</a></p>
+      <p class="lp-foot__copy">&copy; @DateTime.Now.Year @site.SystemName. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/main.js"></script>
+}

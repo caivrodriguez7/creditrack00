@@ -1,0 +1,58 @@
+/* Splash screen: large logo on white, with a short reveal.
+   Palette: navy, teal, turquoise, a little lime. No new colors. The logo file is used as is. */
+
+.splash-page { background: #fff; overflow: hidden; }
+.splash-page::before { content: none; }
+
+.splash {
+  position: relative; min-height: 100vh; min-height: 100svh; min-height: 100dvh;
+  display: grid; place-items: center; padding: var(--space-5);
+  padding-bottom: calc(var(--space-5) + env(safe-area-inset-bottom, 0px));
+  background:
+    radial-gradient(60rem 28rem at 50% 108%, var(--color-turquoise-soft), transparent 70%),
+    radial-gradient(34rem 20rem at 50% -8%, var(--color-navy-soft), transparent 72%),
+    #fff;
+}
+
+.splash__stage { display: grid; justify-items: center; gap: var(--space-4); width: 100%; text-align: center; }
+
+/* Logo: large and prominent. Width follows the screen but stays within sensible limits. */
+.splash__logo {
+  width: min(88vw, 36rem, 62dvh * 2.28);
+  height: auto; aspect-ratio: 1363 / 597;
+  margin-block: calc(-1 * var(--space-4));
+}
+@media (min-width: 64rem) { .splash__logo { width: min(40vw, 40rem, 66dvh * 2.28); } }
+
+/* Short progress line (navy to teal to lime). Decorative; the text below states the status. */
+.splash__progress {
+  width: min(12rem, 46vw); height: 0.25rem; border-radius: var(--radius-pill);
+  background: var(--color-navy-soft); overflow: hidden;
+}
+.splash__bar { display: block; width: 100%; height: 100%; border-radius: inherit; background: var(--gradient-bar); transform-origin: left; }
+
+.splash__status { min-height: 1.5rem; max-width: 22rem; font-size: var(--text-sm); color: var(--color-muted); line-height: 1.5; }
+.splash__actions { margin-top: var(--space-2); }
+
+/* ---------- Motion: starts when JS adds .is-playing ---------- */
+.splash__logo, .splash__status { opacity: 0; }
+.splash__bar { transform: scaleX(0); }
+
+.is-playing .splash__logo { animation: splash-logo-in 800ms cubic-bezier(0.2, 0.75, 0.2, 1) 60ms forwards; }
+.is-playing .splash__bar { animation: splash-fill 1500ms cubic-bezier(0.45, 0.05, 0.3, 1) 100ms forwards; }
+.is-playing .splash__status { animation: splash-fade 500ms ease 450ms forwards; }
+.is-pending .splash__progress { display: none; }
+
+@keyframes splash-logo-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.94); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes splash-fill { to { transform: scaleX(1); } }
+@keyframes splash-fade { to { opacity: 1; } }
+
+/* Reduced motion: no movement, only a gentle fade. The splash stays on screen just as long. */
+@media (prefers-reduced-motion: reduce) {
+  .is-playing .splash__logo { animation: splash-fade 600ms ease 60ms forwards; }
+  .is-playing .splash__status { animation: splash-fade 400ms ease 400ms forwards; }
+  .is-playing .splash__bar { animation: none; transform: none; }
+}

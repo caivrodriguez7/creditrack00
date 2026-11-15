@@ -1,0 +1,13 @@
+/* Breadcrumb trail at the top of sub-pages (js/components/breadcrumbs.js) */
+.breadcrumbs { margin: 0 0 var(--space-3); font-size: var(--text-xs, 0.75rem); }
+.breadcrumbs__list { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0; margin: 0; padding: 0; list-style: none; }
+.breadcrumbs__item { display: inline-flex; align-items: center; color: var(--color-muted, #5b6785); }
+.breadcrumbs__item + .breadcrumbs__item::before { content: "\203A"; margin: 0 0.5rem; opacity: 0.6; }
+.breadcrumbs__item a { color: var(--color-navy); text-decoration: none; font-weight: var(--weight-semibold, 600); border-radius: 4px; }
+.breadcrumbs__item a:hover { color: var(--color-teal, var(--color-navy)); text-decoration: underline; }
+.breadcrumbs__item a:focus-visible { outline: 2px solid var(--color-turquoise); outline-offset: 2px; }
+.breadcrumbs__item [aria-current="page"] { color: var(--color-navy); font-weight: var(--weight-bold, 700); }
+@media (min-width: 48rem) { .breadcrumbs { font-size: var(--text-sm, 0.875rem); margin-bottom: var(--space-4); } }
+
+/* inside a grid .page the row gap already spaces it */
+.page > .breadcrumbs { margin: 0; }

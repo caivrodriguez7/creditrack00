@@ -1,0 +1,20 @@
+/* Customer Portal > Profile > Customer Code & QR (customer-code.html), a subpage. Mock data only.
+   Builds on owner-settings.css (.st-qr frame and View Larger, .st-steps, .st-intro) and owner-customers.css (.form-note, .form-actions).
+   Only what is new lives here: the Customer Code card, the small code line under the QR, and the "not a Store Code" note. */
+.cc-card { display: grid; justify-items: center; text-align: center; gap: var(--space-2); }
+.cc-card .panel__head { justify-self: stretch; margin-bottom: 0; }
+.cc-card .st-intro { margin-bottom: 0; }
+.cc-card .form-actions { justify-self: stretch; margin-top: var(--space-2); }
+.cc-card .btn { gap: var(--space-2); }
+.cc-card .btn.is-done { border-color: var(--color-teal); color: var(--color-teal); }
+.cc-card .btn:disabled, .st-qr .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+/* The code is longer than a store code (CT-CUS-000123), so a slightly tighter letter spacing keeps it on one line on small phones */
+.cc-code { letter-spacing: 0.06em; }
+.cc-code.is-empty { font-size: var(--text-md); letter-spacing: 0; font-weight: var(--weight-semibold); color: var(--color-muted); user-select: none; }
+.cc-hint { font-size: var(--text-xs); color: var(--color-muted); }
+.cc-qr-code { font-size: var(--text-sm); font-weight: var(--weight-semibold); letter-spacing: 0.06em; color: var(--color-navy); overflow-wrap: anywhere; }
+.cc-warn { margin-top: var(--space-3); }
+.cc-warn b { color: var(--color-navy); }
+.cc-link { text-align: center; font-size: var(--text-xs); }
+.cc-link a { color: var(--color-teal); font-weight: var(--weight-semibold); }
+.st-qr.is-empty .st-qr__frame { display: grid; place-items: center; color: var(--color-muted); font-size: var(--text-xs); text-align: center; }

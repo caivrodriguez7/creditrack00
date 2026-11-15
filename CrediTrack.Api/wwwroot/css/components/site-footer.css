@@ -1,0 +1,21 @@
+/* Public-page footer (landing, Terms, Privacy): brand, links, contact, copyright. See Pages/Shared/_SiteFooter.cshtml.
+   Phone: one centered column. 40rem+: three columns. */
+.site-foot { width: 100%; max-width: 64rem; margin-inline: auto; padding: var(--space-4) 0 var(--space-2); border-top: 1px solid rgba(7, 26, 82, 0.12); color: var(--color-navy); font-size: var(--text-xs); text-align: center; }
+.site-foot__grid { display: grid; gap: var(--space-3); justify-items: center; }
+.site-foot__brand { display: grid; gap: 0.125rem; }
+.site-foot__brand strong { font-size: var(--text-sm); }
+.site-foot__brand span { font-style: italic; color: var(--color-muted); }
+.site-foot__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 var(--space-4); }
+.site-foot a { display: inline-flex; align-items: center; min-height: 2.5rem; color: var(--color-teal); font-weight: var(--weight-semibold); text-decoration: none; }
+.site-foot a:hover { color: var(--color-teal-hover); text-decoration: underline; }
+.site-foot a:focus-visible { outline: none; box-shadow: var(--focus-ring); border-radius: 0.25rem; }
+.site-foot__contact { display: grid; justify-items: center; font-style: normal; color: var(--color-muted); }
+.site-foot__contact a { font-weight: var(--weight-medium); min-height: 2rem; }
+.site-foot__copy { margin: var(--space-2) 0 0; color: var(--color-muted); }
+@media (min-width: 40rem) {
+  .site-foot { text-align: left; }
+  .site-foot__grid { grid-template-columns: 1fr auto 1fr; align-items: start; justify-items: start; }
+  .site-foot__links { justify-self: center; flex-direction: column; gap: 0; }
+  .site-foot__contact { justify-items: end; justify-self: end; text-align: right; }
+  .site-foot__copy { text-align: center; }
+}

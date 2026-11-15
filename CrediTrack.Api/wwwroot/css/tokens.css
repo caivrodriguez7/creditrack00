@@ -1,0 +1,83 @@
+/* ==========================================================
+   CrediTrack design tokens
+   Change a value here and it updates across the whole app.
+   ========================================================== */
+:root {
+  /* OFFICIAL BRAND PALETTE (exact values from the palette image)
+       Deep Navy  #071A52  headings, important text, strong surfaces
+       Deep Teal  #086B70  primary buttons and important actions
+       Turquoise  #35A5A0  active navigation, highlights, secondary accents
+       Light Lime #F0F59A  small highlights and selected states (use sparingly) */
+  --color-navy: #071A52;
+  --color-teal: #086B70;
+  --color-turquoise: #35A5A0;
+  --color-lime: #F0F59A;
+
+  /* Tints of the palette for soft backgrounds */
+  --color-navy-soft: #e7ebf5;
+  --color-teal-soft: #dff0f0;
+  --color-turquoise-soft: #e1f4f3;
+  --color-lime-soft: #fbfdd6;
+  --color-teal-hover: #055358;     /* darker teal for hover and pressed */
+  --color-lime-ink: #4d5410;       /* readable text on lime-soft */
+
+  /* Roles */
+  --color-primary: var(--color-teal);          /* primary buttons, links */
+  --color-primary-hover: var(--color-teal-hover);
+  --color-primary-soft: var(--color-teal-soft);
+  --color-accent: var(--color-turquoise);      /* active nav, highlights, focus */
+  --color-amber: #9a6410;         /* pending, warnings */
+  --color-amber-soft: #fff3dc;
+  --color-danger: #c93c3c;        /* overdue, void, errors (status color, not brand) */
+  --color-danger-soft: #fdecec;
+
+  /* Neutrals */
+  --color-ink: #16244d;           /* body text */
+  --color-muted: #475775;        /* darker for AA contrast on tinted glass */
+  --color-border: #d6e4e6;
+  --color-surface: #f3f8f8;
+  --color-bg: #ffffff;
+
+  /* Signature gradients: navy to teal to turquoise; thin accent bar ends in lime */
+  --gradient-brand: linear-gradient(135deg, var(--color-navy) 0%, var(--color-teal) 62%, var(--color-turquoise) 100%);
+  --gradient-bar: linear-gradient(90deg, var(--color-navy), var(--color-teal) 40%, var(--color-turquoise) 75%, var(--color-lime));
+
+  /* Typography */
+  --font-sans: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --text-xs: 0.875rem;
+  --text-sm: 0.9375rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --leading-tight: 1.25;
+  --leading-body: 1.55;
+
+  /* Spacing (4px scale) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  /* Shape */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+  --shadow-soft: 0 1px 2px rgba(20, 33, 61, 0.06);
+  --focus-ring: 0 0 0 3px rgba(53, 165, 160, 0.45);
+
+  /* Layout and motion */
+  --container-sm: 26rem;
+  --container-lg: 64rem;
+  --control-height: 3rem;
+  --ease: 160ms ease;
+}

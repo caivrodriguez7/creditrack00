@@ -1,0 +1,144 @@
+@page "/owner/payment-request-details"
+@{
+    ViewData["Title"] = @"Review Payment | CrediTrack";
+    ViewData["Body"] = @"class=""owner"" data-root=""/"" data-page=""payment-requests"" data-nav=""sub"" data-title=""Review Payment"" data-back=""payment-requests""";
+}
+
+@section Head {
+  <meta name="description" content="Review a customer payment request: amount, method, reference number and proof of payment.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+  <link rel="stylesheet" href="/css/components/record-utang.css">
+  <link rel="stylesheet" href="/css/components/record-bayad.css">
+  <!-- Shared list-page styles (page heading, search, filter chips): same look as Customers -->
+  <link rel="stylesheet" href="/css/pages/owner-customers.css">
+  <link rel="stylesheet" href="/css/pages/owner-payments.css?v=2">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <main class="owner-main" id="main">
+      <div class="page page--narrow page--payments" id="page">
+
+
+        <!-- The link has no valid request -->
+        <section class="panel" id="missing" hidden>
+          <div class="empty">
+            <span class="empty__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.5A2.5 2.5 0 0 1 6 5h11.5v3"/><rect x="3.5" y="8" width="17" height="11.5" rx="2.5"/><path d="M16 13.75h2"/></svg></span>
+            <h2 class="empty__title">Payment request not found</h2>
+            <p class="empty__text">This request may not exist, or the link is incorrect.</p>
+            <a class="btn btn--primary" href="payment-requests" data-route="owner-payment-requests">Go to Payment Requests</a>
+          </div>
+        </section>
+
+        <div class="prd" id="detail" hidden>
+
+          <!-- Result of the last action (confirmed / rejected) -->
+          <div class="notice prd-result" id="result" role="status" hidden></div>
+
+          <section class="panel prd-head" aria-labelledby="prd-amount">
+            <div class="prd-head__top">
+              <p class="prd-head__label">Payment Amount</p>
+              <span class="badge" id="prd-status"></span>
+            </div>
+            <p class="prd-head__amount" id="prd-amount"></p>
+            <p class="prd-head__customer">from <a id="prd-customer" href="#"></a></p>
+          </section>
+
+          <section class="panel" aria-labelledby="prd-details-title">
+            <div class="panel__head"><h2 class="panel__title" id="prd-details-title">Payment Details</h2></div>
+            <dl class="info__list" id="prd-details"></dl>
+          </section>
+
+          <section class="panel" aria-labelledby="prd-proof-title">
+            <div class="panel__head"><h2 class="panel__title" id="prd-proof-title">Proof of Payment</h2></div>
+            <div id="prd-proof"></div>
+          </section>
+
+          <section class="panel" id="prd-balance-panel" aria-labelledby="prd-balance-title">
+            <div class="panel__head"><h2 class="panel__title" id="prd-balance-title">Balance if Confirmed</h2></div>
+            <dl class="info__list" id="prd-balance"></dl>
+            <p class="form-note prd-warn" id="prd-warn" hidden></p>
+          </section>
+
+          <section class="panel" id="prd-outcome-panel" aria-labelledby="prd-outcome-title" hidden>
+            <div class="panel__head"><h2 class="panel__title" id="prd-outcome-title">Review Result</h2></div>
+            <dl class="info__list" id="prd-outcome"></dl>
+            <a class="btn btn--secondary btn--block prd-tx" id="prd-tx" href="#" hidden>View Payment Transaction</a>
+          </section>
+
+          <!-- Archive / Restore (reviewed requests only). Nothing is deleted; it asks for one more confirmation on this same page. -->
+          <section class="panel prd-actions" id="archive-panel" aria-label="Archive this payment request" hidden>
+            <p class="form-note" id="archive-note" hidden><strong>Archived<span id="archived-when"></span>. </strong>This request is hidden from the status tabs. Its payment history and the customer&rsquo;s balance are unchanged.</p>
+            <div class="form-actions" id="archive-buttons">
+              <button class="btn btn--secondary btn--block" type="button" id="archive-open"></button>
+            </div>
+            <div class="prd-confirm" id="archive-confirm" hidden>
+              <h3 class="prd-confirm__title" id="archive-title"></h3>
+              <p class="prd-confirm__text" id="archive-text"></p>
+              <div class="form-actions">
+                <button class="btn btn--secondary" type="button" id="archive-cancel">Go Back</button>
+                <button class="btn btn--primary" type="button" id="archive-yes"></button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Actions for a pending request. Approve and Reject each ask for one more confirmation on this same page. -->
+          <section class="panel prd-actions" id="actions" aria-label="Review this payment">
+            <div class="form-actions" id="action-buttons">
+              <button class="btn btn--secondary prd-reject" type="button" id="reject-open">Reject</button>
+              <button class="btn btn--primary" type="button" id="approve-open">Confirm Payment</button>
+            </div>
+
+            <div class="prd-confirm" id="approve-confirm" hidden>
+              <h3 class="prd-confirm__title">Confirm this payment?</h3>
+              <p class="prd-confirm__text" id="approve-text"></p>
+              <div class="form-actions">
+                <button class="btn btn--secondary" type="button" id="approve-cancel">Go Back</button>
+                <button class="btn btn--primary" type="button" id="approve-confirm-btn">Yes, Confirm Payment</button>
+              </div>
+            </div>
+
+            <form class="prd-confirm" id="reject-form" novalidate hidden>
+              <h3 class="prd-confirm__title">Reject this payment?</h3>
+              <p class="prd-confirm__text">The customer&rsquo;s balance will not change. Tell the customer why.</p>
+              <div class="field">
+                <label class="field__label" for="reject-reason">Reason for rejecting <span aria-hidden="true">*</span></label>
+                <textarea class="textarea" id="reject-reason" rows="3" maxlength="200" placeholder="e.g., We could not find this payment in our account." required aria-describedby="reject-hint reject-error"></textarea>
+                <p class="field__hint" id="reject-hint"><span id="reject-count">0</span>/200 characters</p>
+                <p class="field__error" id="reject-error" hidden></p>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn--secondary" type="button" id="reject-cancel">Go Back</button>
+                <button class="btn btn--danger" type="submit" id="reject-confirm-btn">Confirm Rejection</button>
+              </div>
+            </form>
+          </section>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/owner-api.js"></script>
+  <script src="/js/components/owner-shell.js"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/components/record-utang.js"></script>
+  <script src="/js/components/record-bayad.js"></script>
+  <script src="/js/pages/owner-payment-request-details.js"></script>
+}

@@ -1,0 +1,97 @@
+/* Customer Portal > Connected Stores (stores.html), a subpage of Profile.
+   Reuses .page (page grid, owner-customers.css is not needed), .panel, .empty, .notice, .badge, .btn and the
+   Home "My Stores" look (icon, name, balance, status badge). Only what is new lives here. */
+.page { --gap: var(--space-3); display: grid; gap: var(--gap); min-width: 0; }
+.page [hidden] { display: none !important; }
+.cs-sub { font-size: var(--text-xs); }
+.cs-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-3); }
+.cs-head__title { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-navy); }
+.cs-head__title::before { content: ""; flex: none; width: 0.3rem; height: 1.1em; border-radius: 2px; background: var(--color-turquoise); }
+.cs-head__count { flex: none; font-size: var(--text-xs); color: var(--color-muted); }
+.cs-note { margin: calc(var(--space-2) * -1) 0 var(--space-3); font-size: var(--text-xs); color: var(--color-muted); }
+.cs-grid { display: grid; gap: var(--space-3); align-items: start; min-width: 0; }
+.cs-none { padding-bottom: var(--space-3); }
+
+/* A store card */
+.cs-card { min-width: 0; padding: var(--space-4); background: var(--color-bg); border: 1.5px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); transition: border-color var(--ease), box-shadow var(--ease); }
+.cs-card.is-focus { border-color: var(--color-turquoise); box-shadow: 0 0 0 3px rgba(53, 165, 160, 0.25); }
+.cs-card--left { background: var(--color-surface); border-style: dashed; }
+.cs-card__top { display: flex; align-items: center; gap: var(--space-3); }
+.cs-card__icon { flex: none; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: var(--radius-md); background: var(--color-navy-soft); color: var(--color-navy); }
+.cs-card:nth-child(even) .cs-card__icon { background: var(--color-turquoise-soft); color: var(--color-teal); }
+.cs-card__icon svg { width: 1.4rem; height: 1.4rem; }
+.cs-card__id { flex: 1; min-width: 0; }
+.cs-card__name { font-size: var(--text-sm); line-height: 1.3; overflow-wrap: anywhere; }
+.cs-card__type { font-size: 0.75rem; color: var(--color-muted); overflow-wrap: anywhere; }
+.cs-card__top .badge { flex: none; align-self: flex-start; padding: 0.1rem 0.55rem; font-size: 0.6875rem; }
+.badge--muted { background: var(--color-navy-soft); color: var(--color-muted); }
+
+.cs-card__balance { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-3); margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--color-border); }
+.cs-label { display: block; font-size: 0.75rem; color: var(--color-muted); }
+.cs-amount { display: block; font-size: 1.5rem; font-weight: var(--weight-bold); line-height: 1.15; color: var(--color-navy); overflow-wrap: anywhere; }
+.cs-card__balance .badge { flex: none; }
+.cs-card__facts { margin: var(--space-2) 0 0; padding: 0; list-style: none; display: grid; gap: 0.15rem; font-size: 0.75rem; color: var(--color-muted); }
+.cs-card__facts li { overflow-wrap: anywhere; }
+.cs-pending { display: inline-block; margin-top: var(--space-2); padding: 0.15rem 0.65rem; border-radius: var(--radius-pill); background: var(--color-lime); color: var(--color-navy); font-size: 0.75rem; font-weight: var(--weight-semibold); }
+.cs-kept { margin-top: var(--space-2); font-size: 0.75rem; color: var(--color-teal); font-weight: var(--weight-semibold); }
+.cs-card__actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+.cs-card__actions .btn { flex: 1 1 9rem; min-height: 2.5rem; padding-inline: var(--space-3); font-size: var(--text-xs); }
+.cs-card__actions .btn svg { width: 1rem; height: 1rem; transition: transform var(--ease); }
+.cs-card__actions [aria-expanded="true"] svg { transform: rotate(180deg); }
+.cs-leave { color: var(--color-danger); }
+.cs-leave:hover { background: var(--color-danger-soft); color: var(--color-danger); }
+
+/* Store details (opens inside the card) */
+.cs-details { margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--color-border); }
+.cs-details__list { margin: 0; display: grid; gap: var(--space-2); }
+.cs-details__list div { display: flex; justify-content: space-between; gap: var(--space-3); font-size: var(--text-xs); }
+.cs-details__list dt { flex: none; color: var(--color-muted); }
+.cs-details__list dd { margin: 0; min-width: 0; text-align: right; font-weight: var(--weight-semibold); color: var(--color-navy); overflow-wrap: anywhere; }
+.cs-details__link { display: inline-flex; margin-top: var(--space-3); font-size: var(--text-xs); }
+
+/* Join Another Store */
+.cs-add { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-3); padding: var(--space-3) var(--space-4); color: var(--color-ink); background: var(--color-surface); border: 1.5px dashed var(--color-border); border-radius: var(--radius-lg); font-weight: var(--weight-regular); }
+.cs-add:hover { text-decoration: none; color: var(--color-ink); border-color: var(--color-turquoise); }
+.cs-add__icon { flex: none; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border: 1.5px dashed var(--color-turquoise); border-radius: var(--radius-md); background: var(--color-bg); color: var(--color-teal); }
+.cs-add__icon svg { width: 1.3rem; height: 1.3rem; }
+.cs-add strong { display: block; font-size: var(--text-sm); color: var(--color-navy); }
+.cs-add__text { display: block; font-size: 0.75rem; color: var(--color-muted); }
+
+/* Leave Store confirmation */
+.cs-dialog { width: min(26rem, calc(100% - var(--space-4) * 2)); max-height: calc(100% - var(--space-4) * 2); padding: 0; border: 0; border-radius: var(--radius-lg); background: var(--color-bg); color: var(--color-ink); overflow: auto; box-shadow: 0 24px 48px -16px rgba(7, 26, 82, 0.6); }
+.cs-dialog::backdrop { background: rgba(7, 26, 82, 0.6); }
+.cs-dialog__body { display: grid; gap: var(--space-3); padding: var(--space-5) var(--space-4) var(--space-4); }
+.cs-dialog__icon { display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; background: var(--color-danger-soft); color: var(--color-danger); }
+.cs-dialog__icon svg { width: 1.5rem; height: 1.5rem; }
+.cs-dialog h2 { font-size: 1.125rem; overflow-wrap: anywhere; }
+.cs-dialog p { font-size: var(--text-sm); color: var(--color-muted); }
+.cs-keep { padding: var(--space-3); border-radius: var(--radius-md); background: var(--color-turquoise-soft); border: 1px solid #bfe3e1; font-size: var(--text-xs); }
+.cs-keep strong { color: var(--color-navy); }
+.cs-keep ul { margin: var(--space-2) 0 0; padding-left: 1.1rem; display: grid; gap: 0.25rem; color: var(--color-ink); }
+.cs-dialog .cs-dialog__error { padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); background: var(--color-danger-soft); color: var(--color-danger); font-size: var(--text-xs); }
+.cs-dialog__actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-top: var(--space-1); }
+
+@media (min-width: 56rem) {
+  .cs-sub, .cs-head__count, .cs-note { font-size: var(--text-sm); }
+  .cs-head__title { font-size: var(--text-md); }
+  .cs-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+  .cs-card__name { font-size: var(--text-md); }
+  .cs-card__type, .cs-card__facts, .cs-details__list div, .cs-details__link, .cs-add__text { font-size: var(--text-xs); }
+  .cs-card__actions .btn { font-size: var(--text-sm); }
+}
+@media (prefers-reduced-motion: reduce) { .cs-card, .cs-card__actions .btn svg { transition: none; } }
+
+/* Requests waiting for an answer (link requests to accept, join requests to cancel) */
+.cs-req-list { display: grid; gap: var(--space-3); min-width: 0; }
+.cs-req { display: grid; gap: var(--space-2); min-width: 0; padding: var(--space-4); background: var(--color-bg); border: 1.5px solid var(--color-turquoise); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); }
+.cs-req__title { font-size: var(--text-xs); font-weight: 700; color: var(--color-teal); text-transform: uppercase; letter-spacing: 0.04em; }
+.cs-req__text, .cs-req__rec { font-size: var(--text-sm); overflow-wrap: anywhere; }
+.cs-req__rec { padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); background: var(--color-surface); }
+.cs-req__meta { font-size: var(--text-xs); color: var(--color-muted); }
+.cs-req__actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+/* Store owner's picture (shown while connected): on the store card instead of the store icon, and next to the owner's name in the details */
+.cs-card__icon--photo { padding: 0; overflow: hidden; border-radius: 50%; background: var(--color-surface); }
+.cs-card__photo { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.cs-owner { display: inline-flex; align-items: center; gap: var(--space-2); }
+.cs-owner-pic { flex: none; width: 1.75rem; height: 1.75rem; border-radius: 50%; object-fit: cover; }

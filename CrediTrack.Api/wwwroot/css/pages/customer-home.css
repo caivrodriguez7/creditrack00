@@ -1,0 +1,248 @@
+/* Customer Home dashboard. Two states: "No Store Joined" (.join) and "After Joining a Store" (.chome__joined).
+   The joined dashboard stacks on mobile; its desktop overview places Payment Reminders beside the balance and status cards.
+   My Stores dropdown, My Stores, and Recent Activity follow the overview. Floating PAY button + store chooser at the end of the file.
+   Reuses: .panel, .list, .tx-icon, .empty, .notice, .sample-tag (owner-ui.css), .btn, .badge (components.css). */
+.chome { --c-pad: var(--space-4); --c-gap: var(--space-3); display: grid; gap: var(--c-gap); min-width: 0; }
+.chome [hidden] { display: none !important; }
+.chome__welcome h1 { font-size: 1.25rem; color: var(--color-navy); overflow-wrap: anywhere; }
+.chome__welcome p { margin-top: 0.125rem; font-size: var(--text-xs); }
+
+/* =====================  State 1: No Store Joined  ===================== */
+.join { display: grid; gap: var(--c-gap); min-width: 0; }
+.join-card {
+  display: grid; justify-items: center; gap: var(--space-2); padding: var(--space-5) var(--space-4); text-align: center;
+  border-radius: var(--radius-lg); background: var(--color-turquoise-soft); border: 1px solid #bfe3e1;
+}
+.join-card__icon { display: grid; place-items: center; width: 3.75rem; height: 3.75rem; margin-bottom: var(--space-1); border-radius: 50%; background: var(--color-navy); color: var(--color-lime); box-shadow: 0 10px 22px -12px rgba(7, 26, 82, 0.7); }
+.join-card__icon svg { width: 1.9rem; height: 1.9rem; }
+.join-card h2 { font-size: 1.25rem; }
+.join-card p { max-width: 22rem; font-size: var(--text-sm); color: var(--color-muted); }
+.join-card__btn { width: 100%; margin-top: var(--space-3); }
+
+.why__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+.why__item { display: flex; align-items: flex-start; gap: var(--space-3); font-size: var(--text-sm); }
+.why__item strong { display: block; color: var(--color-navy); font-weight: var(--weight-semibold); }
+.why__text { display: block; margin-top: 0.1rem; font-size: var(--text-xs); color: var(--color-muted); }
+.why__check { flex: none; display: grid; place-items: center; width: 1.6rem; height: 1.6rem; color: var(--color-teal); }
+.why__check svg { width: 1.45rem; height: 1.45rem; }
+
+/* =====================  State 2: After Joining a Store  ===================== */
+.chome__joined { display: grid; gap: var(--c-gap); min-width: 0; }
+.chome__overview { display: grid; gap: var(--c-gap); min-width: 0; }
+.chome__overview-main { display: grid; gap: var(--c-gap); min-width: 0; }
+
+/* Account Status and Payment Status: two cards side by side */
+.cstats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--c-gap); }
+.cstat { display: grid; gap: 0.2rem; align-content: start; min-width: 0; padding: var(--space-3) var(--c-pad); background: var(--color-bg); border: 1px solid var(--color-border); border-top: 3px solid var(--color-turquoise); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); }
+.cstat[data-tone="warning"] { border-top-color: var(--color-amber); }
+.cstat[data-tone="danger"] { border-top-color: var(--color-danger); }
+.cstat__label { font-size: 0.75rem; font-weight: var(--weight-semibold); color: var(--color-muted); }
+.cstat__value { display: flex; align-items: center; gap: var(--space-2); font-size: 1.0625rem; font-weight: var(--weight-bold); line-height: 1.25; color: var(--color-navy); }
+.cstat__sub { font-size: 0.75rem; color: var(--color-muted); line-height: 1.4; }
+.cstat__bar { display: block; height: 0.4rem; margin-top: 0.15rem; border-radius: var(--radius-pill); background: var(--color-navy-soft); overflow: hidden; }
+.cstat__bar span { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--color-turquoise); transition: width 400ms ease; }
+.dot { flex: none; width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--color-turquoise); }
+.dot--success { background: var(--color-teal); box-shadow: 0 0 0 3px var(--color-teal-soft); }
+.dot--warning { background: var(--color-amber); box-shadow: 0 0 0 3px var(--color-amber-soft); }
+.dot--danger { background: var(--color-danger); box-shadow: 0 0 0 3px var(--color-danger-soft); }
+@media (max-width: 22.5rem) { .cstat { padding: var(--space-3); } }
+@media (min-width: 56rem) { .cstat { padding: var(--space-4) var(--c-pad); } .cstat__value { font-size: 1.25rem; } .cstat__sub, .cstat__label { font-size: var(--text-xs); } }
+
+/* Store selector */
+.picker { display: grid; gap: 0.3rem; }
+.picker__label { font-size: var(--text-xs); font-weight: var(--weight-semibold); color: var(--color-navy); }
+.picker__box { position: relative; }
+.picker__icon, .picker__chev { position: absolute; top: 50%; transform: translateY(-50%); display: grid; place-items: center; pointer-events: none; color: var(--color-teal); }
+.picker__icon { left: var(--space-3); width: 1.9rem; height: 1.9rem; border-radius: var(--radius-sm); background: var(--color-turquoise-soft); }
+.picker__icon svg { width: 1.1rem; height: 1.1rem; }
+.picker__chev { right: var(--space-3); color: var(--color-muted); }
+.picker__chev svg { width: 1.2rem; height: 1.2rem; }
+.picker__select {
+  -webkit-appearance: none; appearance: none; width: 100%; min-height: 3.25rem; padding: 0 2.5rem 0 3.4rem; cursor: pointer;
+  background: var(--color-bg); color: var(--color-navy); font-weight: var(--weight-semibold); font-size: var(--text-sm);
+  border: 1.5px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-soft);
+  text-overflow: ellipsis; transition: border-color var(--ease), box-shadow var(--ease);
+}
+.picker__select:hover { border-color: var(--color-turquoise); }
+.picker__select:focus { outline: none; border-color: var(--color-turquoise); box-shadow: var(--focus-ring); }
+
+/* Balance hero: the one bold surface (same navy-to-teal look as the Store Owner dashboard) */
+.chero { position: relative; overflow: hidden; padding: var(--space-4) var(--space-5); border-radius: var(--radius-lg); color: #fff; background: var(--gradient-brand); box-shadow: 0 12px 26px -16px rgba(7, 26, 82, 0.7); }
+.chero::before, .chero::after { content: ""; position: absolute; border-radius: 50%; pointer-events: none; }
+.chero::before { width: 9rem; height: 9rem; right: -2.5rem; top: -4rem; background: var(--color-turquoise); opacity: 0.35; }
+.chero::after { width: 3.5rem; height: 3.5rem; right: 1.25rem; top: 3.6rem; background: var(--color-lime); opacity: 0.28; }
+.chero > * { position: relative; }
+.chero__top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.chero__label { font-size: var(--text-xs); font-weight: var(--weight-semibold); color: rgba(255, 255, 255, 0.85); }
+.chero__amount { margin-top: var(--space-1); font-size: 2rem; font-weight: var(--weight-bold); line-height: 1.1; letter-spacing: -0.015em; overflow-wrap: anywhere; }
+.chero__notes { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-2); }
+.chero__note { display: inline-block; padding: 0.15rem 0.65rem; border-radius: var(--radius-pill); background: rgba(255, 255, 255, 0.16); font-size: 0.75rem; font-weight: var(--weight-semibold); color: #fff; }
+.chero__note--pending { background: var(--color-lime); color: var(--color-navy); }
+.chero__split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); margin: var(--space-4) 0 0; padding-top: var(--space-3); border-top: 1px solid rgba(255, 255, 255, 0.22); }
+.chero__split dt { font-size: 0.75rem; color: rgba(255, 255, 255, 0.78); }
+.chero__split dd { margin: 0.1rem 0 0; font-size: var(--text-sm); font-weight: var(--weight-bold); }
+.chero__split div:last-child { text-align: right; }
+
+/* Recent activity rows (on top of the shared .list rows) */
+.act__main { flex: 1; min-width: 0; display: grid; }
+.act__title { font-weight: var(--weight-semibold); font-size: var(--text-xs); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.act__meta { font-size: 0.75rem; line-height: 1.35; color: var(--color-muted); overflow-wrap: anywhere; }   /* wraps instead of cutting off the time */
+.act__right { flex: none; display: grid; justify-items: end; gap: 0.2rem; }
+.act__right .badge { padding: 0.05rem 0.5rem; font-size: 0.6875rem; }
+.tx-icon--pending { background: var(--color-amber-soft); color: var(--color-amber); }
+
+/* My Stores */
+.stores__count { flex: none; font-size: var(--text-xs); color: var(--color-muted); }
+.stores__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--c-gap); }
+.store-card {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); align-content: start; align-items: center; column-gap: var(--space-2); row-gap: 0.1rem;
+  min-width: 0; padding: var(--space-3); color: var(--color-ink);
+  background: var(--color-bg); border: 1.5px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft);
+  font-weight: var(--weight-regular); transition: border-color var(--ease), transform var(--ease);
+}
+.store-card > :not(.store-card__icon):not(.store-card__name) { grid-column: 1 / -1; }
+.store-card:hover { text-decoration: none; color: var(--color-ink); border-color: var(--color-turquoise); transform: translateY(-1px); }
+.store-card.is-selected { border-color: var(--color-turquoise); background: linear-gradient(180deg, var(--color-turquoise-soft), var(--color-bg) 55%); }
+.store-card__icon { display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: var(--radius-sm); background: var(--color-navy-soft); color: var(--color-navy); }
+.store-card:nth-child(even) .store-card__icon { background: var(--color-turquoise-soft); color: var(--color-teal); }
+.store-card__icon svg { width: 1.2rem; height: 1.2rem; }
+.store-card__name { font-weight: var(--weight-bold); font-size: var(--text-xs); line-height: 1.25; color: var(--color-navy); overflow-wrap: anywhere; }
+.store-card__label { margin-top: var(--space-2); font-size: 0.75rem; color: var(--color-muted); }
+.store-card__amount { font-size: 1.125rem; font-weight: var(--weight-bold); line-height: 1.2; color: var(--color-navy); overflow-wrap: anywhere; }
+.store-card .badge { justify-self: start; margin-top: 0.2rem; padding: 0.1rem 0.55rem; font-size: 0.6875rem; }
+.store-card__more { display: inline-flex; align-items: center; gap: 0.15rem; margin-top: var(--space-1); font-size: 0.75rem; font-weight: var(--weight-semibold); color: var(--color-teal); }
+.store-card__more svg { width: 0.9rem; height: 0.9rem; }
+.store-card--add { border-style: dashed; background: var(--color-surface); }
+.store-card--add .store-card__icon { border: 1.5px dashed var(--color-turquoise); background: var(--color-bg); color: var(--color-teal); }
+.store-card--add p { margin-top: var(--space-1); font-size: 0.75rem; line-height: 1.4; color: var(--color-muted); }
+
+/* Very narrow phones */
+@media (max-width: 22.5rem) {
+  .chero { padding: var(--space-3) var(--space-4); }
+  .chero__amount { font-size: 1.75rem; }
+}
+
+/* Tablet: roomier join card, store cards sit three across before the desktop split */
+@media (min-width: 40rem) {
+  .stores__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .join-card__btn { width: auto; min-width: 14rem; }
+}
+
+/* Desktop: same single column, a little roomier */
+@media (min-width: 56rem) {
+  .chome { --c-pad: var(--space-5); --c-gap: var(--space-4); }
+  .chome__welcome h1 { font-size: 1.5rem; }
+  .chome__welcome p { font-size: var(--text-sm); }
+  .chome__overview { grid-template-columns: minmax(0, 1.3fr) minmax(16rem, 0.9fr); align-items: stretch; }
+
+  .join { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); column-gap: var(--space-5); align-items: stretch; }
+  .join-card { align-content: center; padding: var(--space-7) var(--space-6); }
+  .join-card h2 { font-size: 1.5rem; }
+  .join-card p { font-size: var(--text-md); }
+  .why { align-self: stretch; }
+  .why__item { font-size: var(--text-md); }
+  .why__text { font-size: var(--text-sm); }
+  .join .notice { grid-column: 1 / -1; }
+
+  .chero { padding: var(--space-5); }
+  .chero__label { font-size: var(--text-sm); }
+  .chero__amount { font-size: 2.25rem; }
+  .chero__split dd { font-size: var(--text-md); }
+  .panel__title { font-size: var(--text-md); }
+  .panel__link, .stores__count { font-size: var(--text-sm); }
+  .act__title { font-size: var(--text-sm); }
+  .act__meta { font-size: var(--text-xs); }
+  .list__amount { font-size: var(--text-sm); }
+  .empty__title { font-size: var(--text-md); }
+  .empty__text { font-size: var(--text-sm); }
+  .store-card { padding: var(--space-3) var(--space-4); }
+  .store-card__name { font-size: var(--text-sm); }
+  .stores__grid { grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); }
+}
+
+/* =====================  Floating PAY button + store chooser  ===================== */
+.pay-fab {
+  position: fixed; z-index: 28; right: var(--space-4); bottom: calc(5rem + env(safe-area-inset-bottom));   /* clears the phone bottom bar */
+  display: inline-flex; align-items: center; gap: var(--space-2); min-height: 3.5rem; padding: 0 var(--space-5);
+  border: 3px solid var(--color-bg); border-radius: var(--radius-pill); cursor: pointer;
+  background: var(--gradient-brand); color: var(--color-lime); font: inherit; font-size: var(--text-md); font-weight: var(--weight-bold); letter-spacing: 0.06em;
+  box-shadow: 0 8px 20px -6px rgba(7, 26, 82, 0.65);
+  transition: transform 240ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 240ms ease;
+}
+.pay-fab[hidden] { display: none; }
+.pay-fab:focus-visible { outline: none; box-shadow: var(--focus-ring), 0 8px 20px -6px rgba(7, 26, 82, 0.65); }
+.pay-fab:active { transform: scale(0.94); }
+.pay-fab__icon { display: grid; place-items: center; }
+.pay-fab__icon svg { width: 1.5rem; height: 1.5rem; }
+@media (hover: hover) { .pay-fab:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 14px 28px -8px rgba(7, 26, 82, 0.7); } }
+@media (min-width: 56rem) {
+  .pay-fab { right: max(var(--space-6), calc((100vw - 16rem - 62rem) / 2 + var(--space-6))); bottom: var(--space-6); }   /* same corner as the owner floating button */
+}
+
+.paysheet { position: fixed; inset: 0; z-index: 40; display: grid; align-items: end; justify-items: center; }
+.paysheet[hidden] { display: none; }
+.paysheet__backdrop { position: absolute; inset: 0; background: rgba(7, 26, 82, 0.55); animation: sheet-fade 200ms ease-out; }
+.paysheet__dialog {
+  position: relative; width: 100%; max-width: 30rem; max-height: 88dvh; overflow-y: auto;
+  padding: var(--space-4) var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom));
+  background: var(--color-bg); border-radius: var(--radius-lg) var(--radius-lg) 0 0; box-shadow: 0 -12px 32px -12px rgba(7, 26, 82, 0.5);
+  animation: sheet-rise 260ms cubic-bezier(0.22, 1.2, 0.36, 1);
+}
+.paysheet__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.paysheet__head h2 { font-size: 1.125rem; color: var(--color-navy); }
+.paysheet__close { width: 2.5rem; height: 2.5rem; border: 0; border-radius: var(--radius-md); background: transparent; color: var(--color-muted); font-size: 1.6rem; line-height: 1; cursor: pointer; }
+.paysheet__close:hover { background: var(--color-turquoise-soft); color: var(--color-navy); }
+.paysheet__lead { margin-top: 0.125rem; font-size: var(--text-sm); color: var(--color-muted); }
+.paysheet__list { display: grid; gap: var(--space-2); margin-top: var(--space-3); }
+.payopt { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); border: 1.5px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); cursor: pointer; transition: border-color var(--ease), background-color var(--ease); }
+.payopt:hover { border-color: var(--color-turquoise); }
+.payopt:has(input:checked) { border-color: var(--color-teal); background: var(--color-turquoise-soft); }
+.payopt:has(input:focus-visible) { box-shadow: var(--focus-ring); }
+.payopt input { position: absolute; opacity: 0; pointer-events: none; }
+.payopt__icon { flex: none; display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: var(--radius-sm); background: var(--color-navy-soft); color: var(--color-navy); }
+.payopt__icon svg { width: 1.2rem; height: 1.2rem; }
+.payopt__main { flex: 1; min-width: 0; display: grid; }
+.payopt__name { font-size: var(--text-sm); font-weight: var(--weight-bold); color: var(--color-navy); overflow-wrap: anywhere; }
+.payopt__sub { font-size: 0.75rem; color: var(--color-muted); }
+.payopt .badge { flex: none; padding: 0.1rem 0.55rem; font-size: 0.6875rem; }
+.payopt.is-disabled { opacity: 0.55; cursor: not-allowed; }
+.paysheet__error { margin-top: var(--space-2); font-size: var(--text-xs); color: var(--color-danger); }
+.paysheet__actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-top: var(--space-4); }
+body.is-paysheet-open { overflow: hidden; }
+@media (min-width: 40rem) {
+  .paysheet { align-items: center; }
+  .paysheet__dialog { border-radius: var(--radius-lg); padding-bottom: var(--space-4); }
+}
+@media (prefers-reduced-motion: reduce) { .paysheet__backdrop, .paysheet__dialog { animation: none; } .pay-fab { transition: none; } }
+
+/* Payment reminders */
+.cdue { min-width: 0; padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg); background: var(--color-bg); border: 1px solid var(--color-border); box-shadow: var(--shadow-soft); }
+.cdue__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); margin-bottom: var(--space-2); }
+.cdue__title { margin: 0; font-size: var(--text-md); color: var(--color-navy); }
+.cdue__count { flex: none; display: inline-grid; place-items: center; min-width: 1.5rem; height: 1.5rem; padding: 0 0.45rem; border-radius: var(--radius-pill); background: var(--color-amber); color: #fff; font-size: var(--text-xs); font-weight: var(--weight-bold, 700); }
+.cdue--late .cdue__count { background: var(--color-danger); }
+.cdue__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+.cdue__item {
+  display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: var(--space-3);
+  padding: var(--space-2) var(--space-3); border: 1px solid var(--color-border); border-left: 4px solid var(--color-amber);
+  border-radius: var(--radius-md); background: var(--color-amber-soft); color: inherit;
+  transition: border-color var(--ease), background-color var(--ease);
+}
+.cdue__link { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); min-height: 3.5rem; color: inherit; text-decoration: none; }
+.cdue__link:hover { text-decoration: none; color: inherit; }
+.cdue__link:focus-visible { outline: none; box-shadow: var(--focus-ring); border-radius: var(--radius-sm); }
+.cdue__main { display: grid; gap: 2px; min-width: 0; }
+.cdue__when { font-weight: var(--weight-semibold); color: var(--color-amber); }
+.cdue__store { font-size: var(--text-xs); color: var(--color-muted); overflow-wrap: anywhere; }
+.cdue__amount { font-weight: var(--weight-bold, 700); color: var(--color-navy); white-space: nowrap; }
+
+/* Urgency: Due in 7 days / tomorrow = amber (above). Due today = red. Overdue = red, stronger (solid bar + bold). */
+.cdue__item--today { background: var(--color-danger-soft); border-color: var(--color-danger); border-left-width: 6px; }
+.cdue__item--today .cdue__when { color: var(--color-danger); font-weight: var(--weight-bold, 700); text-transform: uppercase; letter-spacing: 0.02em; }
+.cdue__item--overdue { background: var(--color-danger-soft); border-color: var(--color-danger); border-left-width: 6px; box-shadow: inset 0 0 0 1px var(--color-danger); }
+.cdue__item--overdue .cdue__when { color: var(--color-danger); font-weight: var(--weight-bold, 700); }
+.cdue__more { display: block; margin: var(--space-2) 0 0; font-size: var(--text-xs); font-weight: var(--weight-semibold); text-align: center; }
+.cdue[hidden], .cdue__more[hidden] { display: none; }
+:root[data-theme="dark"] .cdue__item { background: var(--color-amber-soft); border-left-color: var(--color-amber); }
+:root[data-theme="dark"] .cdue__item--today, :root[data-theme="dark"] .cdue__item--overdue { background: var(--color-danger-soft); border-color: var(--color-danger); border-left-color: var(--color-danger); }
+

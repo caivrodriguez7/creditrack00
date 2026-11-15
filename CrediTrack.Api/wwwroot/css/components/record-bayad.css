@@ -1,0 +1,91 @@
+/* Record Bayad: only what differs from Record Utang. The modal itself reuses the .ru-* styles from record-utang.css. */
+
+/* A customer with no outstanding balance is listed but cannot be chosen */
+.rb .ru-opt.is-disabled { cursor: not-allowed; background: var(--color-surface); border-color: var(--color-border); }
+.rb .ru-opt.is-disabled:hover { border-color: var(--color-border); background: var(--color-surface); }
+.rb .ru-opt.is-disabled .ru-opt__main, .rb .ru-opt.is-disabled .ru-avatar { opacity: 0.55; }
+.rb .ru-opt.is-disabled .ru-opt__amount { color: var(--color-muted); }
+
+/* Same rules Record Utang applies to the shared pieces it does not use here */
+.rb [hidden] { display: none !important; }
+.rb .ru__panel { display: grid; gap: var(--space-3); align-content: start; }
+.rb .ru__dialog:focus { outline: none; }
+.rb .ru__steps { position: absolute; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; height: 4px; }
+.rb .ru__steps span { background: rgba(255, 255, 255, 0.22); }
+.rb .ru__steps .is-current { background: var(--color-lime); }
+
+/* ---------- Step 2: Payment details ---------- */
+.rb .ru__steps .is-done { background: rgba(255, 255, 255, 0.7); }
+.rb-who dd { min-width: 0; }
+.rb-who__bal { font-size: var(--text-md, 1rem); color: var(--color-navy); }
+.rb-hint { font-size: 0.75rem; color: var(--color-muted); }
+.rb-hint--end { text-align: right; }
+.rb-full { justify-self: start; border: 0; background: transparent; padding: 0.125rem 0; font-size: var(--text-xs); font-weight: var(--weight-semibold); color: var(--color-teal); cursor: pointer; }
+.rb-full:hover { text-decoration: underline; }
+.rb .ru-field input[type="date"] { appearance: none; -webkit-appearance: none; text-align: left; }
+.rb .ru-field .rb-notes { min-height: 5rem; padding-block: var(--space-3); resize: vertical; font-family: inherit; }
+
+/* Payment method: tap-to-choose chips (radio buttons), not a dropdown */
+.rb-method { border: 0; margin: 0; padding: 0; min-width: 0; }
+.rb-method legend { padding: 0; margin-bottom: 0.375rem; font-size: var(--text-xs); font-weight: var(--weight-semibold); color: var(--color-navy); }
+.rb-method__grid { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.rb-chip { position: relative; display: inline-flex; }
+.rb-chip input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.rb-chip span {
+  display: inline-flex; align-items: center; min-height: 2.5rem; padding: 0 var(--space-4); border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-pill); background: var(--color-bg); font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-navy);
+  transition: background-color var(--ease), border-color var(--ease), color var(--ease);
+}
+.rb-chip:hover span { border-color: var(--color-turquoise); }
+.rb-chip input:checked + span { border-color: var(--color-teal); background: var(--color-teal); color: #fff; }
+.rb-chip input:focus-visible + span { box-shadow: var(--focus-ring); }
+
+@media (min-width: 56rem) {
+  .rb .ru__dialog[data-step="payment"] { max-width: 34rem; }
+}
+/* Phones: like the item steps in Record Utang, the form grows into a nearly full-screen panel */
+@media (max-width: 55.99rem) {
+  .rb .ru__dialog[data-step="payment"] { height: calc(100vh - 1.5rem); height: calc(100dvh - 1.5rem); max-height: none; }
+  .rb:has(.ru__dialog[data-step="payment"]) { padding: var(--space-3) var(--space-2); }
+}
+
+/* ---------- Step 3: Review payment ---------- */
+.rb .ru__dialog[data-step="review"] .ru__body { gap: var(--space-3); }
+.rb-pay { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) var(--space-4); border: 1.5px solid var(--color-lime); border-radius: var(--radius-md); background: rgba(240, 245, 154, 0.35); }
+.rb-pay__label { font-size: var(--text-xs); font-weight: var(--weight-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-navy); }
+.rb-pay__amount { font-size: var(--text-xl); color: var(--color-navy); white-space: nowrap; }
+.rb-rows dd { max-width: 60%; }
+.rb-rows__notes { align-items: flex-start !important; }
+.rb-rows__notes dd { white-space: pre-wrap; font-weight: var(--weight-semibold); }
+.rb-after { display: grid; gap: 0.125rem; padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-navy); color: #fff; }
+.rb-after__label { font-size: var(--text-xs); font-weight: var(--weight-semibold); color: rgba(255, 255, 255, 0.8); }
+.rb-after__amount { font-size: 1.75rem; line-height: 1.2; color: #fff; }
+.rb-after__note { margin-top: 0.25rem; font-size: var(--text-xs); color: rgba(255, 255, 255, 0.85); }
+.rb-after.is-cleared { background: var(--color-teal); }
+.rb-after.is-cleared .rb-after__note { color: var(--color-lime); font-weight: var(--weight-bold); }
+@media (min-width: 56rem) { .rb .ru__dialog[data-step="review"] { max-width: 34rem; } }
+@media (max-width: 55.99rem) {
+  .rb .ru__dialog[data-step="review"] { height: calc(100vh - 1.5rem); height: calc(100dvh - 1.5rem); max-height: none; }
+  .rb:has(.ru__dialog[data-step="review"]) { padding: var(--space-3) var(--space-2); }
+}
+
+/* ---------- Step 4: success ---------- */
+.rb .ru-done { justify-items: center; text-align: center; gap: var(--space-2); }
+.rb .ru-done__icon { display: grid; place-items: center; width: 4rem; height: 4rem; border-radius: 50%; background: var(--color-teal); color: #fff; box-shadow: 0 0 0 6px var(--color-teal-soft); margin: var(--space-2) 0 var(--space-2); animation: ru-pop 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.rb .ru-done__title { font-size: var(--text-lg); }
+.rb .ru-done__ref { font-size: var(--text-xs); color: var(--color-muted); margin-bottom: var(--space-2); }
+.rb .ru-done__ref strong { display: inline-block; margin-left: 0.25rem; padding: 0.15rem 0.6rem; border-radius: var(--radius-pill); background: var(--color-lime); color: var(--color-navy); }
+.rb .ru-totals--done { width: 100%; text-align: left; }
+.rb .ru-totals--done .ru-totals__main { border-radius: 0; }
+.rb .ru-totals--done > div:first-child { border-radius: var(--radius-md) var(--radius-md) 0 0; }
+.rb .ru-totals--done > div:last-child { border-radius: 0 0 var(--radius-md) var(--radius-md); }
+.rb-done__note { font-size: var(--text-xs); color: var(--color-muted); }
+.rb .ru-items__error { font-size: var(--text-xs); font-weight: var(--weight-semibold); color: var(--color-danger); }
+.rb .ru__total, .rb .ru__actions { display: flex; gap: var(--space-3); }
+.rb .ru__actions .btn { flex: 1 1 0; }
+.rb .ru__actions .btn:first-child:not(:only-child) { flex: 0 0 auto; min-width: 6.5rem; }
+.rb .ru__dialog[data-step="done"] .ru__body { gap: var(--space-2); }
+@media (max-width: 55.99rem) {
+  .rb .ru__dialog[data-step="done"] { height: calc(100vh - 1.5rem); height: calc(100dvh - 1.5rem); max-height: none; }
+  .rb:has(.ru__dialog[data-step="done"]) { padding: var(--space-3) var(--space-2); }
+}

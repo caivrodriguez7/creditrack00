@@ -1,0 +1,91 @@
+/* Store Owner > Transaction Details > Edit Transaction (transaction-edit.html).
+   Builds on owner-customers.css (.form-panel, .form-actions, .page--form), owner-ui.css (.panel, .notice, .tx-icon),
+   components.css (.field, .input, .select, .textarea, .btn) and owner-transactions.css (.txd-head__icon colours). */
+
+.etx { gap: var(--space-4); }
+.etx [hidden] { display: none !important; }
+.etx .select, .etx .textarea { font-size: 1rem; }
+.etx .select { min-height: 3rem; cursor: pointer; }
+.etx .textarea { font: inherit; min-height: 5.5rem; }
+.etx input[aria-invalid="true"], .etx select[aria-invalid="true"], .etx textarea[aria-invalid="true"] { border-color: var(--color-danger); }
+.etx-error { padding: var(--space-3); border-radius: var(--radius-md); background: var(--color-danger-soft); line-height: 1.45; }
+
+/* Fixed facts */
+.etx-id { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid var(--color-border); }
+.etx-id__icon { flex: none; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: var(--radius-md); }
+.etx-id__icon svg { width: 1.3rem; height: 1.3rem; }
+.etx-id__icon.tx-icon--credit { background: var(--color-navy-soft); color: var(--color-navy); }
+.etx-id__icon.tx-icon--payment { background: var(--color-turquoise-soft); color: var(--color-teal); }
+.etx-id__main { min-width: 0; display: grid; gap: 0.1rem; }
+.etx-id__title { font-size: var(--text-sm); font-weight: var(--weight-bold); color: var(--color-navy); }
+.etx-id__meta { font-size: 0.75rem; color: var(--color-muted); }
+.etx-id__meta strong { color: var(--color-navy); }
+
+.etx-section { font-size: var(--text-sm); color: var(--color-navy); }
+.etx-count { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); }
+.etx-count .field__hint { margin-left: auto; white-space: nowrap; }
+
+/* Credit items */
+.etx-items, .etx-pay { display: grid; gap: var(--space-3); min-width: 0; }
+#e-items { display: grid; gap: var(--space-3); }
+.eitem { display: grid; gap: var(--space-3); padding: var(--space-3); border: 1.5px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); }
+.eitem__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.eitem__title { font-size: var(--text-xs); font-weight: var(--weight-bold); letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-muted); }
+.eitem__remove { display: inline-flex; align-items: center; gap: 0.3rem; min-height: 2.25rem; padding: 0 var(--space-3); border: 0; border-radius: var(--radius-md); background: transparent; color: var(--color-danger); font: inherit; font-size: var(--text-xs); font-weight: var(--weight-semibold); cursor: pointer; }
+.eitem__remove:hover { background: var(--color-danger-soft); }
+.eitem__remove:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.eitem__remove:disabled { opacity: 0.4; cursor: not-allowed; background: transparent; }
+.eitem__remove svg { width: 1rem; height: 1rem; }
+.eitem__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+.eitem__grid .field--wide { grid-column: 1 / -1; }
+.eitem .input { min-height: 3rem; font-size: 1rem; }
+.eitem__sub { display: flex; justify-content: space-between; align-items: baseline; font-size: var(--text-xs); color: var(--color-muted); }
+.eitem__sub strong { font-size: var(--text-sm); color: var(--color-navy); }
+.etx-add { justify-self: start; min-height: 2.75rem; font-size: var(--text-sm); }
+.etx-total { display: flex; justify-content: space-between; align-items: baseline; padding-top: var(--space-3); border-top: 1px solid var(--color-border); font-size: var(--text-sm); color: var(--color-muted); }
+.etx-total strong { font-size: var(--text-lg); color: var(--color-navy); }
+
+/* Balance effect */
+.etx-effect { display: grid; gap: var(--space-2); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); background: var(--color-turquoise-soft); border-left: 4px solid var(--color-turquoise); }
+.etx-effect__rows { display: grid; margin: 0; }
+.etx-effect__rows > div { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); padding: 0.3rem 0; font-size: var(--text-xs); }
+.etx-effect__rows > div + div { border-top: 1px solid rgba(7, 26, 82, 0.1); }
+.etx-effect__rows dt { color: var(--color-muted); min-width: 0; }
+.etx-effect__rows dd { margin: 0; text-align: right; font-weight: var(--weight-semibold); color: var(--color-navy); overflow-wrap: anywhere; }
+.etx-effect__rows .is-main dd { font-size: var(--text-sm); font-weight: var(--weight-bold); }
+.etx-effect__rows .is-warn dd { color: var(--color-danger); }
+
+/* Confirmation dialog */
+.etx-confirm { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: var(--space-4); }
+.etx-confirm__backdrop { position: absolute; inset: 0; background: rgba(7, 26, 82, 0.55); }
+.etx-confirm__card { position: relative; width: min(26rem, 100%); max-height: calc(100vh - 2rem); overflow-y: auto; display: grid; gap: var(--space-3); padding: var(--space-5) var(--space-4); border-radius: var(--radius-lg); background: var(--color-bg); box-shadow: 0 18px 48px rgba(7, 26, 82, 0.35); }
+.etx-confirm__card:focus { outline: none; }
+.etx-confirm__title { font-size: 1.125rem; color: var(--color-navy); }
+.etx-confirm__text { font-size: var(--text-sm); color: var(--color-muted); line-height: 1.5; }
+.etx-confirm__rows { display: grid; margin: 0; padding: 0 var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); }
+.etx-confirm__rows > div { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); padding: var(--space-2) 0; font-size: var(--text-xs); }
+.etx-confirm__rows > div + div { border-top: 1px solid var(--color-border); }
+.etx-confirm__rows dt { flex: none; color: var(--color-muted); }
+.etx-confirm__rows dd { margin: 0; min-width: 0; text-align: right; font-weight: var(--weight-semibold); color: var(--color-navy); overflow-wrap: anywhere; }
+.etx-confirm__rows .was { display: block; font-weight: var(--weight-regular); color: var(--color-muted); text-decoration: line-through; }
+.etx-confirm__actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.etx-confirm__actions .btn { min-height: 2.875rem; padding-inline: var(--space-2); font-size: var(--text-sm); white-space: nowrap; }
+body.is-etx-confirm { overflow: hidden; }
+
+@media (min-width: 40rem) { .eitem__grid { grid-template-columns: 2fr 1fr 1fr 1fr; } .eitem__grid .field--wide { grid-column: auto; } }
+
+/* Payment due date (credit only): same look as the due date on Record Utang */
+.etx-due { margin: 0; min-width: 0; display: grid; gap: var(--space-2); padding: var(--space-3); border: 1.5px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); }
+.etx-due[hidden], .etx-due__add[hidden], .etx-due__toggle[hidden], .etx-due__fixed[hidden], .etx-due__pick[hidden] { display: none; }
+.etx-due__title { padding: 0 var(--space-1); font-size: var(--text-sm); font-weight: var(--weight-bold); color: var(--color-navy); }
+.etx-due__add, .etx-due__fixed { display: grid; gap: var(--space-2); min-width: 0; }
+.etx-due__toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem; padding: 0.25rem; border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid var(--color-border); }
+.etx-due__btn { min-height: 2.5rem; padding: 0 var(--space-2); border: 0; border-radius: var(--radius-sm, 0.5rem); background: transparent; font: inherit; font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-muted); cursor: pointer; }
+.etx-due__btn:hover { color: var(--color-navy); }
+.etx-due__btn.is-on { background: var(--color-navy); color: #fff; box-shadow: 0 2px 6px -2px rgba(7, 26, 82, 0.5); }
+.etx-due__btn:focus-visible { outline: 2px solid var(--color-turquoise); outline-offset: 2px; }
+.etx-due__pick { display: grid; gap: 0.375rem; }
+.etx-due__label { font-size: var(--text-xs); font-weight: var(--weight-semibold); color: var(--color-navy); }
+.etx-due__pick .input { font-size: 1rem; min-height: 3rem; }   /* 16px stops iOS zoom on focus */
+.etx-due__hint { font-size: var(--text-xs); color: var(--color-muted); }
+.etx-due__value { font-size: var(--text-sm); font-weight: var(--weight-bold); color: var(--color-navy); }

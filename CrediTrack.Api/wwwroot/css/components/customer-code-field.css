@@ -1,0 +1,17 @@
+/* Customer Code field on Add Customer (js/components/customer-code-field.js). The Enter Code / Scan QR tabs and the camera frame
+   come from css/components/link-account.css (.la-*); this file only adds the code row and the "account found" card. */
+.ccf { display: grid; gap: var(--space-2); padding: var(--space-3); border: 1px dashed var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); }
+.ccf[hidden] { display: none; }
+.ccf__find { display: grid; gap: var(--space-2); }
+.ccf__find[hidden] { display: none; }
+.ccf__row { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2); align-items: start; }
+.ccf__row .btn { min-height: 3rem; }
+.ccf .la-code { min-height: 3rem; font-size: 1.125rem; }
+.ccf__found { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); border: 1px solid var(--color-teal); border-radius: var(--radius-md); background: var(--color-teal-soft); }
+.ccf__found[hidden] { display: none; }
+.ccf__avatar { flex: none; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--color-teal); color: #fff; font-size: var(--text-xs); font-weight: 700; }
+.ccf__main { flex: 1 1 auto; min-width: 0; display: grid; gap: 0.125rem; }
+.ccf__name { overflow-wrap: anywhere; color: var(--color-navy); }
+.ccf__facts { font-size: var(--text-xs); color: var(--color-muted); overflow-wrap: anywhere; }
+.ccf__facts[hidden] { display: none; }
+.ccf__note { font-size: var(--text-xs); color: var(--color-muted); }

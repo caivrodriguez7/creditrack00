@@ -1,0 +1,105 @@
+@{
+    ViewData["Title"] = @"Store Information | CrediTrack";
+    ViewData["Body"] = @"class=""owner"" data-root=""/"" data-page=""settings"" data-nav=""sub"" data-title=""Store Information"" data-back=""settings""";
+}
+
+@section Head {
+  <meta name="description" content="Your store name, address, contact number and other store details.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+  <!-- Shared owner page styles (page grid, heading, profile card, info list, form actions): same look as Customers -->
+  <link rel="stylesheet" href="/css/pages/owner-customers.css">
+  <link rel="stylesheet" href="/css/pages/owner-settings.css">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <!-- Back button and title are added here by js/components/owner-shell.js -->
+    <main class="owner-main" id="main">
+      <div class="page page--settings page--settings-sub" id="page">
+
+
+        <!-- View -->
+        <div class="st-stack" id="store-view">
+          <section class="panel" aria-labelledby="store-title">
+            <div class="panel__head">
+              <h2 class="panel__title" id="store-title">Store Information</h2>
+              <button class="btn btn--secondary st-edit-btn" type="button" id="store-edit-open" aria-controls="store-form">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.1 2.1 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>
+                <span>Edit</span>
+              </button>
+            </div>
+            <dl class="info__list">
+              <div><dt>Store Name</dt><dd id="pf-storeName"></dd></div>
+              <div><dt>Store Contact Number</dt><dd id="pf-storePhone"></dd></div>
+              <div><dt>Business Type</dt><dd id="pf-businessType"></dd></div>
+              <div><dt>Store Hours</dt><dd id="pf-storeHours"></dd></div>
+              <div class="info__row--stack"><dt>Store Address</dt><dd id="pf-storeAddress"></dd></div>
+              <div><dt>Store Code</dt><dd id="pf-storeCode"></dd></div>
+            </dl>
+          </section>
+        </div>
+
+        <!-- Edit mode: replaces the view above until Save Changes or Cancel -->
+        <form class="panel form-panel st-form" id="store-form" novalidate hidden aria-labelledby="store-form-title">
+          <div class="panel__head"><h2 class="panel__title" id="store-form-title">Edit Store Information</h2></div>
+          <p class="form-panel__intro">Update your store details. Fields marked <span aria-hidden="true">*</span><span class="visually-hidden">with an asterisk</span> are required.</p>
+          <div class="st-fields">
+              <div class="field">
+                <label class="field__label" for="sf-storeName">Store Name <span aria-hidden="true">*</span></label>
+                <input class="input" id="sf-storeName" type="text" autocomplete="organization" maxlength="60" placeholder="e.g., Aling Nena's Store" required aria-describedby="sf-storeName-error">
+                <p class="field__error" id="sf-storeName-error" hidden></p>
+              </div>
+              <div class="field">
+                <label class="field__label" for="sf-storePhone">Store Contact Number <span aria-hidden="true">*</span></label>
+                <input class="input" id="sf-storePhone" type="tel" inputmode="tel" autocomplete="off" maxlength="16" placeholder="09XX XXX XXXX" required aria-describedby="sf-storePhone-error">
+                <p class="field__error" id="sf-storePhone-error" hidden></p>
+              </div>
+              <div class="field">
+                <label class="field__label" for="sf-businessType">Business Type <span class="field__opt">(optional)</span></label>
+                <select class="select" id="sf-businessType" aria-describedby="sf-businessType-error"><option value="">Select business type</option></select>
+                <p class="field__error" id="sf-businessType-error" hidden></p>
+              </div>
+              <div class="field">
+                <label class="field__label" for="sf-storeHours">Store Hours <span class="field__opt">(optional)</span></label>
+                <input class="input" id="sf-storeHours" type="text" maxlength="60" placeholder="e.g., Mon-Sat, 6:00 AM - 9:00 PM" aria-describedby="sf-storeHours-hint sf-storeHours-error">
+                <p class="field__hint" id="sf-storeHours-hint">Shown to you only for now.</p>
+                <p class="field__error" id="sf-storeHours-error" hidden></p>
+              </div>
+              <div class="field">
+                <label class="field__label" for="sf-storeAddress">Store Address <span aria-hidden="true">*</span></label>
+                <textarea class="textarea" id="sf-storeAddress" rows="3" maxlength="160" autocomplete="street-address" placeholder="Street, Barangay, City / Municipality, Province" required aria-describedby="sf-storeAddress-hint sf-storeAddress-error"></textarea>
+                <p class="field__hint" id="sf-storeAddress-hint">Include the street, barangay, city or municipality, and province.</p>
+                <p class="field__error" id="sf-storeAddress-error" hidden></p>
+              </div>
+          </div>
+          <p class="form-note"><strong>Store Code</strong>Your store code <span id="sf-code">&mdash;</span> is fixed and can&rsquo;t be edited here.</p>
+          <div class="form-actions">
+            <button class="btn btn--secondary" type="button" id="store-cancel">Cancel</button>
+            <button class="btn btn--primary" type="submit" id="store-save">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/owner-api.js"></script>
+  <script src="/js/components/owner-shell.js"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/pages/owner-store-info.js"></script>
+}

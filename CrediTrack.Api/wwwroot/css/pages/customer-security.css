@@ -1,0 +1,10 @@
+/* Customer Portal > Profile > Security (security.html), a subpage. Mock data only.
+   Reuses the Store Owner's Security look (owner-settings.css: .st-pw-form, .input-wrap show/hide eye, .pw-rules, .st-tips).
+   Only what is new lives here: the "last changed" line and the success message. */
+.sec-last { font-size: var(--text-xs); color: var(--color-muted); }
+.sec-success { display: flex; align-items: flex-start; gap: var(--space-3); margin-bottom: var(--space-4); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); background: var(--color-turquoise-soft); border: 1px solid var(--color-turquoise); border-left-width: 4px; font-size: var(--text-xs); color: var(--color-ink); }
+.sec-success[hidden] { display: none; }
+.sec-success strong { display: block; font-size: var(--text-sm); color: var(--color-navy); }
+.sec-success:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.sec-success__icon { flex: none; display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: var(--color-teal); color: #fff; }
+.st-pw-form .btn:disabled { opacity: 0.6; cursor: not-allowed; }

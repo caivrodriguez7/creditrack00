@@ -1,0 +1,185 @@
+@page "/customer/request-payment"
+@{
+    ViewData["Title"] = @"Make a Payment | CrediTrack";
+    ViewData["Body"] = @"class=""owner customer"" data-root=""/"" data-page=""payments""";
+}
+
+@section Head {
+  <meta name="description" content="Tell a store you have paid: choose the store, amount and payment method, add proof, review, and send the request for the store owner to verify.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+  <link rel="stylesheet" href="/css/components/customer-shell.css">
+  <!-- Step card, back button, detail rows and success layout are shared with Join a Store -->
+  <link rel="stylesheet" href="/css/pages/customer-join.css">
+  <link rel="stylesheet" href="/css/pages/customer-request-payment.css">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <!-- Header, sidebar and bottom navigation are added here by js/components/customer-shell.js -->
+    <main class="owner-main" id="main">
+      <div class="cjoin cpr" id="cpr">
+
+        <!-- 1. Payment details -->
+        <section class="jstep" data-step="form" aria-labelledby="t-form" hidden>
+          <header class="jhead"><button class="jback" type="button" data-back aria-label="Back"></button><h1 id="t-form" tabindex="-1">Make a Payment</h1></header>
+          <p class="jsub">Paid a store already? Send the details here. The store owner will check them and record your payment.</p>
+
+
+          <form class="jform" id="pay-form" novalidate>
+
+            <!-- Store -->
+            <div class="field">
+              <label class="field__label" for="store">Select Store</label>
+              <select class="select cpr__select" id="store" name="store" aria-describedby="store-info store-error" required></select>
+              <p class="field__hint cpr__info" id="store-info" role="status" hidden></p>
+              <p class="field__error" id="store-error" role="alert" hidden></p>
+            </div>
+
+            <!-- Amount -->
+            <div class="field">
+              <label class="field__label" for="amount">Payment Amount</label>
+              <div class="cpr__money">
+                <span class="cpr__peso" aria-hidden="true">₱</span>
+                <input class="input cpr__amount" id="amount" name="amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" aria-describedby="amount-hint amount-error" required>
+              </div>
+              <div class="cpr__quick">
+                <span class="field__hint" id="amount-hint">Enter the amount you paid.</span>
+                <button class="cpr__full" type="button" id="amount-full" hidden>Full balance</button>
+              </div>
+              <p class="field__error" id="amount-error" role="alert" hidden></p>
+            </div>
+
+            <!-- Method -->
+            <fieldset class="field cpr__methods" aria-describedby="method-error">
+              <legend class="field__label">Payment Method</legend>
+              <div class="cpr__radios" id="methods"></div>
+              <p class="field__error" id="method-error" role="alert" hidden></p>
+            </fieldset>
+
+            <!-- Reference number (hidden for Cash) -->
+            <div class="field" id="reference-field">
+              <label class="field__label" for="reference">Reference Number <span class="cpr__opt" id="reference-opt">(required)</span></label>
+              <input class="input" id="reference" name="reference" type="text" autocomplete="off" spellcheck="false" maxlength="30" placeholder="Enter reference number" aria-describedby="reference-hint reference-error">
+              <p class="field__hint" id="reference-hint"></p>
+              <p class="field__error" id="reference-error" role="alert" hidden></p>
+            </div>
+
+            <!-- Proof (optional) -->
+            <div class="field">
+              <span class="field__label" id="proof-label">Payment Proof <span class="cpr__opt" id="proof-opt">(optional)</span></span>
+              <input class="visually-hidden" id="proof" name="proof" type="file" accept="image/png,image/jpeg" aria-labelledby="proof-label" tabindex="-1">
+              <button class="cpr__drop" type="button" id="proof-pick" aria-describedby="proof-hint proof-error">
+                <span class="cpr__drop__icon" data-icon="upload"></span>
+                <strong>Upload Screenshot / Receipt</strong>
+                <span id="proof-hint">JPG or PNG, up to 5 MB</span>
+              </button>
+              <div class="cpr__proof" id="proof-chosen" hidden>
+                <img class="cpr__proof__img" id="proof-img" alt="Preview of your payment proof">
+                <span class="cpr__proof__main"><strong id="proof-name"></strong><span id="proof-size"></span></span>
+                <button class="cpr__proof__remove" type="button" id="proof-remove" aria-label="Remove payment proof"><span data-icon="close"></span></button>
+              </div>
+              <p class="field__error" id="proof-error" role="alert" hidden></p>
+            </div>
+
+            <!-- Message (optional) -->
+            <div class="field">
+              <label class="field__label" for="note">Message <span class="cpr__opt">(optional)</span></label>
+              <textarea class="textarea cpr__note" id="note" name="note" rows="3" maxlength="200" placeholder="Add a note for the store owner..." aria-describedby="note-count note-error"></textarea>
+              <div class="cpr__count"><p class="field__error" id="note-error" role="alert" hidden></p><span class="field__hint" id="note-count">0 / 200</span></div>
+            </div>
+
+            <button class="btn btn--primary btn--block btn--lg" type="submit" id="form-next">Review Payment</button>
+          </form>
+        </section>
+
+        <!-- 2. Review -->
+        <section class="jstep" data-step="review" aria-labelledby="t-review" hidden>
+          <header class="jhead"><button class="jback" type="button" data-back aria-label="Back to edit"></button><h1 id="t-review" tabindex="-1">Review Payment</h1></header>
+          <p class="jsub">Check the details before you send them to the store.</p>
+          <section class="jcard" aria-labelledby="r-h">
+            <h2 class="jcard__title" id="r-h">Payment details</h2>
+            <dl class="jrows jrows--tight">
+              <div><dt>Store</dt><dd id="r-store"></dd></div>
+              <div><dt>Payment amount</dt><dd class="cpr__amount-out" id="r-amount"></dd></div>
+              <div><dt>Payment method</dt><dd id="r-method"></dd></div>
+              <div id="r-reference-row"><dt>Reference number</dt><dd id="r-reference"></dd></div>
+              <div><dt>Payment proof</dt><dd id="r-proof"></dd></div>
+              <div id="r-note-row"><dt>Message</dt><dd id="r-note"></dd></div>
+            </dl>
+          </section>
+          <section class="jcard" aria-labelledby="rb-h">
+            <h2 class="jcard__title" id="rb-h">Your balance</h2>
+            <dl class="jrows jrows--tight">
+              <div><dt>Balance now</dt><dd id="r-balance"></dd></div>
+              <div><dt>If the store accepts it</dt><dd id="r-after"></dd></div>
+            </dl>
+          </section>
+          <p class="jnote"><strong>Important:</strong> Your payment request will be sent to the store owner for verification. Your balance will not decrease until the payment is verified and recorded.</p>
+          <p class="field__error jsave-error" id="submit-error" role="alert" hidden></p>
+          <div class="jform">
+            <button class="btn btn--primary btn--block btn--lg" type="button" id="submit">Submit Payment Request</button>
+            <button class="btn btn--secondary btn--block" type="button" id="review-back">Back to Edit</button>
+          </div>
+        </section>
+
+        <!-- 3. Submitted -->
+        <section class="jstep jstep--done" data-step="done" aria-labelledby="t-done" hidden>
+          <div class="jdone">
+            <span class="jdone__icon" data-icon="check"></span>
+            <h1 id="t-done" tabindex="-1">Payment Request Submitted</h1>
+            <p class="jsub" id="d-text"></p>
+            <p class="cpr__big" id="d-amount"></p>
+            <span class="badge badge--warning cpr__pending" id="d-status">Pending Verification</span>
+            <dl class="jrows jrows--card">
+              <div><dt>Store</dt><dd id="d-store"></dd></div>
+              <div><dt>Method</dt><dd id="d-method"></dd></div>
+              <div id="d-reference-row"><dt>Reference number</dt><dd id="d-reference"></dd></div>
+              <div><dt>Balance status</dt><dd id="d-balance">Not yet updated</dd></div>
+            </dl>
+            <p class="jfoot">You can track this request in the Payments tab.</p>
+          </div>
+          <div class="jform">
+            <a class="btn btn--primary btn--block btn--lg" href="payments" data-route="customer-payments">View My Payments</a>
+            <a class="btn btn--secondary btn--block" href="home" data-route="customer-dashboard">Back to Home</a>
+          </div>
+        </section>
+
+        <!-- Nothing to pay: no store joined, or nothing owed -->
+        <section class="jstep" data-step="blocked" aria-labelledby="t-blocked" hidden>
+          <header class="jhead"><button class="jback" type="button" data-back aria-label="Back"></button><h1 id="t-blocked" tabindex="-1">Make a Payment</h1></header>
+          <div class="jstore">
+            <span class="jstore__icon" data-icon="store"></span>
+            <h2 class="jlead" id="b-title"></h2>
+            <p class="jsub" id="b-text"></p>
+          </div>
+          <div class="jform">
+            <a class="btn btn--primary btn--block btn--lg" href="#" data-route="customer-join-store" id="b-join" hidden>Join a Store</a>
+            <a class="btn btn--secondary btn--block" href="payments" data-route="customer-payments">View My Payments</a>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/customer-api.js"></script>
+  <script src="/js/components/customer-shell.js"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js?v=8"></script>
+  <script src="/js/pages/customer-request-payment.js"></script>
+}
