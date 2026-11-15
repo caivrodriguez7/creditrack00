@@ -180,8 +180,14 @@ html[data-theme="dark"] { background: var(--dk-page); }
 :root[data-theme="dark"] .notice--archived { background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.12); border-left-color: var(--color-turquoise); }
 
 /* Pager, QR holder keep their own light surface only where it must stay light (QR codes) */
-:root[data-theme="dark"] .pager__btn { background: rgba(255, 255, 255, 0.07); color: var(--color-navy); }
+:root[data-theme="dark"] .pager__bar { background: var(--glass-fill); border-color: var(--glass-edge); box-shadow: var(--glass-shadow), var(--glass-shine); }
+:root[data-theme="dark"] .pager__btn--step { background: rgba(92, 184, 179, 0.16); color: var(--color-teal); }
+:root[data-theme="dark"] .pager__btn--step:hover:not(:disabled) { background: var(--dk-teal-solid); color: #fff; }
 :root[data-theme="dark"] .pager__btn.is-current { background: var(--dk-navy-fill); color: #fff; }
+:root[data-theme="dark"] .pager .pager__input { background: rgba(255, 255, 255, 0.07); border-color: var(--glass-edge); color: var(--color-navy); }
+:root[data-theme="dark"] .pager__go { background: var(--dk-navy-fill); color: #fff; }
+:root[data-theme="dark"] .pager__go:hover { background: var(--dk-teal-solid); }
+:root[data-theme="dark"] .pager__divider { background: var(--glass-line); }
 
 /* Toast */
 :root[data-theme="dark"] .toast { background: rgba(26, 52, 82, 0.96); border-color: rgba(255, 255, 255, 0.18); color: #fff; box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.8); }
