@@ -1,5 +1,5 @@
 /* Pagination bar (window.CrediTrackPager).
-   Shows Previous / Next, page numbers (1 ... 4 5 6 ... 20) and "Page 5 of 20" under a list.
+   Shows pill-shaped Previous / Next buttons with "5 of 20" between them under a list (the numbered buttons are hidden by css/components/pager.css).
    The list pages send a query with page + pageSize and get back { page, totalPages, totalCount } (see js/api/list-query.js);
    this bar only draws those numbers and tells the page which page was chosen. It never loads anything itself.
 
@@ -46,7 +46,7 @@
         else html += button(n, n, "pager__btn--num", "Go to page " + n);
       });
       html += "</span>";
-      html += '<span class="pager__status" aria-live="polite">Page ' + current + " of " + total + "</span>";
+      html += '<span class="pager__status" aria-live="polite" aria-label="Page ' + current + " of " + total + '">' + current + " of " + total + "</span>";
       html += '<button type="button" class="pager__btn pager__btn--step" data-page="' + (current + 1) + '"' + (current >= total ? " disabled" : "") + ' aria-label="Next page">' +
         '<span class="pager__word">Next</span> <span aria-hidden="true">&rsaquo;</span></button>';
       el.innerHTML = html;
