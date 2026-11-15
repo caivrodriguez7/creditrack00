@@ -29,7 +29,7 @@ public class EmailService : IEmailService
         var smtp = GetSmtpSettings();
 
         var message = new MimeMessage();
-        message.From.Add(MailboxAddress.Parse(smtp.From));
+        message.From.Add(BuildFromAddress(smtp.From));
         message.To.Add(MailboxAddress.Parse(toEmail));
         message.Subject = "Reset Your CrediTrack Password";
 
@@ -83,7 +83,7 @@ public class EmailService : IEmailService
             rawToken);
 
         var message = new MimeMessage();
-        message.From.Add(MailboxAddress.Parse(smtp.From));
+        message.From.Add(BuildFromAddress(smtp.From));
         message.To.Add(MailboxAddress.Parse(toEmail));
         message.Subject = isEmailChange ? "Confirm Your New CrediTrack Email" : "Verify Your CrediTrack Email";
 
@@ -133,6 +133,17 @@ public class EmailService : IEmailService
     // ------------------------------------------------------------------
     // Shared helpers
     // ------------------------------------------------------------------
+
+    // The sender shows as "CrediTrack" in the inbox. Email:From may be a bare address or "Name <address>";
+    // an optional Email:FromName setting overrides the name.
+    private MailboxAddress BuildFromAddress(string from)
+    {
+        var parsed = MailboxAddress.Parse(from.Trim());
+        var name = _configuration["Email:FromName"]?.Trim();
+        if (string.IsNullOrWhiteSpace(name))
+            name = string.IsNullOrWhiteSpace(parsed.Name) ? "CrediTrack" : parsed.Name;
+        return new MailboxAddress(name, parsed.Address);
+    }
 
     private sealed record SmtpSettings(string Host, int Port, string Username, string Password, string From);
 
@@ -187,30 +198,8 @@ public class EmailService : IEmailService
         const string teal = "#086B70";
         const string font = "'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
 
-        Uri? uri = null;
-        var logoUrl = _configuration["Email:LogoUrl"]?.Trim();
-        if (Uri.TryCreate(logoUrl, UriKind.Absolute, out var configuredUri)
-            && configuredUri.Scheme == Uri.UriSchemeHttps)
-        {
-            uri = configuredUri;
-        }
-        else
-        {
-            var verificationUrl = _configuration["Frontend:EmailVerificationUrl"]?.Trim();
-            if (Uri.TryCreate(verificationUrl, UriKind.Absolute, out var frontendUri)
-                && frontendUri.Scheme == Uri.UriSchemeHttps)
-            {
-                uri = new Uri(frontendUri, "/assets/images/creditrack-email-logo.png");
-            }
-        }
-
-        if (uri != null)
-        {
-            var safeUrl = System.Net.WebUtility.HtmlEncode(uri.AbsoluteUri);
-            return $"<img src=\"{safeUrl}\" width=\"200\" alt=\"CrediTrack\" style=\"display:block;border:0;outline:none;text-decoration:none;width:200px;max-width:100%;height:auto;font-family:{font};font-size:22px;font-weight:bold;color:{navy};\">";
-        }
-
-        // Local or non-HTTPS environments retain the text wordmark rather than using an unavailable remote image.
+        // Text wordmark instead of an image: an image has a fixed white background, which shows as a white box in
+        // dark mode, while text colors are adjusted by the mail app.
         return $"<div style=\"font-family:{font};font-size:36px;line-height:40px;font-weight:800;font-style:italic;letter-spacing:-1px;text-align:center;\"><span style=\"color:{navy};\">Credi</span><span style=\"color:{teal};\">Track</span></div>";
     }
 
