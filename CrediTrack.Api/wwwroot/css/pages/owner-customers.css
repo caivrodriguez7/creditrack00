@@ -51,9 +51,9 @@
 .detail .profile { order: 1; }
 .detail .balance { order: 2; }
 .detail .actions { order: 3; }
-.detail .history { order: 4; }
-.detail .info { order: 5; }
-.detail .account { order: 6; }                           /* Customer Account sits at the bottom, under Customer Information */
+.detail .account { order: 4; }                           /* Customer Account sits under Record Utang / Record Bayad, above Recent Transactions */
+.detail .history { order: 5; }
+.detail .info { order: 6; }                              /* Customer Information (with Archive Customer) is last */
 
 .profile { display: flex; align-items: center; gap: var(--space-3); }
 .profile__avatar { flex: none; display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; background: var(--color-turquoise); color: var(--color-navy); font-size: var(--text-sm); font-weight: var(--weight-bold); }

@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="/css/components/record-utang.css?v=date2">
   <link rel="stylesheet" href="/css/components/record-bayad.css">
   <link rel="stylesheet" href="/css/components/link-account.css?v=2">
-  <link rel="stylesheet" href="/css/pages/owner-customers.css?v=4">
+  <link rel="stylesheet" href="/css/pages/owner-customers.css?v=5">
   <link rel="stylesheet" href="/css/components/breadcrumbs.css">
   <link rel="stylesheet" href="/css/glass.css?v=4">
   <link rel="stylesheet" href="/css/polish.css?v=1">
@@ -77,20 +77,6 @@
               <a class="btn btn--primary" href="#" data-route="record-payment"><span data-icon="payment"></span>Record Bayad</a>
             </div>
 
-            <section class="panel info" aria-labelledby="info-title">
-              <div class="panel__head"><h2 class="panel__title" id="info-title">Customer Information</h2></div>
-              <dl class="info__list">
-                <div><dt>Full Name</dt><dd id="info-name"></dd></div>
-                <div><dt>Contact Number</dt><dd id="info-phone"></dd></div>
-                <div><dt>Customer ID</dt><dd id="info-code"></dd></div>
-                <div><dt>Customer Since</dt><dd id="info-since"></dd></div>
-              </dl>
-              <div class="archive-box">
-                <p class="archive-box__text" id="archive-text"></p>
-                <button class="btn btn--secondary btn--block" type="button" id="archive-btn"></button>
-              </div>
-            </section>
-
             <!-- Customer Account: the customer's CrediTrack account, linked to this record (js/components/link-account.js) -->
             <section class="panel account" id="account" aria-labelledby="account-title">
               <div class="account__head">
@@ -110,6 +96,20 @@
                 <div><dt>Linked On</dt><dd id="account-linked"></dd></div>
                 <div><dt>Connection Status</dt><dd><span class="badge" id="account-status"></span></dd></div>
               </dl>
+            </section>
+
+            <section class="panel info" aria-labelledby="info-title">
+              <div class="panel__head"><h2 class="panel__title" id="info-title">Customer Information</h2></div>
+              <dl class="info__list">
+                <div><dt>Full Name</dt><dd id="info-name"></dd></div>
+                <div><dt>Contact Number</dt><dd id="info-phone"></dd></div>
+                <div><dt>Customer ID</dt><dd id="info-code"></dd></div>
+                <div><dt>Customer Since</dt><dd id="info-since"></dd></div>
+              </dl>
+              <div class="archive-box">
+                <p class="archive-box__text" id="archive-text"></p>
+                <button class="btn btn--secondary btn--block" type="button" id="archive-btn"></button>
+              </div>
             </section>
           </div>
 
