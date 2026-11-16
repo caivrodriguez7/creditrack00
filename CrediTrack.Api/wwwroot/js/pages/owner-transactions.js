@@ -22,7 +22,10 @@
     voided:   { label: "Voided",         cls: "badge--danger" }
   };
   var STATUS_FILTERS = ["all", "unpaid", "partial", "paid", "confirmed", "voided"];
-  var state = { data: null, items: [], page: 1, query: "", type: "all", status: "all", range: "all", from: "", to: "" };
+  var state = { data: null, items: [], page: 1, query: "", type: "all", status: "all", range: "all", from: "", to: "", customerId: "", customerName: "" };
+  // Opened from Customer Details (transactions?customerId=3&customer=Ana&type=credit): list only that customer's transactions
+  var params = new URLSearchParams(window.location.search);
+  var urlCustomer = { id: params.get("customerId") || "", name: params.get("customer") || "", type: params.get("type") || "" };
   var pager = window.CrediTrackPager.create($("pager"), function (n) { return load(n); }, $("result-line"));
   var requestSeq = 0;   // only the newest request may draw
 
@@ -48,7 +51,7 @@
     return esc(dateLong(iso));
   }
 
-  function isFiltering() { return !!(state.query.trim() || state.type !== "all" || state.status !== "all" || state.range !== "all"); }
+  function isFiltering() { return !!(state.customerId || state.query.trim() || state.type !== "all" || state.status !== "all" || state.range !== "all"); }
 
   // ---- Drawing ----
   var CHEVRON = '<svg class="tx-row__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
@@ -86,7 +89,7 @@
     var hasAny = d.totalAll > 0;
     var shown = state.items;
 
-    $("page-sub").textContent = hasAny ? noun(d.totalAll) + " recorded in your store." : "Review all store credits and payments.";
+    $("page-sub").textContent = state.customerId ? "Transactions of " + (state.customerName || "this customer") + "." : hasAny ? noun(d.totalAll) + " recorded in your store." : "Review all store credits and payments.";
     $("toolbar").hidden = !hasAny;
     $("empty-none").hidden = hasAny;
 
@@ -127,6 +130,11 @@
     }
 
     // Controls
+    $("customer-filter").hidden = !state.customerId;
+    if (state.customerId) {
+      $("customer-filter-name").textContent = state.customerName || "this customer";
+      $("customer-filter-back").href = "customer-details?id=" + encodeURIComponent(state.customerId);
+    }
     $("search-clear").hidden = !state.query;
     document.querySelectorAll("#type-chips .chip").forEach(function (chip) {
       chip.setAttribute("aria-pressed", String(chip.getAttribute("data-type") === state.type));
@@ -143,7 +151,7 @@
 
   // The query this page sends. The names match the future API (GET /api/transactions?search=&type=&status=&dateRange=&from=&to=&page=&pageSize=).
   function currentQuery(page) {
-    return { search: state.query.trim(), type: state.type, status: state.status, dateRange: state.range, from: state.from, to: state.to, page: page, pageSize: PAGE_SIZE };
+    return { customerId: state.customerId, search: state.query.trim(), type: state.type, status: state.status, dateRange: state.range, from: state.from, to: state.to, page: page, pageSize: PAGE_SIZE };
   }
   // A number = that page; anything else (a filter changed) = start again from page 1
   function load(target) {
@@ -153,6 +161,7 @@
       state.data = data;
       state.page = data.page;
       state.items = data.items;
+      if (state.customerId && !state.customerName && data.items.length) state.customerName = data.items[0].customer || "";
       render();
     });
   }
@@ -202,8 +211,16 @@
   $("found-reset").addEventListener("click", function () {
     state.query = ""; state.type = "all"; state.status = "all"; state.range = "all"; state.from = ""; state.to = "";
     $("search").value = "";
+    clearCustomer();
     change();
   });
+  // Back to every customer's transactions (also takes the customer out of the address)
+  function clearCustomer() {
+    if (!state.customerId) return;
+    state.customerId = ""; state.customerName = "";
+    try { window.history.replaceState(null, "", window.location.pathname); } catch (e) { /* ignore */ }
+  }
+  $("customer-filter-clear").addEventListener("click", function () { clearCustomer(); change(); });
   // Empty state for a brand-new store: switch on the sample data (same switch as the dashboard)
 
   // Dates cannot be in the future
@@ -211,6 +228,10 @@
 
   // Starting view: the one the person left (Back/Forward), otherwise clean.
   if (window.CrediTrack.navType() === "back_forward" && readView()) applyView(readView()); else clearView();
+  if (urlCustomer.id) {   // coming from a customer: that customer, and the Credits / Payments chip they had on
+    state.customerId = urlCustomer.id; state.customerName = urlCustomer.name;
+    if (["credit", "payment"].indexOf(urlCustomer.type) !== -1 && window.CrediTrack.navType() !== "back_forward") state.type = urlCustomer.type;
+  }
   // Restored from the back/forward cache: pick up the saved view and any new data.
   window.addEventListener("pageshow", function (event) { if (event.persisted) { applyView(readView()); load(true); } });
 

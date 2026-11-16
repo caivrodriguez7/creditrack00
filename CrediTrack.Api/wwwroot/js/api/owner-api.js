@@ -866,6 +866,7 @@
       var matches = win.invalid ? [] : data.transactions.filter(function (t) {
         if (type !== "all" && t.type !== type) return false;
         if (status !== "all" && t.status !== status) return false;
+        if (query.customerId && String(t.customerId) !== String(query.customerId)) return false;   // one customer's transactions only
         if (search && (t.customer || "").toLowerCase().indexOf(search) === -1) return false;
         return Q.inWindow(t.date, win);
       });   // already newest first
