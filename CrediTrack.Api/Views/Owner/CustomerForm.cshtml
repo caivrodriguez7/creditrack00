@@ -1,0 +1,130 @@
+@{
+    ViewData["Title"] = @"Add Customer | CrediTrack";
+    ViewData["Body"] = @"class=""owner"" data-root=""/"" data-page=""customers"" data-nav=""sub"" data-title=""Add Customer"" data-back=""customers""";
+}
+
+@section Head {
+  <meta name="description" content="Add a customer to your store records, or update a customer's information.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+  <link rel="stylesheet" href="/css/pages/owner-customers.css">
+  <link rel="stylesheet" href="/css/components/link-account.css?v=2">
+  <link rel="stylesheet" href="/css/components/customer-code-field.css">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <!-- Back button and title are added here by js/components/owner-shell.js -->
+    <main class="owner-main" id="main">
+      <div class="page page--form" id="page">
+
+
+        <!-- Edit mode with a link that has no valid customer -->
+        <section class="panel" id="missing" hidden>
+          <div class="empty">
+            <span class="empty__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg></span>
+            <h2 class="empty__title">Customer not found</h2>
+            <p class="empty__text">This customer may have been removed, or the link is incorrect.</p>
+            <a class="btn btn--primary" href="customers" data-route="owner-customers">Go to Customers</a>
+          </div>
+        </section>
+
+        <form class="panel form-panel" id="cform" novalidate hidden>
+          <p class="form-panel__intro" id="form-intro">Add a customer to your store records.</p>
+
+          <div class="field">
+            <label class="field__label" for="cf-name">Full Name <span aria-hidden="true">*</span></label>
+            <input class="input" id="cf-name" type="text" autocomplete="off" maxlength="60" placeholder="Enter customer's full name" required aria-describedby="cf-name-error">
+            <p class="field__error" id="cf-name-error" hidden></p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="cf-phone">Contact Number <span class="field__opt">(optional)</span></label>
+            <input class="input" id="cf-phone" type="tel" inputmode="tel" autocomplete="off" maxlength="16" placeholder="09XX XXX XXXX" aria-describedby="cf-phone-hint cf-phone-error">
+            <p class="field__hint" id="cf-phone-hint">Only add a number if the customer provides one.</p>
+            <p class="field__error" id="cf-phone-error" hidden></p>
+          </div>
+
+          <!-- Optional: the customer's CrediTrack account, by Customer Code or QR (js/components/customer-code-field.js). Real accounts only. -->
+          <section class="ccf" id="ccf" aria-labelledby="ccf-label" hidden>
+            <span class="field__label" id="ccf-label">CrediTrack account <span class="field__opt">(optional)</span></span>
+            <p class="field__hint">Does the customer already use CrediTrack? Enter their Customer Code or scan their QR code (Profile &gt; Customer Code &amp; QR). We&rsquo;ll ask them to link their account to this record. It is only linked once they accept.</p>
+
+            <div class="ccf__find" id="ccf-find">
+              <div class="la-tabs" role="tablist" aria-label="How to add the Customer Code">
+                <button class="la-tab" type="button" role="tab" id="ccf-tab-enter" aria-controls="ccf-pane-enter" aria-selected="true"><span>Enter Code</span></button>
+                <button class="la-tab" type="button" role="tab" id="ccf-tab-scan" aria-controls="ccf-pane-scan" aria-selected="false" tabindex="-1"><span>Scan QR</span></button>
+              </div>
+
+              <div class="la-pane" id="ccf-pane-enter" role="tabpanel" aria-labelledby="ccf-tab-enter">
+                <div class="ccf__row">
+                  <input class="input la-code" id="ccf-code" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="24" placeholder="CT-CUS-123456" aria-label="Customer Code" aria-describedby="ccf-error">
+                  <button class="btn btn--secondary" type="button" id="ccf-check">Check</button>
+                </div>
+              </div>
+
+              <div class="la-pane" id="ccf-pane-scan" role="tabpanel" aria-labelledby="ccf-tab-scan" hidden>
+                <div class="la-scan" id="ccf-scan">
+                  <video class="la-scan__video" id="ccf-video" playsinline muted aria-label="Camera preview"></video>
+                  <span class="la-scan__frame" aria-hidden="true"></span>
+                  <div class="la-scan__msg" id="ccf-scan-msg" hidden></div>
+                </div>
+                <p class="la-hint" id="ccf-scan-hint">Point the camera at the customer&rsquo;s Customer Code QR.</p>
+                <div class="la-scan__actions" id="ccf-scan-actions" hidden>
+                  <button class="btn btn--secondary" type="button" id="ccf-rescan">Scan Again</button>
+                </div>
+                <div class="la-scan__upload">
+                  <button class="btn btn--secondary btn--block" type="button" id="ccf-upload">Upload a QR photo</button>
+                  <input type="file" id="ccf-file" accept="image/*" hidden>
+                </div>
+              </div>
+
+              <p class="field__error" id="ccf-error" role="alert" hidden></p>
+            </div>
+
+            <div class="ccf__found" id="ccf-found" hidden>
+              <span class="ccf__avatar" id="ccf-avatar" aria-hidden="true"></span>
+              <div class="ccf__main">
+                <strong class="ccf__name" id="ccf-name"></strong>
+                <span class="ccf__facts" id="ccf-id"></span>
+                <span class="ccf__facts" id="ccf-email"></span>
+              </div>
+              <button class="btn btn--ghost btn--sm" type="button" id="ccf-remove">Remove</button>
+            </div>
+            <p class="ccf__note" id="ccf-found-note" hidden>The customer will get a link request. Until they accept, this is only your own record.</p>
+          </section>
+
+          <p class="form-note" id="form-note"><strong>No account required</strong>You can add a customer even if they don&rsquo;t have a CrediTrack account yet.</p>
+
+          <div class="form-actions">
+            <button class="btn btn--secondary" type="button" id="cf-cancel">Cancel</button>
+            <button class="btn btn--primary" type="submit" id="cf-save">Save Customer</button>
+          </div>
+        </form>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/owner-api.js"></script>
+  <script src="/js/components/owner-shell.js"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/vendor/jsqr.js"></script>
+  <script src="/js/components/customer-code-field.js"></script>
+  <script src="/js/pages/owner-customer-form.js"></script>
+}

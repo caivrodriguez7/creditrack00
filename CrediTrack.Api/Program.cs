@@ -21,16 +21,13 @@ if (string.IsNullOrWhiteSpace(connectionString))
         "host: environment variable ConnectionStrings__Default or DATABASE_URL). See \"First-time setup\" in the README.");
 builder.Services.AddDbContext<AppDb>(options => options.UseNpgsql(connectionString));
 
-// The pages are a mix: most are Razor Pages (Pages/*.cshtml); some Store Owner screens are ASP.NET Core MVC (Controllers/OwnerController.cs + Views/Owner);
-// the JSON API stays in Controllers/ (api/...)
-// Page guard: the /Owner and /Customer page folders need a signed-in user of the matching role, so the page itself
-// (not only the API behind it) cannot be opened without logging in. Every other page (welcome, login, register,
+// The screens are a mix: the Store Owner and Customer screens are ASP.NET Core MVC (Controllers/OwnerController.cs + Views/Owner,
+// Controllers/CustomerController.cs + Views/Customer); the public pages (welcome, login, register, email links, privacy, terms)
+// stay Razor Pages (Pages/*.cshtml); the JSON API stays in Controllers/ (api/...)
+// Page guard: the MVC controllers carry [Authorize(Policy = "OwnerOnly")] / [Authorize(Policy = "CustomerOnly")], so the page itself
+// (not only the API behind it) cannot be opened without logging in. Every Razor Page (welcome, login, register,
 // privacy, terms ...) stays public.
-builder.Services.AddRazorPages(options =>
-{
-    options.Conventions.AuthorizeFolder("/Owner", "OwnerOnly");
-    options.Conventions.AuthorizeFolder("/Customer", "CustomerOnly");
-});
+builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews()
     .AddJsonOptions(options =>
         options.JsonSerializerOptions.NumberHandling =
@@ -349,7 +346,7 @@ app.Use(async (ctx, next) =>
 app.UseRateLimiter();            // before authentication: a flood is turned away before it costs a database lookup
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();            // /api/... and the MVC screens (OwnerController)
-app.MapRazorPages();             // the pages: /, /login, /owner/dashboard, /customer/home ...
+app.MapControllers();            // /api/... and the MVC screens (OwnerController, CustomerController)
+app.MapRazorPages();             // the public pages: /, /login, /register-owner, /verify-email ...
 
 app.Run();

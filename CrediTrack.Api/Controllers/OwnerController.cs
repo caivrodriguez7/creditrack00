@@ -7,9 +7,9 @@ using Microsoft.Extensions.Options;
 namespace CrediTrack.Api.Controllers;
 
 // ASP.NET Core MVC part of CrediTrack (Controller -> View -> Model/ViewModel).
-// These Store Owner screens are MVC views (Views/Owner/*.cshtml). The other screens are Razor Pages (Pages/*.cshtml)
-// and the JSON API is in the other controllers (api/...). The three styles share one project, one layout and one login.
-// Same address as before: /owner/store-information, /owner/about, /owner/customers.
+// All Store Owner screens are MVC views (Views/Owner/*.cshtml). The public pages (login, register, email links) are Razor Pages (Pages/*.cshtml)
+// and the JSON API is in the other controllers (api/...). They share one project, one layout and one login.
+// The addresses are the same as before: /owner/dashboard, /owner/customers, /owner/transactions ...
 [Authorize(Policy = "OwnerOnly")]
 [Route("owner")]
 public class OwnerController : Controller
@@ -38,4 +38,74 @@ public class OwnerController : Controller
     // GET /owner/customers
     [HttpGet("customers")]
     public IActionResult Customers() => View();
+
+    // ---- Screens moved from Razor Pages to MVC (same addresses as before) ----
+
+    // GET /owner/customer-details
+    [HttpGet("customer-details")]
+    public IActionResult CustomerDetails() => View();
+
+    // GET /owner/customer-form
+    [HttpGet("customer-form")]
+    public IActionResult CustomerForm() => View();
+
+    // GET /owner/dashboard
+    [HttpGet("dashboard")]
+    public IActionResult Dashboard() => View();
+
+    // GET /owner/help-support
+    [HttpGet("help-support")]
+    public IActionResult HelpSupport() => View();
+
+    // GET /owner/notifications
+    [HttpGet("notifications")]
+    public IActionResult Notifications() => View();
+
+    // GET /owner/overdue
+    [HttpGet("overdue")]
+    public IActionResult Overdue() => View();
+
+    // GET /owner/payment-request-details
+    [HttpGet("payment-request-details")]
+    public IActionResult PaymentRequestDetails() => View();
+
+    // GET /owner/payment-requests
+    [HttpGet("payment-requests")]
+    public IActionResult PaymentRequests() => View();
+
+    // GET /owner/profile-edit
+    [HttpGet("profile-edit")]
+    public IActionResult ProfileEdit() => View();
+
+    // GET /owner/reports
+    [HttpGet("reports")]
+    public IActionResult Reports() => View();
+
+    // GET /owner/security
+    [HttpGet("security")]
+    public IActionResult Security() => View();
+
+    // GET /owner/settings
+    [HttpGet("settings")]
+    public IActionResult Settings() => View();
+
+    // GET /owner/settings-notifications
+    [HttpGet("settings-notifications")]
+    public IActionResult SettingsNotifications() => View();
+
+    // GET /owner/store-qr
+    [HttpGet("store-qr")]
+    public IActionResult StoreQr() => View();
+
+    // GET /owner/transaction-details
+    [HttpGet("transaction-details")]
+    public IActionResult TransactionDetails() => View();
+
+    // GET /owner/transaction-edit
+    [HttpGet("transaction-edit")]
+    public IActionResult TransactionEdit() => View();
+
+    // GET /owner/transactions
+    [HttpGet("transactions")]
+    public IActionResult Transactions() => View();
 }

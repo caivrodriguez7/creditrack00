@@ -1,0 +1,148 @@
+@{
+    ViewData["Title"] = @"My Payments | CrediTrack";
+    ViewData["Body"] = @"class=""owner customer"" data-root=""/"" data-page=""payments""";
+}
+
+@section Head {
+  <meta name="description" content="Your payment requests: what is waiting for a store to verify, what was recorded and what was not accepted.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+  <link rel="stylesheet" href="/css/components/customer-shell.css">
+  <!-- Shared list-page heading (same look as Transaction History) -->
+  <link rel="stylesheet" href="/css/pages/owner-customers.css?v=3">
+  <!-- Store filter styles (same control as Transaction History) -->
+  <link rel="stylesheet" href="/css/pages/customer-history.css">
+  <link rel="stylesheet" href="/css/pages/customer-payments.css?v=3">
+  <link rel="stylesheet" href="/css/components/pager.css?v=4">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <!-- Header, sidebar and bottom navigation are added here by js/components/customer-shell.js -->
+    <main class="owner-main" id="main">
+      <div class="page cpay" id="cpay">
+
+        <header class="page-head">
+          <div class="page-head__text">
+            <h1 id="page-title">My Payments</h1>
+            <p class="text-muted">Manage your payment requests.</p>
+          </div>
+        </header>
+
+
+        <!-- 1. Payment summary -->
+        <section class="psum" id="summary" aria-label="Payment summary" hidden>
+          <div class="psum__card psum__card--pending">
+            <span class="psum__label">Pending</span>
+            <strong class="psum__value" id="sum-pending">0</strong>
+            <span class="psum__note" id="sum-pending-note">Awaiting verification</span>
+          </div>
+          <div class="psum__card psum__card--recorded">
+            <span class="psum__label" id="sum-recorded-label">Recorded (30 days)</span>
+            <strong class="psum__value" id="sum-recorded">₱0.00</strong>
+            <span class="psum__note">Verified payments</span>
+          </div>
+        </section>
+
+        <section class="panel ppanel" aria-labelledby="list-title">
+          <h2 class="panel__title ppanel__title" id="list-title">Payment Requests</h2>
+
+          <!-- Filters: store (only when more than one store is connected), payment method and date range -->
+          <div class="pfilters">
+            <div class="hpick ppick" id="store-filter" hidden>
+              <label class="hpick__label" for="store-select">Filter by store</label>
+              <div class="hpick__box">
+                <span class="hpick__icon" aria-hidden="true"></span>
+                <select class="hpick__select" id="store-select"></select>
+                <span class="hpick__chev" aria-hidden="true"></span>
+              </div>
+            </div>
+            <div class="pfilters__extra" id="extra-filters" hidden>
+              <div class="hpick ppick" id="method-filter">
+                <label class="hpick__label" for="method-select">Payment method</label>
+                <div class="hpick__box">
+                  <span class="hpick__icon" aria-hidden="true"></span>
+                  <select class="hpick__select" id="method-select"></select>
+                  <span class="hpick__chev" aria-hidden="true"></span>
+                </div>
+              </div>
+              <div class="hpick ppick" id="range-filter">
+                <label class="hpick__label" for="range-select">Date</label>
+                <div class="hpick__box">
+                  <span class="hpick__icon" aria-hidden="true"></span>
+                  <select class="hpick__select" id="range-select">
+                    <option value="all">All time</option>
+                    <option value="today">Today</option>
+                    <option value="7">Last 7 days</option>
+                    <option value="30">Last 30 days</option>
+                    <option value="month">This month</option>
+                    <option value="custom">Custom range&hellip;</option>
+                  </select>
+                  <span class="hpick__chev" aria-hidden="true"></span>
+                </div>
+              </div>
+              <div class="pfilters__custom" id="custom" hidden>
+                <label class="field"><span class="field__label">From</span><input class="input" type="date" id="from"></label>
+                <label class="field"><span class="field__label">To</span><input class="input" type="date" id="to"></label>
+                <p class="field__error pfilters__error" id="custom-error" role="alert" hidden>The start date must be on or before the end date.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Status tabs -->
+          <div class="ptabs" role="tablist" aria-label="Payment status" id="tabs" hidden>
+            <button class="ptab" type="button" role="tab" id="tab-all" data-tab="all" aria-selected="true" aria-controls="pay-panel" tabindex="0"><span>All</span> <span class="ptab__count" id="count-all">0</span></button>
+            <button class="ptab" type="button" role="tab" id="tab-pending" data-tab="pending" aria-selected="false" aria-controls="pay-panel" tabindex="-1"><span>Pending</span> <span class="ptab__count" id="count-pending">0</span></button>
+            <button class="ptab" type="button" role="tab" id="tab-completed" data-tab="completed" aria-selected="false" aria-controls="pay-panel" tabindex="-1"><span>Completed</span> <span class="ptab__count" id="count-completed">0</span></button>
+            <button class="ptab" type="button" role="tab" id="tab-rejected" data-tab="rejected" aria-selected="false" aria-controls="pay-panel" tabindex="-1"><span>Rejected</span> <span class="ptab__count" id="count-rejected">0</span></button>
+          </div>
+
+          <p class="result-line" id="result-line" aria-live="polite" hidden></p>
+
+          <!-- 3. Payment request list -->
+          <div id="pay-panel" role="tabpanel" aria-labelledby="tab-all">
+            <ul class="plist" id="pay-list" hidden></ul>
+          </div>
+          <nav class="pager" id="pager" hidden></nav>
+
+          <!-- 4. Empty states (one is shown at a time) -->
+          <div class="empty" id="empty-none" hidden>
+            <span class="empty__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M9.5 13.5l2 2 3.5-4"/></svg></span>
+            <h3 class="empty__title" id="none-title">No payment requests yet</h3>
+            <p class="empty__text" id="none-text">Payments you send to a store, and payments a store records for you, will show up here.</p>
+            <a class="btn btn--primary ppanel__join" href="#" data-route="customer-join-store" id="none-join" hidden>Join a Store</a>
+          </div>
+          <div class="empty" id="empty-tab" hidden>
+            <span class="empty__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+            <h3 class="empty__title" id="tab-title">No pending payments</h3>
+            <p class="empty__text" id="tab-text">There is nothing here right now.</p>
+            <button class="btn btn--secondary" type="button" id="tab-reset">View all payments</button>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/list-query.js"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/customer-api.js"></script>
+  <script src="/js/components/customer-shell.js"></script>
+  <script src="/js/components/pager.js?v=4"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js?v=8"></script>
+  <script src="/js/pages/customer-payments.js?v=p10"></script>
+}

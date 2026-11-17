@@ -1,0 +1,159 @@
+@{
+    ViewData["Title"] = @"Edit Transaction | CrediTrack";
+    ViewData["Body"] = @"class=""owner"" data-root=""/"" data-page=""transactions"" data-nav=""sub"" data-title=""Edit Transaction"" data-back=""transactions""";
+}
+
+@section Head {
+  <meta name="description" content="Correct a recorded credit or payment. The transaction keeps its ID and the customer's balance is recalculated.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+  <link rel="stylesheet" href="/css/pages/owner-customers.css">
+  <link rel="stylesheet" href="/css/pages/owner-transactions.css">
+  <link rel="stylesheet" href="/css/pages/owner-transaction-edit.css?v=3">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <main class="owner-main" id="main">
+      <div class="page page--form" id="page">
+
+
+        <!-- Shown when the link has no valid transaction -->
+        <section class="panel" id="missing" hidden>
+          <div class="empty">
+            <span class="empty__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14l-3.5-3.5M20 16H6l3.5 3.5"/></svg></span>
+            <h2 class="empty__title">Transaction not found</h2>
+            <p class="empty__text">This transaction may not exist, or the link is incorrect.</p>
+            <a class="btn btn--primary" href="transactions" data-route="owner-transactions">Back to Transaction History</a>
+          </div>
+        </section>
+
+        <form class="panel form-panel etx" id="eform" novalidate hidden>
+
+          <!-- Fixed facts: these cannot be edited -->
+          <div class="etx-id">
+            <span class="etx-id__icon" id="e-icon" aria-hidden="true"></span>
+            <div class="etx-id__main">
+              <p class="etx-id__title" id="e-title"></p>
+              <p class="etx-id__meta">Transaction ID <strong id="e-code"></strong> stays the same.</p>
+            </div>
+          </div>
+          <p class="form-panel__intro" id="e-intro"></p>
+
+          <p class="field__error etx-error" id="e-error" role="alert" hidden></p>
+
+          <div class="field">
+            <label class="field__label" for="e-customer">Customer <span aria-hidden="true">*</span></label>
+            <select class="select" id="e-customer" aria-describedby="e-customer-hint e-customer-error"></select>
+            <p class="field__hint" id="e-customer-hint"></p>
+            <p class="field__error" id="e-customer-error" hidden></p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="e-date" id="e-date-label">Transaction date <span aria-hidden="true">*</span></label>
+            <input class="input" id="e-date" type="date" min="2000-01-01" aria-describedby="e-date-error">
+            <p class="field__error" id="e-date-error" hidden></p>
+          </div>
+
+          <!-- Credit: items -->
+          <section class="etx-items" id="credit-fields" aria-labelledby="e-items-title" hidden>
+            <h2 class="etx-section" id="e-items-title">Items purchased</h2>
+            <div id="e-items"></div>
+            <p class="field__error" id="e-items-error" hidden></p>
+            <button class="btn btn--secondary etx-add" type="button" id="e-add-item">+ Add another item</button>
+            <p class="etx-total"><span>Total credit</span><strong id="e-total"></strong></p>
+          </section>
+
+          <!-- Credit: payment due date. A credit with no due date can receive one here; a credit that has one shows it in the date picker so it can be changed or removed (Keep / Remove due date) -->
+          <fieldset class="etx-due" id="due-fields" aria-describedby="e-due-hint" hidden>
+            <legend class="etx-due__title" id="due-title">Payment due date <span class="field__opt">(optional)</span></legend>
+            <div class="etx-due__add" id="due-add">
+              <div class="etx-due__toggle" id="due-toggle" role="group" aria-label="Payment due date">
+                <button class="etx-due__btn is-on" type="button" id="e-due-none" aria-pressed="true">No due date</button>
+                <button class="etx-due__btn" type="button" id="e-due-set" aria-pressed="false">Set due date</button>
+              </div>
+              <div class="etx-due__pick" id="e-due-pick" hidden>
+                <label class="etx-due__label" for="e-due">Customer will pay on</label>
+                <input class="input" id="e-due" type="date" aria-describedby="e-due-error">
+              </div>
+              <p class="etx-due__hint" id="e-due-hint">Leave it on No due date if there is no agreed payment date.</p>
+              <p class="field__error" id="e-due-error" role="alert" hidden></p>
+            </div>
+          </fieldset>
+
+          <!-- Payment: amount, method, reference, notes -->
+          <section class="etx-pay" id="payment-fields" hidden>
+            <div class="field">
+              <label class="field__label" for="e-amount">Payment amount (&#8369;) <span aria-hidden="true">*</span></label>
+              <input class="input" id="e-amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" aria-describedby="e-amount-hint e-amount-error">
+              <p class="field__hint" id="e-amount-hint"></p>
+              <p class="field__error" id="e-amount-error" hidden></p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="e-method">Payment method <span aria-hidden="true">*</span></label>
+              <select class="select" id="e-method" aria-describedby="e-method-error"></select>
+              <p class="field__error" id="e-method-error" hidden></p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="e-reference">Reference number <span class="field__opt">(optional)</span></label>
+              <input class="input" id="e-reference" type="text" maxlength="40" autocomplete="off" spellcheck="false" placeholder="e.g. GCash or bank reference" aria-describedby="e-reference-error">
+              <p class="field__error" id="e-reference-error" hidden></p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="e-notes">Notes <span class="field__opt">(optional)</span></label>
+              <textarea class="textarea" id="e-notes" rows="3" maxlength="200" placeholder="Add a note about this payment" aria-describedby="e-notes-count e-notes-error"></textarea>
+              <div class="etx-count"><p class="field__error" id="e-notes-error" hidden></p><span class="field__hint" id="e-notes-count">0 / 200</span></div>
+            </div>
+          </section>
+
+          <!-- What the change does to the balance (updates as the owner types) -->
+          <section class="etx-effect" id="e-effect" aria-live="polite" aria-labelledby="e-effect-title">
+            <h2 class="etx-section" id="e-effect-title">Balance after this change</h2>
+            <dl class="etx-effect__rows" id="e-effect-rows"></dl>
+          </section>
+
+          <div class="form-actions">
+            <button class="btn btn--secondary" type="button" id="e-cancel">Cancel</button>
+            <button class="btn btn--primary" type="submit" id="e-save">Save Changes</button>
+          </div>
+        </form>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Confirmation before anything is saved -->
+  <div class="etx-confirm" id="e-confirm" hidden>
+    <div class="etx-confirm__backdrop" data-confirm-close></div>
+    <div class="etx-confirm__card" role="alertdialog" aria-modal="true" aria-labelledby="c-title" aria-describedby="c-text" tabindex="-1">
+      <h2 class="etx-confirm__title" id="c-title">Save these changes?</h2>
+      <p class="etx-confirm__text" id="c-text">The transaction will be updated and the balance recalculated. The transaction ID stays the same.</p>
+      <dl class="etx-confirm__rows" id="c-rows"></dl>
+      <p class="field__error etx-error" id="c-error" role="alert" hidden></p>
+      <div class="etx-confirm__actions">
+        <button class="btn btn--secondary" type="button" id="c-back" data-confirm-close>Go Back</button>
+        <button class="btn btn--primary" type="button" id="c-save">Confirm &amp; Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/owner-api.js?v=5"></script>
+  <script src="/js/components/owner-shell.js"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/pages/owner-transaction-edit.js?v=3"></script>
+}
