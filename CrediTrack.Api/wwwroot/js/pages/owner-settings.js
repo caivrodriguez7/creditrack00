@@ -1,5 +1,5 @@
 /* Store Owner > Profile & Settings (settings), the main page. Mock data only, no backend.
-   Shows the profile card (photo, name, store, role, account status) and Personal Information. The menu items are plain
+   Shows the profile card (photo, name, store, role, account status) and the Edit Profile button (full name, email and contact number are shown on the Edit Profile page). The menu items are plain
    links to their own subpages (profile-edit, store-information, store-qr, security, settings-notifications, help-support, about).
    Data comes from js/api/owner-api.js (CrediTrackApi). After a subpage saves, it leaves a one-time message
    (sessionStorage "creditrack.flash") that this page shows as a toast. */
@@ -22,20 +22,12 @@
       el.appendChild(img);
     } else el.textContent = initials(name) || fallback;
   }
-  function setValue(id, value, format) {
-    var el = $(id), has = !!value;
-    el.textContent = has ? (format ? format(value) : value) : "Not added yet";
-    el.classList.toggle("is-empty", !has);
-  }
   // The header (store name and initials) is filled by owner-shell.js: keep it in step. (Subpages have no header, so this does nothing there.)
 
   function renderProfile(p) {
     paintAvatar($("pf-avatar"), p.photo, p.fullName, "SO");
     $("pf-name").textContent = p.fullName || "Store Owner";
     $("pf-store").textContent = p.storeName || "Your Store";
-    setValue("pf-fullName", p.fullName);
-    setValue("pf-email", p.email);
-    setValue("pf-contactNumber", p.contactNumber, api.formatPhone);
     var card = document.querySelector(".st-identity");   // loaded: remove the placeholder state
     if (card) card.removeAttribute("aria-busy");
   }

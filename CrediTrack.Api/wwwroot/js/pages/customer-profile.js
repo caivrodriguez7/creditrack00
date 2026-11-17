@@ -29,13 +29,6 @@
     } else el.textContent = initials(name) || "C";
   }
 
-  // Personal information rows (same as the Store Owner's profile card): the value, or "Not added yet" in a quiet style
-  function setValue(id, value, format) {
-    var el = $(id), has = !!value;
-    el.textContent = has ? (format ? format(value) : value) : "Not added yet";
-    el.classList.toggle("is-empty", !has);
-  }
-
   // ---------- QR code ----------
   function build(text) {
     var qr = window.qrcode(0, "M");
@@ -131,9 +124,6 @@
 
     paintAvatar($("pf-avatar"), profile.photo, fullName);
     $("pf-name").textContent = fullName || "Customer";
-    setValue("pf-fullName", fullName);
-    setValue("pf-email", profile.email);
-    setValue("pf-contactNumber", profile.contactNumber, api.formatPhone);
 
     var codeEl = $("cc-code");
     codeEl.textContent = code || "Not available yet";

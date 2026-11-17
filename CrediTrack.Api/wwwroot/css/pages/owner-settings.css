@@ -553,3 +553,6 @@ dialog.st-dialog::backdrop { background: rgba(7, 26, 82, 0.45); -webkit-backdrop
 .pa-remove:hover { background: var(--color-danger-soft); color: var(--danger-strong); }
 .pa-remove:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 .pa-remove:disabled, .pa-actions .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Profile card: the personal info rows were removed, so give the Edit Profile button its own space under the badges. */
+.st-owner .st-card .profile__edit { margin-top: var(--space-4); }
