@@ -1,0 +1,88 @@
+@{
+    ViewData["Title"] = @"Payment Requests | CrediTrack";
+    ViewData["Body"] = @"class=""owner"" data-root=""/"" data-page=""payment-requests""";
+}
+
+@section Head {
+  <meta name="description" content="Review payments your customers say they made.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+  <link rel="stylesheet" href="/css/components/record-utang.css?v=date2">
+  <link rel="stylesheet" href="/css/components/record-bayad.css">
+  <!-- Shared list-page styles (page heading, search, filter chips): same look as Customers -->
+  <link rel="stylesheet" href="/css/pages/owner-customers.css">
+  <link rel="stylesheet" href="/css/pages/owner-payments.css?v=2">
+  <link rel="stylesheet" href="/css/components/pager.css?v=2">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <!-- Header, sidebar and bottom navigation are added here by js/components/owner-shell.js -->
+    <main class="owner-main" id="main">
+      <div class="page page--payments" id="page">
+
+        <header class="page-head">
+          <div class="page-head__text">
+            <h1 id="page-title">Payment Requests</h1>
+            <p class="text-muted" id="page-sub">Review payments your customers say they made.</p>
+          </div>
+        </header>
+
+
+        <div class="chips" role="group" aria-label="Filter payment requests" id="status-chips" hidden>
+          <button class="chip" type="button" data-status="pending" aria-pressed="true">Pending <span id="count-pending">0</span></button>
+          <button class="chip" type="button" data-status="confirmed" aria-pressed="false">Confirmed <span id="count-confirmed">0</span></button>
+          <button class="chip" type="button" data-status="rejected" aria-pressed="false">Rejected <span id="count-rejected">0</span></button>
+          <button class="chip" type="button" data-status="voided" aria-pressed="false">Voided <span id="count-voided">0</span></button>
+          <button class="chip" type="button" data-status="all" aria-pressed="false">All <span id="count-all">0</span></button>
+          <button class="chip" type="button" data-status="archived" aria-pressed="false">Archived <span id="count-archived">0</span></button>
+        </div>
+
+        <section class="panel pr-panel" aria-labelledby="list-title">
+          <h2 class="visually-hidden" id="list-title">Payment requests</h2>
+          <ul class="pr-list" id="pr-list" hidden></ul>
+          <nav class="pager" id="pager" hidden></nav>
+
+          <!-- No requests at all -->
+          <div class="empty" id="empty-none" hidden>
+            <span class="empty__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.5A2.5 2.5 0 0 1 6 5h11.5v3"/><rect x="3.5" y="8" width="17" height="11.5" rx="2.5"/><path d="M16 13.75h2"/></svg></span>
+            <h3 class="empty__title">No payment requests yet</h3>
+            <p class="empty__text">When a customer sends a payment for you to review, it will show up here.</p>
+          </div>
+
+          <!-- This status has none -->
+          <div class="empty" id="empty-filter" hidden>
+            <span class="empty__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/></svg></span>
+            <h3 class="empty__title" id="empty-filter-title">Nothing to review</h3>
+            <p class="empty__text" id="empty-filter-text">You are all caught up.</p>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/list-query.js"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/owner-api.js"></script>
+  <script src="/js/components/owner-shell.js"></script>
+  <script src="/js/components/pager.js?v=2"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/components/record-utang.js"></script>
+  <script src="/js/components/record-bayad.js"></script>
+  <script src="/js/pages/owner-payment-requests.js?v=p10"></script>
+}

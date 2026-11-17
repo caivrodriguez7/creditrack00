@@ -1,0 +1,89 @@
+@{
+    ViewData["Title"] = @"Store QR Code &amp; Store Code | CrediTrack";
+    ViewData["Body"] = @"class=""owner"" data-root=""/"" data-page=""settings"" data-nav=""sub"" data-title=""Store QR Code &amp; Store Code"" data-back=""settings""";
+}
+
+@section Head {
+  <meta name="description" content="Show your store QR code and store code so customers can find and join your store.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+  <!-- Shared owner page styles (page grid, heading, profile card, info list, form actions): same look as Customers -->
+  <link rel="stylesheet" href="/css/pages/owner-customers.css">
+  <link rel="stylesheet" href="/css/pages/owner-settings.css">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <!-- Back button and title are added here by js/components/owner-shell.js -->
+    <main class="owner-main" id="main">
+      <div class="page page--settings page--settings-sub" id="page">
+
+
+        <section class="panel st-qr" aria-labelledby="qr-title">
+          <div class="panel__head"><h2 class="panel__title" id="qr-title">Store QR Code</h2></div>
+          <p class="st-intro" id="qr-store"></p>
+          <div class="st-qr__frame" id="qr-frame" role="img" aria-label="Store QR code"></div>
+          <button class="btn btn--ghost st-qr__zoom" type="button" id="qr-zoom" aria-pressed="false" aria-controls="qr-frame">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+            <span id="qr-zoom-text">View Larger</span>
+          </button>
+          <p class="st-qr__label">Store Code</p>
+          <p class="st-qr__code" id="qr-code"></p>
+          <div class="form-actions">
+            <button class="btn btn--secondary" type="button" id="qr-copy">Copy Code</button>
+            <button class="btn btn--primary" type="button" id="qr-download">Download QR</button>
+          </div>
+          <p class="field__hint" id="qr-status" role="status" aria-live="polite"></p>
+        </section>
+
+        <!-- Auto-approve: let customers who enter the Store Code join at once (real accounts; off by default) -->
+        <section class="panel" aria-labelledby="join-title" id="join-panel">
+          <div class="panel__head"><h2 class="panel__title" id="join-title">Joining your store</h2></div>
+          <ul class="st-prefs">
+            <li>
+              <label class="st-pref">
+                <span class="st-pref__text">
+                  <span class="st-pref__label" id="aa-label">Auto-approve new customers</span>
+                  <span class="st-pref__desc" id="aa-desc">Off: each customer who enters your Store Code waits for your Approve in Customers. On: they are added to your customer list right away as a new record.</span>
+                </span>
+                <span class="switch"><input type="checkbox" role="switch" id="aa-toggle" aria-labelledby="aa-label" aria-describedby="aa-desc aa-status" disabled><span class="switch__track" aria-hidden="true"></span></span>
+              </label>
+            </li>
+          </ul>
+          <p class="field__hint" id="aa-status" role="status" aria-live="polite"></p>
+          <p class="form-note" id="aa-warn" hidden><strong>Share your code with care</strong>While this is on, anyone who gets your Store Code or QR can add themselves to your customer list. If you already keep a record for someone, link it afterwards with Link Customer Account: the empty new record is replaced and your old record keeps its utang and payments. Customers waiting now still need your Approve.</p>
+        </section>
+
+        <section class="panel" aria-labelledby="how-title">
+          <div class="panel__head"><h2 class="panel__title" id="how-title">How customers find your store</h2></div>
+          <ol class="st-steps">
+            <li>Show this <strong>QR Code</strong> to your customer, or tell them your <strong>Store Code</strong>. You can also download the QR Code and print it for your store.</li>
+            <li>The customer opens CrediTrack and <strong>scans the QR Code</strong> or <strong>enters the Store Code</strong> to find your store.</li>
+            <li>Their request waits under <strong>Customers</strong> until you approve it (or they join right away if Auto-approve is on). Then you can record their utang and bayad.</li>
+          </ol>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/owner-api.js"></script>
+  <script src="/js/components/owner-shell.js"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/vendor/qrcode.js"></script>
+  <script src="/js/pages/owner-store-qr.js"></script>
+}

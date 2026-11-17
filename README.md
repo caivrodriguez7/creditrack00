@@ -11,7 +11,7 @@ dotnet build
 dotnet run
 ```
 Open **http://localhost:5224** (the splash screen). The pages and the API are ONE app on one address:
-the pages are Razor Pages (`CrediTrack.Api/Pages/*.cshtml`) and, for three Store Owner screens (Store Information, About CrediTrack, Customers), ASP.NET Core MVC (`Controllers/OwnerController.cs`, `Views/Owner/*.cshtml`, `ViewModels/`), all with the same layout and login (the addresses are shown without `.html`, for example
+the Store Owner and Customer screens are ASP.NET Core MVC (`Controllers/OwnerController.cs` + `Views/Owner/*.cshtml`, `Controllers/CustomerController.cs` + `Views/Customer/*.cshtml`, `ViewModels/`) and the public pages (welcome, login, register, email links, privacy, terms) are Razor Pages (`CrediTrack.Api/Pages/*.cshtml`), all with the same layout and login (the addresses are shown without `.html`, for example
 `/owner/dashboard` and `/customer/home`), and the API is under `/api/...`.
 Static files (css, js, images) are in `CrediTrack.Api/wwwroot`.
 
@@ -113,7 +113,7 @@ Pictures are **saved in the database** (table `StoredFiles`, migration `StorePic
 - Old pictures: on the next start, pictures an earlier version saved as files in `App_Data/uploads` are copied into the database once. A picture whose file is gone is cleared (initials show instead) and can be uploaded again. The `Uploads:Path` setting is only used for that import, so no persistent disk is needed for pictures any more.
 
 ## Pages (Razor Pages)
-Every page lives in `CrediTrack.Api/Pages` and uses the shared layout `Pages/Shared/_Layout.cshtml`
+The public pages live in `CrediTrack.Api/Pages`, the Owner and Customer screens in `CrediTrack.Api/Views`; all use the shared layout `Pages/Shared/_Layout.cshtml`
 (title, `<body>` attributes, a `Head` section for styles and a `Scripts` section for scripts). The routes below replace the
 old `.html` files; the old names are kept in the descriptions as page names.
 

@@ -1,0 +1,121 @@
+@{
+    ViewData["Title"] = @"About CrediTrack | CrediTrack";
+    ViewData["Body"] = @"class=""owner customer"" data-root=""/"" data-page=""profile"" data-nav=""sub"" data-title=""About CrediTrack"" data-back=""profile""";
+}
+
+@section Head {
+  <meta name="description" content="About CrediTrack: Every Credit, On Track. What CrediTrack is, what you can do in the Customer Portal, how it works, app information and how to contact us.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+  <link rel="stylesheet" href="/css/components/customer-shell.css">
+  <!-- Shared with the Store Owner's About page: logo panel, info list (owner-settings.css), note (owner-customers.css) -->
+  <link rel="stylesheet" href="/css/pages/owner-customers.css">
+  <link rel="stylesheet" href="/css/pages/owner-settings.css">
+  <link rel="stylesheet" href="/css/pages/customer-about.css">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <!-- Back button and title are added here by js/components/customer-shell.js -->
+    <main class="owner-main" id="main">
+      <div class="page page--settings page--settings-sub" id="page">
+
+        <!-- Logo, system name, tagline and description -->
+        <section class="panel st-about" aria-labelledby="about-name">
+          <img class="logo-light st-about__logo" src="/assets/images/creditrack-logo-transparent.png?v=3" width="1363" height="597" alt="CrediTrack logo">
+      <img class="logo-dark st-about__logo" src="/assets/images/creditrack-logo-dark.png?v=3" width="1363" height="597" alt="" aria-hidden="true">
+          <h2 class="ab-name" id="about-name">CrediTrack</h2>
+          <p class="ab-tagline" id="about-tagline">Every Credit, On Track.</p>
+          <p class="ab-desc">CrediTrack is a store credit management system for sari-sari stores and their customers. It helps you manage store credit and payments with ease: keep every credit (utang) and payment (bayad) your stores record for you in one place, see how much you owe at each store, and send payment requests, so you and your store always see the same numbers.</p>
+        </section>
+
+        <!-- What the Customer Portal does -->
+        <section class="panel" aria-labelledby="does-title">
+          <div class="panel__head"><h2 class="panel__title" id="does-title">What You Can Do</h2></div>
+          <ul class="ab-list">
+            <li><strong>Join your stores</strong><span>Send a join request with a Store Code or QR code, and accept a store's request to link your account to a record it already keeps for you.</span></li>
+            <li><strong>Track balances and payments</strong><span>See your outstanding balance in total and store by store, with its payment status.</span></li>
+            <li><strong>Review your history</strong><span>Every credit and payment recorded for you, with the details of each.</span></li>
+            <li><strong>Send payment requests</strong><span>Tell a store you paid and follow its decision. Your balance changes only when the store approves.</span></li>
+            <li><strong>Stay connected with your store</strong><span>Get updates on payment requests, store activity and your account.</span></li>
+          </ul>
+        </section>
+
+        <!-- How it works -->
+        <section class="panel" aria-labelledby="how-title">
+          <div class="panel__head"><h2 class="panel__title" id="how-title">How It Works</h2></div>
+          <ul class="ab-list">
+            <li><strong>1. The store records it</strong><span>The store owner records each credit (utang) with its items, amount and due date, and each payment (bayad).</span></li>
+            <li><strong>2. The customer connects</strong><span>A customer joins a store with its Store Code or QR code, or accepts the store's request to link an existing record. Nothing is connected without the other person's approval.</span></li>
+            <li><strong>3. Both see the same numbers</strong><span>Balances, history and reminders come from the store's records. A payment request becomes a payment only when the store confirms it.</span></li>
+          </ul>
+        </section>
+
+        <!-- Good to know -->
+        <section class="panel" aria-labelledby="know-title">
+          <div class="panel__head"><h2 class="panel__title" id="know-title">Good to Know</h2></div>
+          <ul class="ab-list">
+            <li><strong>A record-keeping tool</strong><span>CrediTrack does not hold, send or collect money. Payments happen between the store and the customer, outside the system.</span></li>
+            <li><strong>Your privacy</strong><span>Each person sees only their own records. We handle personal information under the Data Privacy Act of 2012. See the Privacy Policy for details.</span></li>
+            <li><strong>Clear history</strong><span>Edits and voided records stay in the history, so every change can be traced.</span></li>
+          </ul>
+        </section>
+
+        <!-- App details -->
+        <section class="panel" aria-labelledby="app-title">
+          <div class="panel__head"><h2 class="panel__title" id="app-title">App Information</h2></div>
+          <dl class="info__list">
+            <div><dt>App Name</dt><dd id="app-name">CrediTrack</dd></div>
+            <div><dt>Version</dt><dd id="app-version">Not available</dd></div>
+            <div><dt>Account Type</dt><dd>Customer</dd></div>
+            <div><dt>Operated By</dt><dd>@SiteOptions.Value.OperatorName</dd></div>
+            <div><dt>Legal</dt><dd><a href="/terms">Terms and Conditions</a> &middot; <a href="/privacy">Privacy Policy</a></dd></div>
+            <div><dt>Data</dt><dd>Saved securely on the CrediTrack server</dd></div>
+            <div><dt>Mode</dt><dd>Your account</dd></div>
+            <div><dt>Browser</dt><dd id="sys-browser"></dd></div>
+            <div><dt>Screen</dt><dd id="sys-screen"></dd></div>
+          </dl>
+        </section>
+
+        <!-- Contact -->
+        <section class="panel" aria-labelledby="contact-title">
+          <div class="panel__head"><h2 class="panel__title" id="contact-title">Contact Us</h2></div>
+          <dl class="info__list">
+            <div><dt>Email</dt><dd><a href="mailto:@SiteOptions.Value.SupportEmail?subject=@Uri.EscapeDataString(SiteOptions.Value.SystemName + " support")">@SiteOptions.Value.SupportEmail</a></dd></div>
+            <div><dt>Phone</dt><dd><a href="tel:@SiteOptions.Value.PhoneHref">@SiteOptions.Value.SupportPhone</a></dd></div>
+            <div><dt>Support Hours</dt><dd>@SiteOptions.Value.SupportHours</dd></div>
+          </dl>
+          @if (SiteOptions.Value.IsSample)
+          {
+            <p class="form-note"><strong>Sample contact details</strong>These are placeholders until @SiteOptions.Value.SystemName support is set up.</p>
+          }
+        </section>
+
+        <div class="ab-links">
+          <a class="btn btn--secondary" href="#" data-route="customer-help">Help &amp; Support</a>
+          <a class="btn btn--primary" href="profile" data-route="customer-profile">Back to Profile</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/customer-api.js"></script>
+  <script src="/js/components/customer-shell.js"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js?v=8"></script>
+  <script src="/js/pages/customer-about.js"></script>
+}

@@ -1,0 +1,166 @@
+@{
+    ViewData["Title"] = @"Help &amp; Support | CrediTrack";
+    ViewData["Body"] = @"class=""owner customer"" data-root=""/"" data-page=""profile"" data-nav=""sub"" data-title=""Help &amp; Support"" data-back=""profile""";
+}
+
+@section Head {
+  <meta name="description" content="Answers to common questions, guides for joining a store, linking your record, and checking balances, history and payment requests, and how to contact CrediTrack support.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+  <link rel="stylesheet" href="/css/components/customer-shell.css">
+  <!-- Shared with the Store Owner's Help & Support: panels, intro text, contact list (owner-settings.css), note (owner-customers.css) -->
+  <link rel="stylesheet" href="/css/pages/owner-customers.css">
+  <link rel="stylesheet" href="/css/pages/owner-settings.css">
+  <link rel="stylesheet" href="/css/pages/customer-help.css">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/components/help-bot.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <!-- Back button and title are added here by js/components/customer-shell.js -->
+    <main class="owner-main" id="main">
+      <div class="page page--settings page--settings-sub" id="page">
+
+        <p class="hs-lead">Guides and answers for using CrediTrack as a customer.</p>
+        <nav class="hs-jump" aria-label="On this page">
+          <a href="#join-guide">Join a store</a>
+          <a href="#link-guide">Link a record</a>
+          <a href="#balance-guide">Balances</a>
+          <a href="#history-guide">History</a>
+          <a href="#request-guide">Payment requests</a>
+          <a href="#faq">FAQs</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        @await Html.PartialAsync("/Pages/Shared/_HelpBot.cshtml")
+
+        <section class="panel" aria-labelledby="join-guide-title" id="join-guide">
+          <div class="panel__head"><h2 class="panel__title" id="join-guide-title">Joining a Store</h2></div>
+          <p class="st-intro">Add a store to see your credits, payments and balance there.</p>
+          <ol class="hs-steps">
+            <li><strong>Open Join a Store</strong><span>Tap Join a Store on Home (or Join Another Store from Profile &gt; Connected Stores).</span></li>
+            <li><strong>Enter the Store Code or scan the QR</strong><span>Type the store&rsquo;s code and tap Next, or choose Scan Store QR and point the camera at the store&rsquo;s QR code. Ask the store owner if you don&rsquo;t have either.</span></li>
+            <li><strong>Check the store details</strong><span>Make sure the name, type, location and owner are the store you mean, then tap Confirm and Join.</span></li>
+            <li><strong>Link your existing record (optional)</strong><span>If the store already keeps a record for you, enter its code (for example CUS-014). If not, tap I don&rsquo;t have a code.</span></li>
+            <li><strong>Confirm and join</strong><span>Review the summary and tap Confirm and Join Store. The store then appears in My Stores on Home with its own balance.</span></li>
+          </ol>
+          <a class="btn btn--secondary hs-action" href="#" data-route="customer-join-store">Join a Store</a>
+        </section>
+
+        <section class="panel" aria-labelledby="link-guide-title" id="link-guide">
+          <div class="panel__head"><h2 class="panel__title" id="link-guide-title">Linking an Existing Customer Record</h2></div>
+          <p class="st-intro">Already have a record at the store? Link it while joining so your history comes with you.</p>
+          <ol class="hs-steps">
+            <li><strong>Ask the store owner for your record code</strong><span>It is the code on your record in the store, such as CUS-014. It is not your Customer Code and not the Store Code.</span></li>
+            <li><strong>Enter it on the Link Existing Record step</strong><span>Tap Link Record. Your credits and payments already recorded by the store then show in your CrediTrack account.</span></li>
+            <li><strong>If it is refused</strong><span>Check the code with the store owner. A record can only be linked to one CrediTrack account, so one already linked to someone else needs the store owner&rsquo;s help.</span></li>
+          </ol>
+        </section>
+
+        <section class="panel" aria-labelledby="balance-guide-title" id="balance-guide">
+          <div class="panel__head"><h2 class="panel__title" id="balance-guide-title">Viewing Your Balances</h2></div>
+          <p class="st-intro">See how much you owe, in total and store by store.</p>
+          <ol class="hs-steps">
+            <li><strong>Home shows your total</strong><span>Total Outstanding Balance adds up what you still owe across your stores. Below it, each store in My Stores shows its own balance and payment status (Unpaid, Partially Paid, Overdue or Fully Paid).</span></li>
+            <li><strong>Balances come from the store&rsquo;s records</strong><span>A balance is the credits recorded for you minus the payments recorded for you. It changes when the store records a credit or payment, or when it approves a payment request.</span></li>
+            <li><strong>Each store stays separate</strong><span>Balances at different stores are never mixed together. Tap a store to see its details.</span></li>
+          </ol>
+        </section>
+
+        <section class="panel" aria-labelledby="history-guide-title" id="history-guide">
+          <div class="panel__head"><h2 class="panel__title" id="history-guide-title">Viewing Transaction History</h2></div>
+          <p class="st-intro">Every credit and payment recorded for you, in one place.</p>
+          <ol class="hs-steps">
+            <li><strong>Open History</strong><span>Tap History in the bottom bar (or the side menu on a computer).</span></li>
+            <li><strong>Narrow the list</strong><span>Use All, Credits or Payments. With two or more stores, filter by store. Use search to find a transaction.</span></li>
+            <li><strong>Tap a transaction</strong><span>Credits show the items, quantities and prices. Payments show the method and reference number.</span></li>
+          </ol>
+          <a class="btn btn--secondary hs-action" href="#" data-route="customer-history">Open History</a>
+        </section>
+
+        <section class="panel" aria-labelledby="request-guide-title" id="request-guide">
+          <div class="panel__head"><h2 class="panel__title" id="request-guide-title">Sending and Tracking Payment Requests</h2></div>
+          <p class="st-intro">Tell the store you paid, then follow its decision.</p>
+          <ol class="hs-steps">
+            <li><strong>Start a payment request</strong><span>Tap the PAY button on Home, choose the store, enter the amount, pick how you paid (Cash, GCash, Maya, Bank Transfer or Other) and add the reference number if asked. A picture of your proof of payment is optional.</span></li>
+            <li><strong>Review and submit</strong><span>Check the summary and tap Submit Payment Request. It is saved as Pending.</span></li>
+            <li><strong>Wait for the store&rsquo;s decision</strong><span>Your balance does not change until the store owner approves. Follow it in Payments: Pending, Completed or Rejected.</span></li>
+            <li><strong>Open a request for details</strong><span>Tap it to see the amount, method, reference, proof and status. A rejected request shows the store owner&rsquo;s reason and your balance stays as it was.</span></li>
+          </ol>
+          <a class="btn btn--secondary hs-action" href="#" data-route="customer-payments">Open Payments</a>
+        </section>
+
+        <section class="panel" aria-labelledby="faq-title" id="faq">
+          <div class="panel__head"><h2 class="panel__title" id="faq-title">Frequently Asked Questions</h2></div>
+          <div class="hs-faqs">
+            <details class="hs-faq">
+              <summary class="hs-faq__q"><span>Do I need to join a store to use CrediTrack?</span><svg class="hs-faq__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+              <p class="hs-faq__a">You can create an account without one, but Home stays empty until you join a store. Once you join, your credits, payments and balance there appear in CrediTrack.</p>
+            </details>
+            <details class="hs-faq">
+              <summary class="hs-faq__q"><span>Where do I get a Store Code?</span><svg class="hs-faq__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+              <p class="hs-faq__a">From the store owner. They can show you their Store QR Code or give you their Store Code.</p>
+            </details>
+            <details class="hs-faq">
+              <summary class="hs-faq__q"><span>What is the difference between my Customer Code, a Store Code and a record code?</span><svg class="hs-faq__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+              <p class="hs-faq__a">Your Customer Code (CT-CUS-######) identifies your CrediTrack account and is on your Profile. A Store Code identifies a store. A record code (like CUS-014) is the store&rsquo;s own number for you. Each is used in a different place.</p>
+            </details>
+            <details class="hs-faq">
+              <summary class="hs-faq__q"><span>I paid, but my balance did not go down. Why?</span><svg class="hs-faq__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+              <p class="hs-faq__a">A payment request stays Pending until the store owner approves it, and only then does your balance change. If you paid in cash at the store, the owner records it. Check Payments for the status.</p>
+            </details>
+            <details class="hs-faq">
+              <summary class="hs-faq__q"><span>Why was my payment request rejected?</span><svg class="hs-faq__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+              <p class="hs-faq__a">Open it from Payments to read the reason the store owner gave. Nothing was deducted. You can send a new request once the issue is sorted out.</p>
+            </details>
+            <details class="hs-faq">
+              <summary class="hs-faq__q"><span>Can I request more than I owe?</span><svg class="hs-faq__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+              <p class="hs-faq__a">No. The amount cannot be more than your balance at that store.</p>
+            </details>
+            <details class="hs-faq">
+              <summary class="hs-faq__q"><span>What happens if I leave a store?</span><svg class="hs-faq__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+              <p class="hs-faq__a">Leaving only disconnects it. Your credits, payments and transactions are not deleted, and you can reconnect from Profile &gt; Connected Stores.</p>
+            </details>
+            <details class="hs-faq">
+              <summary class="hs-faq__q"><span>Who can see my Customer Code and QR?</span><svg class="hs-faq__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+              <p class="hs-faq__a">Only people you show them to, usually a store owner. They identify you and never need your password. Don&rsquo;t share your password or verification codes with anyone.</p>
+            </details>
+            <details class="hs-faq">
+              <summary class="hs-faq__q"><span>How do I change my details or password?</span><svg class="hs-faq__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+              <p class="hs-faq__a">Go to Profile. Edit Profile changes your photo, name, email and contact number. Security changes your password. Notifications chooses which updates you get.</p>
+            </details>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="contact-title" id="contact">
+          <div class="panel__head"><h2 class="panel__title" id="contact-title">Contact Support</h2></div>
+          <p class="st-intro">Can&rsquo;t find an answer? Send us a message and we&rsquo;ll get back to you. For a problem with a balance or a record, ask the store owner too: the store keeps those records.</p>
+          @await Html.PartialAsync("/Pages/Shared/_ContactList.cshtml")
+          <p class="hs-tip"><strong>Helpful to include:</strong> your Customer Code (on Profile), the store&rsquo;s name and what you were trying to do. Never send your password.</p>
+        </section>
+
+        <a class="btn btn--primary btn--block hs-back" href="profile" data-route="customer-profile">Back to Profile</a>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/customer-api.js"></script>
+  <script src="/js/components/customer-shell.js"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js?v=8"></script>
+  <script src="/js/components/help-bot.js"></script>
+}

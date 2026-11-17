@@ -134,7 +134,6 @@
     if (state.customerId) {
       $("customer-filter-name").textContent = state.customerName || "this customer";
       $("customer-filter-avatar").textContent = (state.customerName || "?").split(/\s+/).filter(Boolean).map(function (w) { return w[0]; }).slice(0, 2).join("").toUpperCase();
-      $("customer-filter-back").href = "customer-details?id=" + encodeURIComponent(state.customerId);
     }
     $("search-clear").hidden = !state.query;
     document.querySelectorAll("#type-chips .chip").forEach(function (chip) {

@@ -1,0 +1,186 @@
+@{
+    ViewData["Title"] = @"Join a Store | CrediTrack";
+    ViewData["Body"] = @"class=""owner customer"" data-root=""/"" data-page=""home""";
+}
+
+@section Head {
+  <meta name="description" content="Join a store with its store code or QR code, link your existing customer record, and see your balance in My Stores.">
+  <meta name="theme-color" content="#071A52">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=2">
+  <link rel="stylesheet" href="/css/base.css?v=2">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/components/owner-shell.css?v=3">
+  <link rel="stylesheet" href="/css/components/owner-ui.css?v=2">
+  <link rel="stylesheet" href="/css/components/customer-shell.css">
+  <link rel="stylesheet" href="/css/pages/customer-join.css">
+  <link rel="stylesheet" href="/css/components/breadcrumbs.css">
+  <link rel="stylesheet" href="/css/glass.css?v=4">
+  <link rel="stylesheet" href="/css/polish.css?v=1">
+}
+
+  <div class="owner-app">
+    <!-- Header, sidebar and bottom navigation are added here by js/components/customer-shell.js -->
+    <main class="owner-main" id="main">
+      <div class="cjoin" id="cjoin">
+
+        <!-- 1. Choose Joining Method -->
+        <section class="jstep" data-step="method" aria-labelledby="t-method" hidden>
+          <header class="jhead"><button class="jback" type="button" data-back aria-label="Back"></button><h1 id="t-method" tabindex="-1">Join a Store</h1></header>
+          <h2 class="jlead">How would you like to join?</h2>
+          <p class="jsub">Choose a method to connect with a store you are already transacting with.</p>
+          <div class="jchoices">
+            <button class="jchoice" type="button" data-go="scan"><span class="jchoice__icon" data-icon="scan"></span><span class="jchoice__main"><strong>Scan Store QR</strong><span>Quickly join by scanning the store&rsquo;s QR code.</span></span><span class="jchoice__chev" data-icon="chevronRight"></span></button>
+            <button class="jchoice" type="button" data-go="code"><span class="jchoice__icon" data-icon="keyboard"></span><span class="jchoice__main"><strong>Enter Store Code</strong><span>Manually enter the code provided by the store owner.</span></span><span class="jchoice__chev" data-icon="chevronRight"></span></button>
+          </div>
+        </section>
+
+        <!-- 2. Enter Store Code -->
+        <section class="jstep" data-step="code" aria-labelledby="t-code" hidden>
+          <header class="jhead"><button class="jback" type="button" data-back aria-label="Back"></button><h1 id="t-code" tabindex="-1">Enter Store Code</h1></header>
+          <p class="jsub">Type the store code the owner gave you. It looks like <strong>STR-001</strong> or <strong>CT-AB12CD</strong>.</p>
+          <form class="jform" id="code-form" novalidate>
+            <div class="field">
+              <label class="field__label" for="store-code">Store code</label>
+              <input class="input jcode" id="store-code" name="store-code" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="e.g. STR-001" maxlength="24" aria-describedby="code-error">
+              <p class="field__error" id="code-error" role="alert" hidden></p>
+            </div>
+            <button class="btn btn--primary btn--block btn--lg" type="submit" id="code-next">Next</button>
+            <button class="btn btn--ghost btn--block" type="button" data-go="scan"><span class="jinline" data-icon="scan"></span>Scan QR instead</button>
+          </form>
+        </section>
+
+        <!-- 3. Scan Store QR -->
+        <section class="jstep" data-step="scan" aria-labelledby="t-scan" hidden>
+          <header class="jhead"><button class="jback" type="button" data-back aria-label="Back"></button><h1 id="t-scan" tabindex="-1">Scan Store QR</h1></header>
+          <p class="jsub">Point your camera at the QR code displayed in the store.</p>
+          <div class="jscan" id="scan-box">
+            <video class="jscan__video" id="scan-video" playsinline muted></video>
+            <div class="jscan__placeholder" id="scan-placeholder"><span class="jscan__icon" data-icon="scan"></span><strong>Camera preview area</strong><span>The QR scanning frame appears here.</span></div>
+            <div class="jscan__frame" aria-hidden="true"></div>
+            <p class="jscan__msg" id="scan-msg" role="status" hidden></p>
+          </div>
+          <div class="jform">
+            <button class="btn btn--primary btn--block btn--lg" type="button" id="scan-start">Open Camera / Scan QR</button>
+            <button class="btn btn--secondary btn--block" type="button" id="scan-upload">Upload a QR photo</button>
+            <input type="file" id="scan-file" accept="image/*" hidden>
+            <button class="btn btn--secondary btn--block" type="button" data-go="code"><span class="jinline" data-icon="keyboard"></span>Enter store code instead</button>
+          </div>
+          <p class="jfoot">Camera permission is required to scan. You can also upload a picture or screenshot of the QR. The QR must be a CrediTrack store code.</p>
+        </section>
+
+        <!-- 4. Store Verification -->
+        <section class="jstep" data-step="verify" aria-labelledby="t-verify" hidden>
+          <header class="jhead"><button class="jback" type="button" data-back aria-label="Back"></button><h1 id="t-verify" tabindex="-1">Store Details</h1></header>
+          <div class="jstore">
+            <span class="jstore__icon" data-icon="store"></span>
+            <h2 class="jstore__name" id="v-name"></h2>
+            <span class="badge badge--success">Store found</span>
+          </div>
+          <dl class="jrows">
+            <div><dt>Store type</dt><dd id="v-type"></dd></div>
+            <div><dt>Location</dt><dd id="v-location"></dd></div>
+            <div><dt>Owner</dt><dd id="v-owner"></dd></div>
+            <div><dt>Store code</dt><dd id="v-code"></dd></div>
+          </dl>
+          <p class="jnote">Only join a store you already buy from on credit. You will see your own credits, payments and balance at this store.</p>
+          <div class="jform">
+            <button class="btn btn--primary btn--block btn--lg" type="button" id="verify-confirm">Confirm and Join</button>
+            <button class="btn btn--secondary btn--block" type="button" id="verify-cancel">Cancel</button>
+          </div>
+        </section>
+
+        <!-- 5. Link Existing Customer Record -->
+        <section class="jstep" data-step="link" aria-labelledby="t-link" hidden>
+          <header class="jhead"><button class="jback" type="button" data-back aria-label="Back"></button><h1 id="t-link" tabindex="-1">Link Existing Record</h1></header>
+          <div class="jstore jstore--small">
+            <span class="jstore__icon" data-icon="link"></span>
+            <h2 class="jlead" id="l-title">Do you already have a customer record?</h2>
+            <p class="jsub" id="l-sub"></p>
+          </div>
+          <form class="jform" id="link-form" novalidate>
+            <div class="field">
+              <label class="field__label" for="customer-code">Existing customer code</label>
+              <input class="input jcode" id="customer-code" name="customer-code" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="e.g. CUS-014" maxlength="12" aria-describedby="link-error link-hint">
+              <p class="field__hint" id="link-hint">Ask the store owner for the code on your record.</p>
+              <p class="field__error" id="link-error" role="alert" hidden></p>
+            </div>
+            <button class="btn btn--primary btn--block btn--lg" type="submit" id="link-next">Link Record</button>
+            <button class="btn btn--secondary btn--block" type="button" id="link-skip">I don&rsquo;t have a code</button>
+          </form>
+        </section>
+
+        <!-- 6. Confirm Details -->
+        <section class="jstep" data-step="confirm" aria-labelledby="t-confirm" hidden>
+          <header class="jhead"><button class="jback" type="button" data-back aria-label="Back"></button><h1 id="t-confirm" tabindex="-1">Confirm Details</h1></header>
+          <p class="jsub">Check everything before you join.</p>
+          <section class="jcard" aria-labelledby="c-store-h">
+            <h2 class="jcard__title" id="c-store-h">Store</h2>
+            <dl class="jrows jrows--tight">
+              <div><dt>Name</dt><dd id="c-store-name"></dd></div>
+              <div><dt>Type</dt><dd id="c-store-type"></dd></div>
+              <div><dt>Location</dt><dd id="c-store-location"></dd></div>
+              <div><dt>Owner</dt><dd id="c-store-owner"></dd></div>
+            </dl>
+          </section>
+          <section class="jcard" aria-labelledby="c-acct-h">
+            <h2 class="jcard__title" id="c-acct-h">Your account</h2>
+            <dl class="jrows jrows--tight">
+              <div><dt>Name</dt><dd id="c-acct-name"></dd></div>
+              <div id="c-acct-email-row"><dt>Email</dt><dd id="c-acct-email"></dd></div>
+              <div id="c-acct-phone-row"><dt>Mobile</dt><dd id="c-acct-phone"></dd></div>
+              <div id="c-acct-code-row"><dt>Customer code</dt><dd id="c-acct-code"></dd></div>
+            </dl>
+          </section>
+          <section class="jcard jcard--record" id="c-record" aria-labelledby="c-rec-h">
+            <h2 class="jcard__title" id="c-rec-h">Existing record</h2>
+            <p class="jrec" id="c-rec-text"></p>
+            <dl class="jrows jrows--tight" id="c-rec-rows" hidden>
+              <div><dt>Record</dt><dd id="c-rec-code"></dd></div>
+              <div><dt>Name on record</dt><dd id="c-rec-name"></dd></div>
+              <div><dt>Current balance</dt><dd id="c-rec-balance"></dd></div>
+            </dl>
+          </section>
+          <p class="field__error jsave-error" id="confirm-error" role="alert" hidden></p>
+          <div class="jform">
+            <button class="btn btn--primary btn--block btn--lg" type="button" id="confirm-join">Confirm and Join Store</button>
+            <button class="btn btn--secondary btn--block" type="button" id="confirm-back">Back</button>
+          </div>
+        </section>
+
+        <!-- 7. Join Success -->
+        <section class="jstep jstep--done" data-step="done" aria-labelledby="t-done" hidden>
+          <div class="jdone">
+            <span class="jdone__icon" data-icon="check"></span>
+            <h1 id="t-done" tabindex="-1">You&rsquo;ve joined the store!</h1>
+            <p class="jsub" id="d-text"></p>
+            <dl class="jrows jrows--card">
+              <div><dt>Store</dt><dd id="d-store"></dd></div>
+              <div><dt>Existing record</dt><dd id="d-record"></dd></div>
+              <div><dt>Your balance here</dt><dd id="d-balance"></dd></div>
+            </dl>
+          </div>
+          <div class="jform">
+            <a class="btn btn--primary btn--block btn--lg" href="home" data-route="customer-dashboard">View My Stores</a>
+            <button class="btn btn--secondary btn--block" type="button" id="done-another">Join Another Store</button>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+@section Scripts {
+  <script src="/js/session.js?v=5"></script>
+  <script src="/js/api/http.js"></script>
+  <script src="/js/api/customer-api.js"></script>
+  <script src="/js/components/customer-shell.js"></script>
+  <script src="/js/components/breadcrumbs.js"></script>
+  <script src="/js/main.js?v=8"></script>
+  <script src="/js/vendor/jsqr.js"></script>
+  <script src="/js/pages/customer-join.js"></script>
+}
