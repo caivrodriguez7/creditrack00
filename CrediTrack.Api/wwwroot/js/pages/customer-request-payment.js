@@ -51,7 +51,11 @@
     if (heading) heading.focus({ preventScroll: true });
   }
   // Back from the first screen: to the page the customer came from (Home or Payments), else Payments
+  // Opened inside the Make a Payment modal (?modal=1): Back closes the modal, and the success buttons ask the page behind to navigate
+  var embedded = /[?&]modal=1(&|$)/.test(window.location.search) && window.parent !== window;
+  function tell(message) { try { window.parent.postMessage(message, window.location.origin); } catch (e) { /* ignore */ } }
   function leave() {
+    if (embedded) { tell({ type: "close" }); return; }
     var came = false;
     try { var from = new URL(document.referrer); came = from.origin === window.location.origin && /^\/customer\//.test(from.pathname) && window.history.length > 1; } catch (e) { /* no referrer */ }
     if (came) window.history.back(); else window.CrediTrack.goTo("customer-payments");
@@ -60,6 +64,14 @@
     b.addEventListener("click", function () { if (state.step === "review") show("form"); else leave(); });
   });
   $("review-back").addEventListener("click", function () { show("form"); });
+  if (embedded) {
+    sections.done.addEventListener("click", function (event) {
+      var link = event.target.closest("[data-route]");
+      if (!link) return;
+      event.preventDefault(); event.stopPropagation();
+      tell({ type: "navigate", route: link.getAttribute("data-route") });
+    }, true);
+  }
 
   function setError(fieldId, errorId, message) {
     var box = $(errorId), input = fieldId ? $(fieldId) : null;
@@ -459,6 +471,7 @@
     }).then(function (result) {
       state.busy = false; button.disabled = false; $("review-back").disabled = false; button.textContent = button.dataset.label;
       renderDone(result);
+      if (embedded) tell({ type: "submitted" });
       show("done");
     }).catch(function (err) {
       state.busy = false; button.disabled = false; $("review-back").disabled = false; button.textContent = button.dataset.label;

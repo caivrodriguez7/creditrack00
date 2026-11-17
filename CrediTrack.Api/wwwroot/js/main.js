@@ -96,6 +96,11 @@
       window.RecordBayad.open({ customerId: new URLSearchParams(parts[1] || "").get("customer") });
       return;
     }
+    // Make a Payment opens as a floating modal too (js/components/make-payment.js), with the store already chosen.
+    if (parts[0] === "customer-payment" && window.MakePayment) {
+      window.MakePayment.open({ store: new URLSearchParams(parts[1] || "").get("store") });
+      return;
+    }
     var page = AVAILABLE_PAGES[parts[0]];
     if (typeof page === "string") {
       var query = parts[1] ? (page.indexOf("?") === -1 ? "?" : "&") + parts[1] : "";

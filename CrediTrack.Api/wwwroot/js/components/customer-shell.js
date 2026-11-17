@@ -51,6 +51,14 @@
   window.CrediTrackCustomerIcons = ICONS;
   ICONS.back = icon('<path d="M19 12H5M11 18l-6-6 6-6"/>');
 
+  // ---- Full-page flows (data-nav="none", for example Make a Payment): no header, sidebar or bottom navigation, and no Back bar ----
+  // The page has its own heading and Back button, so only the navigation is left out (same look as the subpages without the extra bar).
+  if (document.body.getAttribute("data-nav") === "none") {
+    document.body.classList.add("owner--subpage");
+    if (/[?&]modal=1(&|$)/.test(window.location.search) && window.parent !== window) document.documentElement.classList.add("mp-embed");   // shown inside the Make a Payment modal
+    return;
+  }
+
   // ---- Subpages (data-nav="sub", for example Notifications): just a Back button and the page title ----
   // Same as the Store Owner's subpages: no header, sidebar or bottom navigation. The bar styles are in owner-shell.css.
   //   data-title  the page title (first heading of the page)      data-back  where Back goes when there is no page to step back to

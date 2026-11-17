@@ -301,14 +301,14 @@ var csp = string.Join("; ", new[]
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
-    "frame-ancestors 'none'"
+    "frame-ancestors 'self'"   // only this site may show its own pages in a frame (Make a Payment modal); other sites still cannot
 });
 app.Use(async (ctx, next) =>
 {
     var h = ctx.Response.Headers;
     h["Content-Security-Policy"] = csp;
     h["X-Content-Type-Options"] = "nosniff";
-    h["X-Frame-Options"] = "DENY";
+    h["X-Frame-Options"] = "SAMEORIGIN";
     h["Referrer-Policy"] = "strict-origin-when-cross-origin";
     h["Permissions-Policy"] = "camera=(self), microphone=(), geolocation=()";
     await next();
